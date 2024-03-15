@@ -2,37 +2,28 @@ name: Auto Assign PR Creator and Random Reviewers
 
 on:
   pull_request:
-    branches: [dev] 
+    branches: [dev]
     types: [opened]
 
 jobs:
   auto-assign:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
     steps:
-    - name: 'Assign PR Creator as Assignee'
-      uses: actions/github-script@v5
-      with:
-        script: |
-          github.rest.issues.addAssignees({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.payload.pull_request.number,
-            assignees: [context.payload.pull_request.user.login]
-          });
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Assign Random Reviewers'
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const reviewers = ['changyukim98', 'illa0306', 'm1nddoong', 'PJScript', 'sieunq'];
+            const shuffled = reviewers.sort(() => 0.5 - Math.random());
+            const selectedReviewers = shuffled.slice(0, 3);
 
-    - name: 'Assign Random Reviewers'
-      uses: actions/github-script@v5
-      with:
-        script: |
-          const reviewers = ['changyukim98', 'illa0306', 'm1nddoong', 'PJScript', 'sieunq'];
-          const shuffled = reviewers.sort(() => 0.5 - Math.random());
-          const selectedReviewers = shuffled.slice(0, 3); 
-
-          github.rest.pulls.requestReviewers({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: context.payload.pull_request.number,
-            reviewers: selectedReviewers
-          });
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+            github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              reviewers: selectedReviewers
+            });
+          github-token: ${{ secrets.GITHUB_TOKEN }}
