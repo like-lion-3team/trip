@@ -9,11 +9,12 @@ The repo includes an `index.html` file (so it can render a web page), two GitHub
 
 
 
+## 규칙
 1. mater / main 브랜치에는 절대로 Push 하지 않는다.
 2. 개발중인 내용은 dev브랜치로 merge한다.
 
 
-흐름 예시
+## 흐름 예시
 1. clone 
 2. 로컬에서도 dev브랜치 생성 dev브랜치로 이동
 3. 개발할 기능 내용이 담긴 브랜치 생성 예) feat/login,  fix/login
