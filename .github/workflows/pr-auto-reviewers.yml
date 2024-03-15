@@ -16,7 +16,8 @@ jobs:
         uses: actions/github-script@v5
         with:
           script: |
-            const reviewers = ['changyukim98', 'illa0306', 'm1nddoong', 'PJScript', 'sieunq'];
+            const prCreator = context.payload.pull_request.user.login;
+            const reviewers = ['changyukim98', 'illa0306', 'm1nddoong', 'PJScript', 'sieunq'].filter(user => user !== prCreator);
             const shuffled = reviewers.sort(() => 0.5 - Math.random());
             const selectedReviewers = shuffled.slice(0, 3);
 
