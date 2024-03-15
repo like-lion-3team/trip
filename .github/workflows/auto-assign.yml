@@ -15,5 +15,6 @@ jobs:
       uses: pozil/auto-assign-issue@v1
       with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          assignees: PJScript
+          assignees: ${{ github.actor }}
+          reviewers: like-lion-3team/trip
           numOfAssignee: 1
