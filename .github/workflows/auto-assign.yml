@@ -16,5 +16,5 @@ jobs:
       with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           assignees: ${{ github.actor }}
-          reviewers: changyukim98,illa0306,m1nddoong,PJScript,sieunq 
           numOfAssignee: 1
+     
