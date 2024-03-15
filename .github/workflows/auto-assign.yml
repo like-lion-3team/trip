@@ -16,4 +16,5 @@ jobs:
       with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           assignees: ${{ github.actor }}
+          reviewers: like-lion-3team/trip
           numOfAssignee: 1
