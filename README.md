@@ -22,3 +22,5 @@ The repo includes an `index.html` file (so it can render a web page), two GitHub
 5. Pull Request 생성  dev <- feat/login
 6. 팀원끼리 코드 리뷰 하고 머지
 7. 로컬에서 작업중이던 팀원들은 로컬 브랜치 최신화  git pull origin dev.
+
+test
