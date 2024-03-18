@@ -7,6 +7,10 @@ import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @see <a href="https://springdoc.org/#properties">springdoc properties</a>
+ */
+
 @Configuration
 public class SwaggerConfig {
     @Bean

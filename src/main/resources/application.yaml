@@ -1,3 +1,5 @@
+# ???? ??
+# https://curiousjinan.tistory.com/entry/spring-boot-tomcat-environment
 jwt:
   # ????
   header: Authorization
