@@ -21,6 +21,8 @@ spring:
 
 
 
+
+
   jpa:
     hibernate:
       format_sql: true
@@ -32,3 +34,12 @@ spring:
       port: ${REDIS_PORT}
       username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
+
+springdoc:
+  swagger-ui:
+    display-request-duration: true
+  api-docs:
+    path: /v1/api-docs
+
+  paths-to-match:
+    - /api/v1/**
