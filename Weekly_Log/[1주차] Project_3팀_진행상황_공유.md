@@ -52,3 +52,4 @@
 Github Repository URL: https://github.com/like-lion-3team/trip
 
 - 필수) 팀원들과 함께 찍은 인증샷(온라인 만남시 스크린 캡쳐)도 함께 업로드 해주세요 🙂
+![1주차 이미지](img/Week1.png)
