@@ -2,11 +2,8 @@
 
 ![Proof HTML](https://github.com/like-lion-3team/demo-repository/actions/workflows/proof-html.yml/badge.svg)
 
-# Welcome to your organization's demo respository
-This code repository (or "repo") is designed to demonstrate the best GitHub has to offer with the least amount of noise.
-
-The repo includes an `index.html` file (so it can render a web page), two GitHub Actions workflows, and a CSS stylesheet dependency.
-
+# TourFinder
+여행 코스 기록, 공유 서비스
 
 
 ## 규칙
@@ -22,4 +19,5 @@ The repo includes an `index.html` file (so it can render a web page), two GitHub
 5. Pull Request 생성  dev <- feat/login
 6. 팀원끼리 코드 리뷰 하고 머지
 7. 로컬에서 작업중이던 팀원들은 로컬 브랜치 최신화  git pull origin dev.
-8. workflow test
+
+
