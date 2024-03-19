@@ -19,7 +19,6 @@ spring:
     username: sa
     password: password
 
-
   jpa:
     hibernate:
       format_sql: true
@@ -31,6 +30,10 @@ spring:
       port: ${REDIS_PORT}
       username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
+
+  sql:
+    init:
+      mode: always
 
 springdoc:
   swagger-ui:
