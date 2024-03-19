@@ -1,5 +1,10 @@
 package com.traveloper.tourfinder.auth.service;
 
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,6 +16,7 @@ public class MemberService {
      * @param password 유저가 입력한 비밀번호
      *
      * */
+
      public void signup(
              String nickname,
              String email,
@@ -57,7 +63,5 @@ public class MemberService {
      }
 
 
-
-
-
 }
+
