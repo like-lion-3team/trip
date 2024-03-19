@@ -22,8 +22,15 @@ spring:
   jpa:
     hibernate:
       format_sql: true
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
+    # table create 후 data.sql initialize
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+
   data:
     redis:
       host: ${REDIS_HOST}
@@ -31,9 +38,6 @@ spring:
       username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
 
-  sql:
-    init:
-      mode: always
 
 springdoc:
   swagger-ui:
