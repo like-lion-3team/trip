@@ -1,23 +1,30 @@
 package com.traveloper.tourfinder.auth.service;
 
 
+import com.traveloper.tourfinder.auth.dto.TokenDto;
 import com.traveloper.tourfinder.auth.entity.CustomUserDetails;
 import com.traveloper.tourfinder.auth.entity.Member;
+import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
-  
+    private final JwtTokenUtils jwtTokenUtils;
+
     /**
      * @param nickname 유저가 입력한 닉네임
      * @param email    유저가 입력한 이메일
@@ -33,12 +40,28 @@ public class MemberService implements UserDetailsService {
         // TODO: 회원가입 - 비밀번호 저장시 암호화
     }
 
-    public void login(
+    public TokenDto login(
             String email,
             String password
     ) {
-        // TODO: 로그인 - 이메일, 비밀번호
-        // TODO: 로그인 - 이메일 검증, 비밀번호 검증
+
+        Member member = memberRepository.findMemberByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("로그인 실패")
+        );
+        // TODO: 로그인 - 비밀번호 검증
+        // TODO: 비밀번호 해쉬처리한 값과 DB값 비교
+        String hashedPassword = password;
+        if(!member.getPassword().equals(hashedPassword)){
+            throw new AccessDeniedException("로그인 실패");
+        }
+
+        String token = jwtTokenUtils.generateToken(member);
+
+        return TokenDto.builder()
+                .accessToken(token)
+                .expiredDate(LocalDateTime.now().plusSeconds(60 * 60))
+                .expiredSecond(60 * 60)
+                .build();
     }
 
     /**
