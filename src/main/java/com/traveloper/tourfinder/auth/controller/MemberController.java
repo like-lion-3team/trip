@@ -1,13 +1,16 @@
 package com.traveloper.tourfinder.auth.controller;
 
 
-import com.traveloper.tourfinder.auth.entity.Member;
+import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
+import com.traveloper.tourfinder.auth.dto.MemberDto;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.auth.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,16 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
 
     // 회원가입
     @PostMapping("/sign-up")
-    public void signUp(
-            String nickname,
-            String email,
-            String password
+    public MemberDto signUp(
+            @RequestBody
+            CreateMemberDto dto
     ) {
-        memberService.signup(nickname, email, password);
+        return memberService.signup(dto);
     }
 
     // 로그인
