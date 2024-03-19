@@ -2,6 +2,7 @@ package com.traveloper.tourfinder.common;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @SuperBuilder // builder 에서 상속받은 값은 제어하지 못하는데 @SuperBuilder를 사용하면 제어가 가능해짐
 @MappedSuperclass  // Entity 에서 일반 클래스를 상속 받기 위함
 @EntityListeners(AuditingEntityListener.class)  // JPA의 업데이트 등 이벤트를 감지
+@NoArgsConstructor
 public class BaseEntity {
 
     @Column(name = "is_delete")
