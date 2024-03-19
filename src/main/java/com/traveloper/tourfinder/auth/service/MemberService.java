@@ -1,5 +1,6 @@
 package com.traveloper.tourfinder.auth.service;
 
+
 import com.traveloper.tourfinder.auth.entity.CustomUserDetails;
 import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,6 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
+  
     /**
      * @param nickname 유저가 입력한 닉네임
      * @param email    유저가 입력한 이메일
@@ -57,7 +60,6 @@ public class MemberService implements UserDetailsService {
         // TODO: 인증 코드 검증 - 일치하면 200 응
     }
 
-
     public boolean isPossibleSendCode(
             String email
     ) {
@@ -76,3 +78,4 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
 }
+
