@@ -1,6 +1,7 @@
 package com.traveloper.tourfinder.auth.controller;
 
 
+import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.auth.service.MemberService;
 import lombok.RequiredArgsConstructor;

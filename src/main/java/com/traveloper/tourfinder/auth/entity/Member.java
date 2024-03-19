@@ -3,10 +3,11 @@ package com.traveloper.tourfinder.auth.entity;
 import com.traveloper.tourfinder.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Member extends BaseEntity {
