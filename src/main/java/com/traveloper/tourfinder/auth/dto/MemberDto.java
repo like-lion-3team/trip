@@ -28,7 +28,7 @@ public class MemberDto {
                 .memberName(entity.getMemberName())
                 .nickname(entity.getNickname())
                 .email(entity.getEmail())
-                .role(entity.getRole().getName())
+                .role(String.valueOf(entity.getRole()))
                 .build();
 
     }

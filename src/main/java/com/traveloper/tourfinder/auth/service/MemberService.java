@@ -7,9 +7,11 @@ import com.traveloper.tourfinder.auth.entity.CustomUserDetails;
 import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import jakarta.transaction.Transactional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -40,7 +42,10 @@ public class MemberService implements UserDetailsService {
         if (memberRepository.existsByEmail(dto.getEmail()) || memberRepository.existsByNickname(dto.getNickname()))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
+        String uuid = UUID.randomUUID().toString();
+
         return MemberDto.fromEntity(memberRepository.save(Member.builder()
+                .uuid(uuid)
                 .nickname(dto.getNickname())
                 .email(dto.getEmail())
                 // 비밀번호 저장시 암호화
