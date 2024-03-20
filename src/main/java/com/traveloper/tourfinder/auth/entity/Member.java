@@ -16,7 +16,7 @@ public class Member extends BaseEntity {
     private Long id;
     private String uuid;
     private String memberName;
-    @Setter
+
     private String password;
     @Setter
     private String nickname;

@@ -26,13 +26,16 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "v1/auth/**"
+                        )
+                        .permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/*")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/api-docs/*")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/api-docs")
                         .permitAll()
-
                         .anyRequest()
                         .authenticated()
                 ).addFilterBefore(
