@@ -33,4 +33,14 @@ public class RedisRepo {
         Object value = redisTemplate.opsForValue().get(key);
         return Optional.ofNullable(value).map(String::valueOf);
     }
+
+    /**
+     * <p>RefreshToken을 삭제하는 메서드 입니다.</p>
+     * @param key AccessToken
+     * @return boolean - 삭제 성공시 true 실패시 false를 리턴합니다.
+     * */
+    public boolean destroyRefreshToken(String key) {
+        redisTemplate.delete(key);
+        return getRefreshToken(key).isEmpty();
+    }
 }
