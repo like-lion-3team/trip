@@ -19,5 +19,6 @@ public class ArticleDto {
         dto.id = entity.getId();
         dto.title = entity.getTitle();
         dto.content = entity.getContent();
+        return dto;
     }
 }

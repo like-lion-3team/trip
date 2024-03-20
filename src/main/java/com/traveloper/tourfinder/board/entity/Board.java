@@ -15,7 +15,6 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @OneToMany(mappedBy = "board")
     private final List<Article> articles = new ArrayList<>();
 }
