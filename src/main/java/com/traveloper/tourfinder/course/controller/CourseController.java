@@ -60,7 +60,7 @@ public class CourseController {
         courseService.getCourseDetail();
     }
 
-    @GetMapping("{courseId}")
+    @PutMapping("{courseId}")
     public void updateCourse(
             @PathVariable("courseId")
             Integer courseId
@@ -70,7 +70,7 @@ public class CourseController {
         courseService.updateCourse();
     }
 
-    @GetMapping("{courseId}")
+    @DeleteMapping("{courseId}")
     public void deleteCourse(
             @PathVariable("courseId")
             Integer courseId
