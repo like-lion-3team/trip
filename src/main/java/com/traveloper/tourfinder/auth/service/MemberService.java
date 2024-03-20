@@ -1,16 +1,19 @@
 package com.traveloper.tourfinder.auth.service;
 
 
-
 import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
 import com.traveloper.tourfinder.auth.dto.TokenDto;
 import com.traveloper.tourfinder.auth.entity.CustomUserDetails;
 import com.traveloper.tourfinder.auth.entity.Member;
+import com.traveloper.tourfinder.auth.entity.Role;
 import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
+import com.traveloper.tourfinder.auth.repo.RoleRepository;
 import jakarta.transaction.Transactional;
+
 import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,6 +32,7 @@ import org.springframework.stereotype.Service;
 import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.Optional;
+
 import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
@@ -36,11 +40,13 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
 
     /**
      * 회원가입
+     *
      * @param dto 유저가 입력한 닉네임, 이메일, 비밀번호
      */
     @Transactional
@@ -54,12 +60,16 @@ public class MemberService implements UserDetailsService {
 
         String uuid = UUID.randomUUID().toString();
 
+        Optional<Role> optionalRole = roleRepository.findById(1L);
+        Role role = optionalRole.get();
+
         return MemberDto.fromEntity(memberRepository.save(Member.builder()
                 .uuid(uuid)
                 .nickname(dto.getNickname())
                 .email(dto.getEmail())
                 // 비밀번호 저장시 암호화
                 .password(passwordEncoder.encode(dto.getPassword()))
+                .role(role)
                 .build()));
     }
 
@@ -74,7 +84,7 @@ public class MemberService implements UserDetailsService {
         // TODO: 로그인 - 비밀번호 검증
 
 
-        if(!passwordEncoder.matches(password, member.getPassword())){
+        if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new AccessDeniedException("로그인 실패");
         }
 
