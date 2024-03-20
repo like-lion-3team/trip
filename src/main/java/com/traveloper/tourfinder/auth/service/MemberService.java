@@ -4,6 +4,7 @@ package com.traveloper.tourfinder.auth.service;
 
 import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
+import com.traveloper.tourfinder.auth.dto.SignInDto;
 import com.traveloper.tourfinder.auth.dto.TokenDto;
 import com.traveloper.tourfinder.auth.entity.CustomUserDetails;
 import com.traveloper.tourfinder.auth.entity.Member;
@@ -64,17 +65,16 @@ public class MemberService implements UserDetailsService {
     }
 
     public TokenDto login(
-            String email,
-            String password
+            SignInDto dto
     ) {
 
-        Member member = memberRepository.findMemberByEmail(email).orElseThrow(
+        Member member = memberRepository.findMemberByEmail(dto.getEmail()).orElseThrow(
                 () -> new EntityNotFoundException("로그인 실패")
         );
         // TODO: 로그인 - 비밀번호 검증
 
 
-        if(!passwordEncoder.matches(password, member.getPassword())){
+        if(!passwordEncoder.matches(dto.getPassword(), member.getPassword())){
             throw new AccessDeniedException("로그인 실패");
         }
 

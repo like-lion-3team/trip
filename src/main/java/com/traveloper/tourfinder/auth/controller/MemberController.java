@@ -3,6 +3,7 @@ package com.traveloper.tourfinder.auth.controller;
 
 import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
+import com.traveloper.tourfinder.auth.dto.SignInDto;
 import com.traveloper.tourfinder.auth.dto.TokenDto;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.auth.service.MemberService;
@@ -33,13 +34,11 @@ public class MemberController {
 
     @PostMapping("/sign-in")
     public TokenDto signIn(
-            @RequestParam("email")
-            String email,
-            @RequestParam("password")
-            String password
+            @RequestBody
+            SignInDto dto
     ) {
         log.info("test");
-        return memberService.login(email, password);
+        return memberService.login(dto);
     }
 }
 
