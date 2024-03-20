@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 @Component
 public class ValidateUtils {
-    private static final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[!@#$]).{8,20}$";
+    private static final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$]).{8,20}$";
     private static final String EMAIL_PATTERN = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
     private static final Pattern emailPattern = Pattern.compile(EMAIL_PATTERN);
