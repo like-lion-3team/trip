@@ -73,7 +73,7 @@ public class MemberService implements UserDetailsService {
         );
         // TODO: 로그인 - 비밀번호 검증
         // TODO: 비밀번호 해쉬처리한 값과 DB값 비교
-        String hashedPassword = password;
+        String hashedPassword = passwordEncoder.encode(password);
         if(!member.getPassword().equals(hashedPassword)){
             throw new AccessDeniedException("로그인 실패");
         }
