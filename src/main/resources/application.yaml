@@ -38,6 +38,11 @@ spring:
       username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
 
+naver:
+  developers:
+    client-id: ${NAVER_DEVELOPERS_CLIENT_ID}
+    client-secret: ${NAVER_DEVELOPERS_CLIENT_SECRET}
+
 
 springdoc:
   swagger-ui:
