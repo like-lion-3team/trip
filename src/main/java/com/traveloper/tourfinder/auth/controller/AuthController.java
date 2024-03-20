@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Auth", description = "Auth API")
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("example")
 public class AuthController {
 
     @GetMapping("api01")
