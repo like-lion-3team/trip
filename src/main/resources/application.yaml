@@ -4,7 +4,7 @@ jwt:
   # ????
   header: Authorization
   # jwt ??? ?? salt
-  secret: sdgfhjaklsdhjkhasgfhjasgfhjsdfgkjhsadgfhkjsdgfkhjsdgkj
+  secret: ${JWT_SECRET}
   # ????
   expire_time: 600 # 10 min
 
