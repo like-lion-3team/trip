@@ -1,0 +1,3 @@
+INSERT INTO role(id, name) VALUES (1, 'ACTIVE_USER');
+INSERT INTO role(id, name) VALUES (2, 'BLOCK_USER');
+INSERT INTO role(id, name) VALUES (3, 'SERVICE_ADMIN');
