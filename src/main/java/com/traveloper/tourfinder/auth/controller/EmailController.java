@@ -5,6 +5,7 @@ import com.traveloper.tourfinder.auth.service.EmailService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "email", description = "이메일 인증코드 전송")
@@ -15,21 +16,26 @@ import org.springframework.web.bind.annotation.*;
 public class EmailController {
     private final EmailService emailService;
 
-    @GetMapping("/email/verify")
-    public void sendEmail(
-            @RequestParam("email")
+    @GetMapping("/email/{email}/verify")
+    public ResponseEntity sendEmail(
+            @PathVariable("email")
             String email
     ){
-        // TODO: Redis에 key(email) : value(code) 로 저장
         VerifyCodeSendSuccessDto result = emailService.sendVerifyCodeMail(email);
         log.info(result.getEmail() + "이메일");
         log.info(result.getCode() + "코드");
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/email/verify-code")
-    public void verifyCode(){
-        // TODO: 이메일 인증코드 진위여부 확인
-        // TODO: Redis에 key(email)가 존재하는지 확인 후 존재한다면 value(code) 비교
+    @GetMapping("/email/{email}/verify-code/{code}")
+    public ResponseEntity verifyCode(
+            @PathVariable("email")
+            String email,
+            @PathVariable("code")
+            String code
+    ){
+         boolean result = emailService.verifyCode(email,code);
+         return result ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
 
 

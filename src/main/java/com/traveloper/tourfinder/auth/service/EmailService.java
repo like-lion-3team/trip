@@ -4,11 +4,12 @@ import com.traveloper.tourfinder.auth.dto.VerifyCodeSendSuccessDto;
 import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.util.RandomCodeUtils;
 import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,5 +56,10 @@ public class EmailService {
 
     public void sendNotificationEmail(){
 
+    }
+
+    public boolean verifyCode(String email, String code){
+        Optional<String> storedCode = redisRepo.getVerifyCode(email);
+        return storedCode.map(s -> s.equals(code)).orElse(false);
     }
 }
