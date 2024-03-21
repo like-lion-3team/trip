@@ -40,6 +40,45 @@ public class MemberController {
         log.info("test");
         return memberService.login(dto);
     }
+
+    @GetMapping("/sign-out")
+    public void signOut(){
+        // TODO: 로그아웃 기능
+    }
+
+    @GetMapping("/my")
+    public void getMyInfo(){
+        // TODO: 내 정보 ( 마이페이지 )
+    }
+
+    @PutMapping("/me/password")
+    public void updatePassword(){
+        // TODO: 비밀번호 수정 ( 마이페이지 )
+    }
+
+    @PutMapping("/password-recovery")
+    public void recoverPassword(){
+        // TODO: 비밀번호 복구 ( 비밀번호 찾기 -> 변경 )
+    }
+
+    @PostMapping("/password-recovery")
+    public void recoverPasswordRequest(){
+        // TODO: 비밀번호 복구 요청 ( 이메일 전송 )
+    }
+
+    @PatchMapping("/email")
+    public void updateEmail(){
+        // TODO: 이메일 변경 기능
+        // TODO: 이메일로 전송된 코드 검증 후 변경
+    }
+
+
+
+
+
+
+
+
 }
 
 
