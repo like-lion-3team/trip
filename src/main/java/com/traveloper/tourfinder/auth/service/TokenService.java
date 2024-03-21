@@ -5,7 +5,6 @@ import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.common.RedisRepo;
-import com.traveloper.tourfinder.common.util.SecurityContextUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
