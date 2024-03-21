@@ -17,6 +17,8 @@ public class TestController {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
+
+    // 네이버 지역검색 api 테스트
     @GetMapping("api-test/local")
     public LocalSearchDto test(
             @RequestParam("query")
