@@ -44,7 +44,7 @@ naver:
     client-secret: ${NAVER_DEVELOPERS_CLIENT_SECRET}
 
 kto:
-  serviceKey: "J7a5wFPbLOh9aQO4fhpc9T3K7Vhl6ro%2Bv7kZ6JZHPSE%2FgIsjA0EBfB6fI4svyOlGBPWFls9EmMYYEE9Kccphqw%3D%3D"
+  serviceKey: ${KTO_SERVICE_KEY}
 
 springdoc:
   swagger-ui:
