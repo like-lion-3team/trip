@@ -1,6 +1,8 @@
 package com.traveloper.tourfinder.auth.service;
 
 import com.traveloper.tourfinder.auth.dto.VerifyCodeSendSuccessDto;
+import com.traveloper.tourfinder.common.RedisRepo;
+import com.traveloper.tourfinder.common.util.RandomCodeUtils;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +17,7 @@ public class EmailService {
 
     @Value("${STMP_USERNAME}")
     private static final String senderEmail = "";
-    private static int number;  // 랜덤 인증 코드
+    private final RedisRepo redisRepo;
 
 
 
@@ -23,7 +25,7 @@ public class EmailService {
     // 이메일로 인증코드 전송
     public VerifyCodeSendSuccessDto sendVerifyCodeMail(String email){
         MimeMessage message = javaMailSender.createMimeMessage();
-        String randomCode = "abcdefg";
+        String randomCode = RandomCodeUtils.generate(6);
         try {
             message.setFrom(senderEmail);   // 보내는 이메일
             message.setRecipients(MimeMessage.RecipientType.TO, email); // 보낼 이메일 설정

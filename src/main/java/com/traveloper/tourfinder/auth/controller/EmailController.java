@@ -20,7 +20,6 @@ public class EmailController {
             @RequestParam("email")
             String email
     ){
-        // TODO: 랜덤 코드 생성
         // TODO: Redis에 key(email) : value(code) 로 저장
         VerifyCodeSendSuccessDto result = emailService.sendVerifyCodeMail(email);
         log.info(result.getEmail() + "이메일");
