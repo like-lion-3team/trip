@@ -1,9 +1,11 @@
 package com.traveloper.tourfinder.auth.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Token", description = "토큰과 관련된 API")
 @RestController
 @RequestMapping("api/v1/auth")
 public class TokenController {
