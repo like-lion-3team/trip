@@ -59,6 +59,8 @@ naver:
     client-secret: ${NCP_CLIENT_SECRET}
     
 
+kto:
+  serviceKey: ${KTO_SERVICE_KEY}
 
 springdoc:
   swagger-ui:
