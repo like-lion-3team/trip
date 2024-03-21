@@ -27,6 +27,7 @@ public class TokenService {
 
     public Optional<String> rolling(ReissuanceDto dto) {
         Optional<String> storedRefreshToken = redisRepo.getRefreshToken(dto.getAccessToken());
+
         if (storedRefreshToken.isEmpty()) {
             return Optional.empty(); // Redis에 토큰이 없다면 빈 Optional 반환
         }
