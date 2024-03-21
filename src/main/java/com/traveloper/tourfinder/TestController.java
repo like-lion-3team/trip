@@ -2,19 +2,29 @@ package com.traveloper.tourfinder;
 
 import com.traveloper.tourfinder.api.naver.developers.dto.LocalSearchDto;
 import com.traveloper.tourfinder.api.naver.developers.service.NDApiService;
+import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("api-test")
 public class TestController {
     private final NDApiService ndApiService;
-    @GetMapping("test")
-    public Object test() {
+    private final AuthenticationFacade facade;
+
+    @GetMapping("jwt-test")
+    public Object jwtTest() {
         return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    @GetMapping("facade")
+    public Object facadeTest() {
+        return facade.getCurrentMember();
     }
 
 

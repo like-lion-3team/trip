@@ -1,6 +1,7 @@
 package com.traveloper.tourfinder.course.controller;
 
 
+import com.traveloper.tourfinder.course.dto.CourseDto;
 import com.traveloper.tourfinder.course.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +17,11 @@ public class CourseController {
     private final CourseService courseService;
 
     @PostMapping
-    public void addCourse(){
-        // TODO: 여행코스 등록
-        courseService.addCourse();
+    public CourseDto addCourse(
+            @RequestBody
+            CourseDto courseDto
+    ){
+        return courseService.addCourse(courseDto);
     }
 
     @GetMapping
