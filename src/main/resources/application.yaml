@@ -54,6 +54,10 @@ naver:
   developers:
     client-id: ${NAVER_DEVELOPERS_CLIENT_ID}
     client-secret: ${NAVER_DEVELOPERS_CLIENT_SECRET}
+  ncp:
+    client-id: ${NCP_CLIENT_ID}
+    client-secret: ${NCP_CLIENT_SECRET}
+    
 
 
 springdoc:
