@@ -19,6 +19,18 @@ spring:
     username: sa
     password: password
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+
   jpa:
     hibernate:
       format_sql: true
@@ -42,9 +54,13 @@ naver:
   developers:
     client-id: ${NAVER_DEVELOPERS_CLIENT_ID}
     client-secret: ${NAVER_DEVELOPERS_CLIENT_SECRET}
+  ncp:
+    client-id: ${NCP_CLIENT_ID}
+    client-secret: ${NCP_CLIENT_SECRET}
+    
 
 kto:
-  serviceKey: "J7a5wFPbLOh9aQO4fhpc9T3K7Vhl6ro%2Bv7kZ6JZHPSE%2FgIsjA0EBfB6fI4svyOlGBPWFls9EmMYYEE9Kccphqw%3D%3D"
+  serviceKey: ${KTO_SERVICE_KEY}
 
 springdoc:
   swagger-ui:

@@ -1,7 +1,6 @@
 package com.traveloper.tourfinder.place.controller;
 
 import com.traveloper.tourfinder.api.KTO.service.KTOApiService;
-import java.io.UnsupportedEncodingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
