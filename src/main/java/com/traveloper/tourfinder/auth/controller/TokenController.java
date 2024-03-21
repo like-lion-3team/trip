@@ -1,17 +1,23 @@
 package com.traveloper.tourfinder.auth.controller;
 
+import com.traveloper.tourfinder.auth.dto.Token.ReissuanceDto;
+import com.traveloper.tourfinder.auth.service.TokenService;
+import com.traveloper.tourfinder.common.util.SecurityContextUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Token", description = "토큰과 관련된 API")
 @RestController
 @RequestMapping("api/v1/auth")
 public class TokenController {
-    @GetMapping("/token")
-    public void reissuanceAccessToken(){
+    private TokenService tokenService;
+    @PostMapping("/token")
+    public void reissuanceAccessToken(
+            @RequestBody
+            ReissuanceDto dto
+    ){
         // TODO: AccessToken 재발급
+        tokenService.rolling(dto);
     }
 
     @GetMapping("/destroy")

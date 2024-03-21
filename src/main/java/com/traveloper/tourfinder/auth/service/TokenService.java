@@ -1,8 +1,16 @@
 package com.traveloper.tourfinder.auth.service;
 
+import com.traveloper.tourfinder.auth.dto.Token.ReissuanceDto;
+import com.traveloper.tourfinder.auth.entity.Member;
+import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
+import com.traveloper.tourfinder.auth.repo.MemberRepository;
+import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.util.SecurityContextUtils;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -11,16 +19,33 @@ import java.util.UUID;
 
 
 @Service
+@RequiredArgsConstructor
 public class TokenService {
+    private final RedisRepo redisRepo;
+    private final JwtTokenUtils jwtTokenUtils;
+    private final MemberRepository memberRepository;
 
+    public Optional<String> rolling(ReissuanceDto dto) {
+        Optional<String> storedRefreshToken = redisRepo.getRefreshToken(dto.getAccessToken());
+        if (storedRefreshToken.isEmpty()) {
+            return Optional.empty(); // Redis에 토큰이 없다면 빈 Optional 반환
+        }
 
-    public void rolling(
-            UUID uuid
-    ) {
+        Member member = memberRepository.findMemberByUuid(dto.getUuid())
+                .orElseThrow(() -> new EntityNotFoundException("찾을 수 없음"));
 
-        // TODO: uuid를 기반으로 유저를 검색하고 토큰을 재생성 합니다.
-        // TODO: AccessToken을 발급하고, 기존 RefreshToken을 삭제하고 재생성 합니다.
-        // TODO: Redis에 AccessToken ( key ) : RefreshToken ( value ) 형태로 저장합니다.
+        // 새로운 토큰 생성
+        String newAccessToken = jwtTokenUtils.generateToken(member);
+        String newRefreshToken = jwtTokenUtils.generateToken(member);
+
+        // 기존 리프레시 토큰 삭제
+        redisRepo.destroyRefreshToken(dto.getAccessToken());
+
+        // 새로운 토큰 Redis에 저장
+        redisRepo.saveRefreshToken(newAccessToken, newRefreshToken);
+
+        // 새로운 액세스 토큰 반환
+        return Optional.of(newAccessToken);
     }
 
     public void destroy(
