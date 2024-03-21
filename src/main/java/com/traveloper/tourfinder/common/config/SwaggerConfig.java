@@ -18,14 +18,6 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
 
-        return new OpenAPI()
-                .components(new Components())
-                .info(apiInfo());
-    }
-
-
-    private Info apiInfo() {
-
         String jwtSchemeName = "jwtAuth";
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
         Components components = new Components()
@@ -34,6 +26,16 @@ public class SwaggerConfig {
                         .type(SecurityScheme.Type.HTTP)
                         .scheme("Bearer")
                         .bearerFormat("JWT"));
+        return new OpenAPI()
+                .components(components)
+                .addSecurityItem(securityRequirement)
+                .info(apiInfo());
+    }
+
+
+    private Info apiInfo() {
+
+
 
         return new Info()
                 .title("Traveloper API Docs")
