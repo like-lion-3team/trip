@@ -29,7 +29,7 @@ public class EmailService {
         try {
             message.setFrom(senderEmail);   // 보내는 이메일
             message.setRecipients(MimeMessage.RecipientType.TO, email); // 보낼 이메일 설정
-            message.setSubject("[Team ABC] 요청하신 인증코드 입니다.");  // 제목 설정
+            message.setSubject("[TourFinder] 요청하신 인증코드 입니다.");  // 제목 설정
             String body = "";
             body += "<h2>" + "사용자가 본인임을 확인하려고 합니다. " + "</h2>";
             body += "<p>" + "이용중이던 웹 서비스로 돌아가 다음 확인 코드를 입력하세요. <br></br> <b>유효시간은 5분 입니다. </b>"  +  "</p>";
@@ -43,6 +43,7 @@ public class EmailService {
         }
 
         javaMailSender.send(message);
+        redisRepo.saveVerifyCode(email,randomCode);
         return VerifyCodeSendSuccessDto.builder()
                 .email(email)
                 .code(randomCode)
