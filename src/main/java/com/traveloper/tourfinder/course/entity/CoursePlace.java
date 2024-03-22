@@ -1,7 +1,6 @@
 package com.traveloper.tourfinder.course.entity;
 
 import com.traveloper.tourfinder.common.BaseEntity;
-import com.traveloper.tourfinder.place.entity.TripPlace;
 import jakarta.persistence.*;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
