@@ -18,5 +18,5 @@ public class CoursePlace extends BaseEntity {
     private Course course;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private TripPlace place;
+    private Place place;
 }

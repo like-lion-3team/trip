@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class TripPlaceController {
+public class PlaceController {
     private final KTOApiService ktoApiService;
 
     // 관광정보 서비스 API 여행지 정보 검색
