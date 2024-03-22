@@ -1,4 +1,4 @@
-package com.traveloper.tourfinder.auth.dto;
+package com.traveloper.tourfinder.auth.dto.Token;
 
 import lombok.Builder;
 import lombok.Getter;

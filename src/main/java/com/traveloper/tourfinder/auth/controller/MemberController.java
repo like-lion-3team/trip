@@ -4,13 +4,11 @@ package com.traveloper.tourfinder.auth.controller;
 import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
 import com.traveloper.tourfinder.auth.dto.SignInDto;
-import com.traveloper.tourfinder.auth.dto.TokenDto;
-import com.traveloper.tourfinder.auth.repo.MemberRepository;
+import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import com.traveloper.tourfinder.auth.service.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Auth", description = "Auth API")
