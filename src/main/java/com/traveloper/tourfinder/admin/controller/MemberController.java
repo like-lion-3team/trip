@@ -6,21 +6,21 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("api/v1/admin")
+@RequestMapping("api/v1/admin/members")
 public class MemberController {
 
     // member?page={page}&size={size}&permission={permission}
-    @GetMapping("/member")
+    @GetMapping("/")
     public void getMembers(){
         // TODO: 회원목록 조희
     }
 
-    @GetMapping("/member/{memberUuid}")
+    @GetMapping("/{memberUuid}")
     public void getMemberDetail(){
         // TODO: 멤버 상세 정보 조회
     }
 
-    @PatchMapping("/member/{memberUuid}/block")
+    @PatchMapping("/{memberUuid}/block")
     public void blockMember(
             @PathVariable("memberUuid")
             String memberUuid,
@@ -30,7 +30,7 @@ public class MemberController {
         // TODO: 회원 차단
     }
 
-    @PatchMapping("/member/{memberUuid}/unblock")
+    @PatchMapping("/{memberUuid}/unblock")
     public void unBlockMember(
             @PathVariable("memberUuid")
             String memberUuid
@@ -38,7 +38,7 @@ public class MemberController {
         // TODO: 회원 차단 해제
     }
 
-    @DeleteMapping("/member/{memberUuid}/token/revoke")
+    @DeleteMapping("/{memberUuid}/token/revoke")
     public void revokeToken(
             @PathVariable("memberUuid")
             String memberUuid
