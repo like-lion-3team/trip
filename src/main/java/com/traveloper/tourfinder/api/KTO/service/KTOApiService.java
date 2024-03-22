@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.traveloper.tourfinder.api.KTO.dto.KTOKeywordSearchDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KTOApiService {
     private final KTOSearchService ktoSearchService;
-    private final Gson gson;
+    // private final Gson gson;
 
     // 일반 인증키 (Encoding)
     @Value("${kto.serviceKey}")

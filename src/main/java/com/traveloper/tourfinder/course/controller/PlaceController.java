@@ -1,7 +1,6 @@
 package com.traveloper.tourfinder.course.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.traveloper.tourfinder.api.KTO.dto.KTOKeywordSearchDto;
 import com.traveloper.tourfinder.api.KTO.service.KTOApiService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class TripPlaceController {
+public class PlaceController {
     private final KTOApiService ktoApiService;
 
     // 관광정보 서비스 API 여행지 정보 검색
