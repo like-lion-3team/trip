@@ -33,7 +33,6 @@ public class KTOApiService {
         return ktoSearchService.SearchKeyword(params);
     }
 
-
     // 여행지 상세 정보 확인
     public Object getPlaceDetails(
             String contentId
@@ -50,6 +49,4 @@ public class KTOApiService {
         params.put("overviewYN", "Y");
         return ktoSearchService.DetailCommon(params);
     }
-
-
 }

@@ -3,7 +3,6 @@ package com.traveloper.tourfinder.api.KTO.service;
 import java.util.Map;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
-import org.springframework.web.service.annotation.HttpExchange;
 
 public interface KTOSearchService {
     // 키워드 검색
