@@ -29,7 +29,7 @@ public class TestController {
 
 
     // 네이버 지역검색 api 테스트
-    @GetMapping("api-test/local")
+    @GetMapping("local")
     public LocalSearchDto test(
             @RequestParam("query")
             String query,
