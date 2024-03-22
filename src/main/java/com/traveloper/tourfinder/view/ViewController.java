@@ -24,4 +24,12 @@ public class ViewController {
         model.addAttribute("clientId", NCP_CLIENT_ID);
         return "sample-map";
     }
+
+    @GetMapping("api-test/sample-course-create")
+    public String sampleCourseCreate(
+            Model model
+    ) {
+        model.addAttribute("clientId", NCP_CLIENT_ID);
+        return "sample-course-create";
+    }
 }

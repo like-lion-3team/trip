@@ -23,8 +23,9 @@ public class Course extends BaseEntity {
 
     private String title;
     private String desc;
-    @OneToMany(mappedBy = "course")
-    private List<TripPlace> places;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<CoursePlace> places;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
