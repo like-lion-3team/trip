@@ -1,10 +1,8 @@
 package com.traveloper.tourfinder.place.entity;
 
 import com.traveloper.tourfinder.common.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.traveloper.tourfinder.course.entity.Course;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +24,9 @@ public class TripPlace extends BaseEntity {
     private String thumbnailUrl;
     private String phone;
     private String address;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Course course;
     // mapx
     private Double lng;
     // mapy
