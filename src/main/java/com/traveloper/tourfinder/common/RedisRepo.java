@@ -1,14 +1,10 @@
 package com.traveloper.tourfinder.common;
 
 
-import com.traveloper.tourfinder.auth.dto.VerifyCodeSendSuccessDto;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
-import com.traveloper.tourfinder.common.AppConstants;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -58,10 +54,13 @@ public class RedisRepo {
 
     /**
      * <p>이메일과 인증 코드를 저장하는 메서드 입니다.</p>
+     *
      * @param email 인증에 사용했던 이메일
      * @param code  이메일로 전송한 인증코드
-     * */
-    public void saveVerifyCode(String email, String code){
+     * @return
+     */
+    public String saveVerifyCode(String email, String code){
         redisTemplate.opsForValue().set(email, code,AppConstants.EMAIL_VERIFY_CODE_EXPIRE_SECOND, TimeUnit.SECONDS);
+        return email;
     }
 }
