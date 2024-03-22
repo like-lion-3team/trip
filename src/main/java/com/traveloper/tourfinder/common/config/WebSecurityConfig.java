@@ -28,7 +28,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "api/v1/auth/**",
-                                "api-test/**"
+                                "api-test/**",
+                                "api/v1/place"
                         )
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/*")

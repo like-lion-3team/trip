@@ -15,7 +15,7 @@ public class TripPlaceController {
     private final KTOApiService ktoApiService;
 
     // 관광정보 서비스 API 여행지 정보 검색
-    @GetMapping("/api-test/kto")
+    @GetMapping("/api-test/search")
     public Object searchPlaces(
             @RequestParam("keyword")
             String keyword
@@ -23,4 +23,12 @@ public class TripPlaceController {
         return ktoApiService.getTripPlaces(keyword);
     }
 
+    // 관광정보 서비스 API 여행지 정보 검색
+    @GetMapping("/api-test/detail")
+    public Object placesDetails(
+            @RequestParam("contentId")
+            String contentId
+    ) {
+        return ktoApiService.getPlaceDetails(contentId);
+    }
 }

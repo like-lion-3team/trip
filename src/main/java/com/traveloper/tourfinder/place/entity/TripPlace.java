@@ -32,4 +32,3 @@ public class TripPlace extends BaseEntity {
     // mapy
     private Double lat;
 }
-
