@@ -32,7 +32,7 @@ public class PlaceDto {
                 .address(entity.getAddress())
                 .lng(entity.getLng())
                 .lat(entity.getLat())
-                .courses(entity.getPlaces())
+                .courses(entity.getCourses())
                 .build();
     }
 }

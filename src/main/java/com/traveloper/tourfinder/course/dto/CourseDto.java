@@ -25,7 +25,7 @@ public class CourseDto {
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .desc(entity.getDesc())
-                .places(entity.getCourses())
+                .places(entity.getPlaces())
                 .memberId(entity.getMember().getId())
                 .build();
     }
