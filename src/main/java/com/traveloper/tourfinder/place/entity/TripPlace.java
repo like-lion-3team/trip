@@ -24,7 +24,6 @@ public class TripPlace extends BaseEntity {
     private String title;
     private String desc;
     private String thumbnailUrl;
-    private String naverPlaceId;
     private String phone;
     private String address;
     // mapx
@@ -32,4 +31,3 @@ public class TripPlace extends BaseEntity {
     // mapy
     private Double lat;
 }
-
