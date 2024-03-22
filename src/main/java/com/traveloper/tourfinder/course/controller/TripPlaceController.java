@@ -1,4 +1,4 @@
-package com.traveloper.tourfinder.place.controller;
+package com.traveloper.tourfinder.course.controller;
 
 import com.traveloper.tourfinder.api.KTO.service.KTOApiService;
 import lombok.RequiredArgsConstructor;

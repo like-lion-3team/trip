@@ -6,7 +6,7 @@ import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import com.traveloper.tourfinder.course.dto.CourseDto;
 import com.traveloper.tourfinder.course.entity.Course;
 import com.traveloper.tourfinder.course.repo.CourseRepository;
-import com.traveloper.tourfinder.place.repo.TripPlaceRepository;
+import com.traveloper.tourfinder.course.repo.TripPlaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
