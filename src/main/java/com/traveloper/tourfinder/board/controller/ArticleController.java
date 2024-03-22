@@ -1,7 +1,13 @@
 package com.traveloper.tourfinder.board.controller;
 
+import com.traveloper.tourfinder.board.dto.ArticleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import com.traveloper.tourfinder.board.service.ArticleService;
+import com.traveloper.tourfinder.board.service.BoardService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RequestMapping("articles")
 @RequiredArgsConstructor
@@ -48,4 +54,11 @@ public class ArticleController {
 
 
     // 게시글 상세보기 GET /articles/{articleId}
+    @GetMapping("{articleId}")
+    public String viewArticleDetail(@PathVariable("articleId") Long id, Model model){
+        ArticleDto article = ArticleService.viewArticleDetail(id);
+        model.addAttribute("Article",Article);
+        model.addAttribute("Board",BoardService.findBoardByArticleId(id));
+        return "ArticleDetail";
+    }
 }

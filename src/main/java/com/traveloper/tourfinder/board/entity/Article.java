@@ -1,15 +1,19 @@
 package com.traveloper.tourfinder.board.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.CreationTimestamp;
+
 
 import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Entity
 @NoArgsConstructor
+
+
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +25,6 @@ public class Article {
     private String content;
 
     @ManyToOne
+    @Setter
     private Board board;
 }
