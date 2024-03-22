@@ -42,11 +42,11 @@ public class CourseController {
     }
 
     @GetMapping("/users/{userId}/courses")
-    public void getTargetMemberCourse(
+    public List<CourseDto> getTargetMemberCourse(
             @PathVariable("userId")
             String userId
     ) {
-        courseService.getTargetMemberCoruse(userId);
+        return courseService.getTargetMemberCoruse(userId);
     }
 
     @GetMapping("/recommended")

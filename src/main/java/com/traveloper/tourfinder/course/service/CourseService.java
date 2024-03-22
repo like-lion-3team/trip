@@ -6,6 +6,7 @@ import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import com.traveloper.tourfinder.course.dto.CourseDto;
 import com.traveloper.tourfinder.course.entity.Course;
 import com.traveloper.tourfinder.course.repo.CourseRepository;
+import com.traveloper.tourfinder.place.repo.TripPlaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class CourseService {
     private final CourseRepository courseRepository;
     private final MemberRepository memberRepository;
+    private final TripPlaceRepository tripPlaceRepository;
     private final AuthenticationFacade facade;
     public CourseDto addCourse(CourseDto courseDto) {
         Member member = facade.getCurrentMember();
