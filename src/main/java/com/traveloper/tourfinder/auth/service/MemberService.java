@@ -11,6 +11,8 @@ import com.traveloper.tourfinder.auth.entity.Role;
 import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.auth.repo.RoleRepository;
+import com.traveloper.tourfinder.common.RedisRepo;
+import com.traveloper.tourfinder.common.util.RandomCodeUtils;
 import jakarta.transaction.Transactional;
 
 import java.util.UUID;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,6 +44,8 @@ public class MemberService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
+    private final RedisRepo redisRepo;
+
 
     /**
      * 회원가입
@@ -104,15 +109,28 @@ public class MemberService implements UserDetailsService {
     ) {
         // TODO: 이메일 인증 - 받아온 이메일로 인증코드 전송
         // TODO: 이메일 인증 - Redis에 이메일 (key) : 코드 (value)  형태로 값 저장
+        String key = String.valueOf(redisRepo.getVerifyCode(email));
+        String value = RandomCodeUtils.generate(6);
+
+        redisRepo.saveVerifyCode(key, value);
+
+
     }
 
-    public void verifyCode(
+    public ResponseEntity<String> verifyCode(
             String email,
             String code
     ) {
         // TODO: 인증 코드 검증 - 유저가 입력한 코드 검사
         // TODO: 인증 코드 검증 - Redis에 저장된 값 ( 이메일 )을 검색
         // TODO: 인증 코드 검증 - 일치하면 200 응
+        String savedCode = redisRepo.saveVerifyCode(email,code);
+
+        if (savedCode != null && savedCode.equals(code)) {
+            return ResponseEntity.ok("코드 일치");
+        } else {
+            return ResponseEntity.badRequest().body("코드 불일치");
+        }
     }
 
     public boolean isPossibleSendCode(
