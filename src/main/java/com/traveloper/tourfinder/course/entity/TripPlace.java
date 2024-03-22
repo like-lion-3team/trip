@@ -1,4 +1,4 @@
-package com.traveloper.tourfinder.place.entity;
+package com.traveloper.tourfinder.course.entity;
 
 import com.traveloper.tourfinder.common.BaseEntity;
 import com.traveloper.tourfinder.course.entity.Course;
@@ -20,9 +20,7 @@ public class TripPlace extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private String desc;
     private String thumbnailUrl;
-    private String phone;
     private String address;
 
     @ManyToOne(fetch = FetchType.LAZY)

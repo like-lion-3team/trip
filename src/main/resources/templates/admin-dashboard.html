@@ -5,13 +5,46 @@
     <title>Title</title>
 </head>
 <body>
-  <h1>
+<h1>
     Admin Dashboard
-  </h1>
+</h1>
 
-  <ul class="member-list">
+<ul class="member-list">
 
-  </ul>
+</ul>
 </body>
+<script>
+    async function getMembers() {
+        // class 이름이 "member-list" 인 엘리먼트를 가져옵니다.
+        const memberList = document.querySelector('.member-list');
 
+        try {
+            // 서버로부터 데이터를 가져옵니다.
+            const response = await fetch('/api/v1/admin/members');
+            const data = await response.json();
+
+            // 데이터를 화면에 뿌리기
+            data.members.forEach(member => {
+                const li = document.createElement('li');
+                li.textContent = member.nickname;
+                memberList.appendChild(li);
+            });
+
+            // 멤버목록이 비어있는 경우
+            if (data.members.length <= 0) {
+                const div = document.createElement('div');
+                div.textContent = "텅";
+                memberList.appendChild(div);
+            }
+        } catch (error) {
+            console.error('에러처리:', error);
+            // 에러 처리 로직
+        }
+    }
+
+    // 반드시 아래처럼 함수를 호출해야 함
+    getMembers();
+
+
+</script>
 </html>
