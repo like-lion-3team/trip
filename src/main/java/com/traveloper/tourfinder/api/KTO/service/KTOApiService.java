@@ -2,24 +2,32 @@ package com.traveloper.tourfinder.api.KTO.service;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.nimbusds.jose.shaded.gson.JsonObject;
+import com.traveloper.tourfinder.api.KTO.dto.KTOKeywordSearchDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KTOApiService {
     private final KTOSearchService ktoSearchService;
+    private final Gson gson;
 
     // 일반 인증키 (Encoding)
     @Value("${kto.serviceKey}")
     private String serviceKey;
 
     // 여행지 키워드 검색
-    public Object getTripPlaces(
+    public KTOKeywordSearchDto getTripPlaces(
             String keyword
-    ) {
+    ) throws JsonProcessingException {
         Map<String, Object> params = new HashMap<>();
         params.put("numOfRows", 12);
         params.put("pageNo", 1);
@@ -30,6 +38,7 @@ public class KTOApiService {
         params.put("listYN", "Y");
         params.put("arrange", "A");
         params.put("keyword", keyword);
+
         return ktoSearchService.SearchKeyword(params);
     }
 
