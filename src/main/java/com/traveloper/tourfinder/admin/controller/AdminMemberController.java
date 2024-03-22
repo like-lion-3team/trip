@@ -1,22 +1,23 @@
 package com.traveloper.tourfinder.admin.controller;
 
 import com.traveloper.tourfinder.admin.dto.PeriodDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("api/v1/admin/members")
-public class MemberController {
+@RequiredArgsConstructor
+public class AdminMemberController {
 
     // member?page={page}&size={size}&permission={permission}
-    @GetMapping("/")
+    @GetMapping
     public void getMembers(){
         // TODO: 회원목록 조희
     }
 
     @GetMapping("/{memberUuid}")
-    public void getMemberDetail(){
+    public void getMemberDetail(
+            @PathVariable String memberUuid){
         // TODO: 멤버 상세 정보 조회
     }
 
@@ -24,7 +25,7 @@ public class MemberController {
     public void blockMember(
             @PathVariable("memberUuid")
             String memberUuid,
-           @RequestBody
+            @RequestBody
             PeriodDto dto
     ){
         // TODO: 회원 차단
