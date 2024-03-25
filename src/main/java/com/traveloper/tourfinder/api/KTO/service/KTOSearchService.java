@@ -1,5 +1,6 @@
 package com.traveloper.tourfinder.api.KTO.service;
 
+import com.traveloper.tourfinder.api.KTO.dto.detail.DetailsCommonDto;
 import java.util.Map;
 
 import com.traveloper.tourfinder.api.KTO.dto.KTOKeywordSearchDto;
@@ -16,5 +17,5 @@ public interface KTOSearchService {
 
     // 공통 정보 조회
     @GetExchange("/detailCommon1")
-    Object DetailCommon(@RequestParam Map<String, String> params);
+    DetailsCommonDto DetailCommon(@RequestParam Map<String, String> params);
 }

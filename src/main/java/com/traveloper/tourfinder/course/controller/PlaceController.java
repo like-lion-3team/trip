@@ -2,6 +2,7 @@ package com.traveloper.tourfinder.course.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.traveloper.tourfinder.api.KTO.dto.KTOKeywordSearchDto;
+import com.traveloper.tourfinder.api.KTO.dto.detail.DetailsCommonDto;
 import com.traveloper.tourfinder.api.KTO.service.KTOApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class PlaceController {
 
     // 관광정보 서비스 API 여행지 정보 검색
     @GetMapping("/api-test/detail")
-    public Object placesDetails(
+    public DetailsCommonDto placesDetails(
             @RequestParam("contentId")
             String contentId
     ) {

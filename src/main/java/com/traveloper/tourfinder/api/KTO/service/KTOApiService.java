@@ -1,5 +1,6 @@
 package com.traveloper.tourfinder.api.KTO.service;
 
+import com.traveloper.tourfinder.api.KTO.dto.detail.DetailsCommonDto;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class KTOApiService {
     }
 
     // 여행지 상세 정보 확인
-    public Object getPlaceDetails(
+    public DetailsCommonDto getPlaceDetails(
             String contentId
     ) {
         Map<String, String> params = new HashMap<>();
