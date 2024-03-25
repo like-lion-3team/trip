@@ -27,6 +27,6 @@ public class Place extends BaseEntity {
     // mapy
     private Double lat;
 
-    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
     private List<CoursePlace> courses;
 }
