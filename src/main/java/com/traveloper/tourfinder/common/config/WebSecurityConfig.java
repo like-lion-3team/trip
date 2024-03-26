@@ -58,7 +58,7 @@ public class WebSecurityConfig {
                         )
                         .permitAll()
                         // view
-                        .requestMatchers("/login","sign-up","/my")
+                        .requestMatchers("/login","sign-up","/my-page")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/*")
                         .permitAll()
