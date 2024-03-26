@@ -1,6 +1,7 @@
 package com.traveloper.tourfinder.course.entity;
 
 import com.traveloper.tourfinder.common.BaseEntity;
+import com.traveloper.tourfinder.course.dto.PlaceDto;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,17 @@ public class Place extends BaseEntity {
     // mapy
     private Double lat;
 
-    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
-    private List<CoursePlace> courses;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Course course;
+
+    public static Place fromDto(PlaceDto dto) {
+        return Place.builder()
+                .id(dto.getId())
+                .title(dto.getTitle())
+                .thumbnailUrl(dto.getThumbnailUrl())
+                .address(dto.getAddress())
+                .lng(dto.getLng())
+                .lat(dto.getLat())
+                .build();
+    }
 }
