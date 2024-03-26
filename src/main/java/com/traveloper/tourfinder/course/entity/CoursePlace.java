@@ -2,6 +2,7 @@ package com.traveloper.tourfinder.course.entity;
 
 import com.traveloper.tourfinder.common.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -18,5 +19,5 @@ public class CoursePlace extends BaseEntity {
     private Course course;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private TripPlace place;
+    private Place place;
 }
