@@ -35,6 +35,16 @@ public class AdminMemberService {
         updateMemberRole(uuid, role);
     }
 
+    @Transactional
+    public void unBlockMember(String uuid){
+        String activeUserRoleName = "ACTIVE_USER";
+        Role role = roleRepository.findRoleByName(activeUserRoleName)
+                .orElseThrow(() -> new AccessDeniedException("Role을 찾을 수 없습니다."));
+
+        updateMemberRole(uuid, role);
+
+    }
+
     public void updateMemberRole(String uuid, Role role) {
         Member member = adminMemberRepo.findMemberByUuid(uuid).orElseThrow(() -> new AccessDeniedException("유저를 찾을 수 없습니다."));
 
