@@ -12,4 +12,7 @@ public class AdminViewController {
     public String dashboardMain() {
         return "admin-dashboard";
     }
+
+    @GetMapping("/admin/login")
+    public String adminLogin() {return "admin-login";}
 }
