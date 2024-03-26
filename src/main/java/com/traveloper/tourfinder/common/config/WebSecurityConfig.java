@@ -57,6 +57,9 @@ public class WebSecurityConfig {
                                 "admin/**"
                         )
                         .permitAll()
+                        // view
+                        .requestMatchers("/login","sign-up","/my")
+                        .permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/*")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/api-docs/*")
