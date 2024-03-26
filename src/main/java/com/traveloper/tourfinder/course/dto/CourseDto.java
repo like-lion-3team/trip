@@ -1,7 +1,6 @@
 package com.traveloper.tourfinder.course.dto;
 
 import com.traveloper.tourfinder.course.entity.Course;
-import com.traveloper.tourfinder.course.entity.CoursePlace;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,15 +16,18 @@ public class CourseDto {
     private Long id;
     private String title;
     private String desc;
-    List<CoursePlace> places;
+    List<PlaceDto> places;
     private Long memberId;
 
     public static CourseDto fromEntity(Course entity) {
+        List<PlaceDto> placeDtoList = entity.getPlaces().stream()
+                .map(PlaceDto::fromEntity).toList();
+
         return CourseDto.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .desc(entity.getDesc())
-                .places(entity.getPlaces())
+                .places(placeDtoList)
                 .memberId(entity.getMember().getId())
                 .build();
     }
