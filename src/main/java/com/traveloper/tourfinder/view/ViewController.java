@@ -32,4 +32,12 @@ public class ViewController {
         model.addAttribute("clientId", NCP_CLIENT_ID);
         return "sample-course-create";
     }
+
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
+    @GetMapping("/signUp")
+    public String signUp() {return "signUp";}
 }

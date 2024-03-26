@@ -11,6 +11,7 @@ import com.traveloper.tourfinder.common.util.RandomCodeUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,12 +37,12 @@ public class MemberController {
     // 로그인
 
     @PostMapping("/sign-in")
-    public TokenDto signIn(
+    public ResponseEntity<TokenDto> signIn(
             @RequestBody
             SignInDto dto
     ) {
         log.info("test");
-        return memberService.login(dto);
+        return ResponseEntity.ok(memberService.login(dto));
     }
 
     @GetMapping("/sign-out")
