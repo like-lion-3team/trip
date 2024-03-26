@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -57,13 +58,14 @@ public class AdminMemberController {
     }
 
     @PatchMapping("/{memberUuid}/block")
-    public void blockMember(
+    public ResponseEntity blockMember(
             @PathVariable("memberUuid")
             String memberUuid,
             @RequestBody
             PeriodDto dto
     ){
-        // TODO: 회원 차단
+        adminMemberService.blockMember(memberUuid);
+        return ResponseEntity.ok( "");
     }
 
     @PatchMapping("/{memberUuid}/unblock")
