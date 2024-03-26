@@ -15,15 +15,16 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
-    private final TagRepository tagRepository;
+
+    public static ArticleDto viewArticleDetail(Long id) {
+    }
 
     // 게시글 저장 메서드
     @Transactional
     public void createArticle(ArticleDto ArticleDto){
-        Article Article = new Article(ArticleDto.getTitle(), ArticleDto.getTitle(), ArticleDto.getContent(),
-                ArticleDto.getPassword(),Board);
+        Article Article = new Article(ArticleDto.getTitle(), ArticleDto.getTitle(), ArticleDto.getContent(),Board);
         ArticleDto.fromEntity(ArticleRepository.save(Article));
-        ArticleDto new Dto = new ArticleDto(Article.getId(), Article.getTitle(),Article.getContent(), Article.getPassword());
+        ArticleDto new Dto = new ArticleDto(articleId, Article.getId(), Article.getTitle());
         createTagList(newDto, newDto);
     }
 
@@ -32,7 +33,7 @@ public class ArticleService {
     puvlic void UpdateArticle(ArticleDto ArticleDto){
         Article OriginalAritlce = ArticleRepository.findById(ArticleDto.getId()).orElseThrow();
         ArticleDto newDto = new ArticleDto(ArticleDto.getId(), ArticleDto.getTitle(), ArticleDto.getContent(),
-                ArticleDto.getPassword(),ArticleDto.getTagSet());
+                ArticleDto.getTagSet());
     }
 
     // 게시글 상세 조회
@@ -40,3 +41,9 @@ public class ArticleService {
         Article Article = ArticleRepository.findyById(id).orElseThrow();
         return ArticleDto.fromEntity(Article);
 }
+
+    public void updateArticle(ArticleDto articleDto) {
+    }
+
+    public void deleteArticle(Long articleId) {
+    }

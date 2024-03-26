@@ -1,14 +1,12 @@
 package com.traveloper.tourfinder.board.dto;
 
 import com.traveloper.tourfinder.board.entity.Article;
-import com.traveloper.tourfinder.board.entity.ArticleTag;
-import com.traveloper.tourfinder.board.entity.Comment;
 import lombok.*;
 
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @ToString
@@ -24,13 +22,13 @@ public class ArticleDto {
 
 
 
-    public ArticleDto(String title,String content, String password){
+    public ArticleDto(Long articleId, String title, String content){
         this.title = title;
         this.content = content;
     }
 
     public static ArticleDto fromEntity(Article entity) {
-        ArticleDto dto = new ArticleDto();
+        ArticleDto dto = new ArticleDto(articleId, title, content);
         dto.id = entity.getId();
         dto.title = entity.getTitle();
         dto.content = entity.getContent();

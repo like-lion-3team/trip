@@ -7,12 +7,13 @@ import com.traveloper.tourfinder.board.service.ArticleService;
 import com.traveloper.tourfinder.board.service.BoardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+@Controller
 @RequestMapping("articles")
 @RequiredArgsConstructor
 public class ArticleController {
-
+    private final ArticleService articleService;
+    private final BoardService boardService;
     // 게시글 등록
     @PostMapping("/register")
     public String createArticle(
@@ -25,11 +26,12 @@ public class ArticleController {
 //            @RequestParam(board-id)
 //            Long boardId
     ) {
-        return null;
+        articleService.createArticle(new ArticleDto(articleId, title,content));
+        return "redirect:/boards";
     }
 
     // 게시글 수정
-    @GetMapping("/{articleId}")
+    @GetMapping("/{articleId}/update")
     public String updateArticle(
             @PathVariable("articleId")
             Long articleId,
@@ -38,7 +40,8 @@ public class ArticleController {
             @RequestParam("content")
             String content
     ) {
-        return null;
+        articleService.updateArticle(new ArticleDto(articleId,title,content));
+        return "redirect:/Article/{articleId}";
     }
 
     // 게시글 삭제
@@ -47,7 +50,8 @@ public class ArticleController {
             @PathVariable("articleId")
             Long articleId
     ) {
-        return null;
+        articleService.deleteArticle(articleId);
+        return "redirect:/boards";
     }
 
 
@@ -57,8 +61,8 @@ public class ArticleController {
     @GetMapping("{articleId}")
     public String viewArticleDetail(@PathVariable("articleId") Long id, Model model){
         ArticleDto article = ArticleService.viewArticleDetail(id);
-        model.addAttribute("Article",Article);
-        model.addAttribute("Board",BoardService.findBoardByArticleId(id));
+        model.addAttribute("Article",article);
+        model.addAttribute("Board",BoardService.findBoardByarticleId(id));
         return "ArticleDetail";
     }
 }

@@ -18,6 +18,10 @@ public class BoardService {
         this.boardRepository = boardRepository;
     }
 
+    public static Object findBoardByarticleId(Long id) {
+        return null;
+    }
+
     public List<BoardDto> readAll() {
         List<BoardDto> boardDtos = new ArrayList<>();
         for (Board board: boardRepository.findAll()) {
