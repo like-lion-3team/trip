@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KTOApiService {
     private final KTOSearchService ktoSearchService;
-    // private final Gson gson;
 
     // 일반 인증키 (Encoding)
     @Value("${kto.serviceKey}")
