@@ -11,5 +11,7 @@ import java.util.Optional;
 
 public interface AdminMemberRepo extends JpaRepository<Member, Long> {
     Optional<Member> findMemberByUuid(String uuid);
+    Optional<Member> findMemberByEmail(String email);
+
 
 }

@@ -30,11 +30,13 @@ public class WebSecurityConfig {
                                 "api/v1/auth/**",
                                 "api-test/**",
                                 "api/v1/place",
-                                "/api/v1/admin/**",
+                                "api/v1/admin/**",
 
                                 // html
                                 "admin/**"
                         )
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/admin/*")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/*")
                         .permitAll()
