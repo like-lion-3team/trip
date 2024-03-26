@@ -23,11 +23,12 @@ public class KTOApiService {
 
     // 여행지 키워드 검색
     public KTOKeywordSearchDto getTripPlaces(
-            String keyword
-    ) throws JsonProcessingException {
+            String keyword,
+            Integer pageNo
+    ) {
         Map<String, Object> params = new HashMap<>();
         params.put("numOfRows", 12);
-        params.put("pageNo", 1);
+        params.put("pageNo", pageNo);
         params.put("MobileOS", "ETC");
         params.put("MobileApp", "AppTest");
         params.put("_type", "json");

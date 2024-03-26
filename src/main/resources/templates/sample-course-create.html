@@ -19,10 +19,16 @@
 
     <!-- 여행지 리스트 -->
     <div id="places-list">
-        <h3>검색 결과</h3>
-        <ul id="search-results">
-            <!-- 검색 결과가 여기에 동적으로 추가됩니다 -->
-        </ul>
+        <!-- 검색 결과 및 페이지 번호 표시 -->
+        <div id="search-info">
+            <h3 id="search-results-title">검색 결과</h3>
+            <p id="page-info">총 <span id="total-results">0</span> 개의 결과 중 <span id="start-result">0</span> - <span id="end-result">0</span></p>
+            <ul id="search-results">
+                <!-- 검색 결과가 여기에 동적으로 추가됩니다 -->
+            </ul>
+            <!-- 페이지 번호 표시 -->
+            <div id="page-numbers"></div>
+        </div>
 
         <!-- 모달 창 -->
         <div id="myModal" class="modal">
