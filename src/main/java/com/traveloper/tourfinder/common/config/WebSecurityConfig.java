@@ -34,7 +34,8 @@ public class WebSecurityConfig {
 
                                 // html
                                 "admin/**",
-                                "/css/**"
+                                "/css/**",
+                                "/js/**"
                         )
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/admin/*")
