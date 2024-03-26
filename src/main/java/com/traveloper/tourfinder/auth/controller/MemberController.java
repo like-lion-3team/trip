@@ -4,8 +4,10 @@ package com.traveloper.tourfinder.auth.controller;
 import com.nimbusds.openid.connect.sdk.assurance.request.VerifiedClaimsSetRequest;
 import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
+import com.traveloper.tourfinder.auth.dto.PasswordDto;
 import com.traveloper.tourfinder.auth.dto.SignInDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
+import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.service.MemberService;
 import com.traveloper.tourfinder.common.util.RandomCodeUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -58,11 +60,17 @@ public class MemberController {
     @GetMapping("/my")
     public void getMyInfo(){
         // TODO: 내 정보 ( 마이페이지 )
+
     }
 
     @PutMapping("/me/password")
-    public void updatePassword(){
+    public void updatePassword(
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String confirmPassword
+    ){
         // TODO: 비밀번호 수정 ( 마이페이지 )
+
     }
 
     @PutMapping("/password-recovery")
@@ -76,7 +84,9 @@ public class MemberController {
     }
 
     @PatchMapping("/email")
-    public void updateEmail() {
+    public void updateEmail(
+            @RequestParam String newEmail
+    ) {
         // TODO: 이메일 변경 기능
         // TODO: 이메일로 전송된 코드 검증 후 변경
 

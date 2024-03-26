@@ -101,6 +101,15 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
 
+    // 비밀번호 수정
+    public void updatePassword(String email, String newPassword) {
+        Optional<Member> member = memberRepository.findMemberByEmail(email);
+//        if (member != null) {
+//            member.setPassword(newPassword);
+//            memberRepository.save(member);
+    }
+
+
     /**
      * <p>이메일 인증용 코드 전송</p>
      */
@@ -140,6 +149,8 @@ public class MemberService implements UserDetailsService {
         return true;
     }
 
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Member> optionalMember = memberRepository.findMemberByUuid(username);
@@ -150,5 +161,6 @@ public class MemberService implements UserDetailsService {
                 .member(member)
                 .build();
     }
+
 }
 
