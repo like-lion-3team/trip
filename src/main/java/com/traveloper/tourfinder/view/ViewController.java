@@ -38,6 +38,11 @@ public class ViewController {
         return "login";
     }
 
-    @GetMapping("/signUp")
+    @GetMapping("/sign-up")
     public String signUp() {return "signUp";}
+
+    @GetMapping("/my-page")
+    public String myPage() {return "my-page";}
+
+
 }
