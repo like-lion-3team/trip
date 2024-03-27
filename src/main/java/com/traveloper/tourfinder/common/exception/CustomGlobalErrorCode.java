@@ -14,7 +14,16 @@ public enum CustomGlobalErrorCode {
 
     // 로그인 에러
     CREDENTIALS_NOT_MATCH(401, "2001", "아이디 또는 비밀번호가 일치하지 않습니다."),
-    USER_BLOCKED(403, "2002", "차단된 사용자.");
+    USER_BLOCKED(403, "2002", "차단된 사용자."),
+
+
+    // JWT 관련 에러
+    TOKEN_EXPIRED(401, "3001", "토큰이 만료되었습니다."),
+    UNSUPPORTED_TOKEN(400, "3002", "지원하지 않는 토큰입니다."),
+    MALFORMED_TOKEN(400, "3003", "잘못된 형식의 토큰입니다."),
+    SIGNATURE_INVALID(400, "3004", "토큰의 서명이 유효하지 않습니다."),
+    TOKEN_EMPTY(400, "3005", "토큰이 제공되지 않았습니다.");
+
 
 
     private int status;

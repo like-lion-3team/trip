@@ -3,6 +3,7 @@ package com.traveloper.tourfinder.common.config;
 import com.traveloper.tourfinder.auth.jwt.JwtTokenFilter;
 import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
 import com.traveloper.tourfinder.auth.service.MemberService;
+import com.traveloper.tourfinder.common.exception.CustomJwtExceptionFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -73,6 +75,8 @@ public class WebSecurityConfig {
                 ).addFilterBefore(
                         new JwtTokenFilter(jwtTokenUtils, memberService),
                         AuthorizationFilter.class
+                ).addFilterBefore(
+                        new CustomJwtExceptionFilter(), UsernamePasswordAuthenticationFilter.class
                 );
 
         return http.build();
