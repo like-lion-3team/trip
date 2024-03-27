@@ -85,14 +85,16 @@ public class MemberService implements UserDetailsService {
         Member member = memberRepository.findMemberByEmail(dto.getEmail()).orElseThrow(
                 () -> new EntityNotFoundException("로그인 실패")
         );
-        // TODO: 로그인 - 비밀번호 검증
-
-
 
         if(!passwordEncoder.matches(dto.getPassword(), member.getPassword())){
-
             throw new AccessDeniedException("로그인 실패");
         }
+
+        if(member.getRole().getName().equals("BLOCK_USER")){
+            throw  new AccessDeniedException("차단된 사용자");
+        }
+
+
 
         String token = jwtTokenUtils.generateToken(member);
 
