@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,9 +26,8 @@ public class Course extends BaseEntity {
     @Setter
     private String desc;
 
-    @Setter
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
-    private List<Place> places;
+    private final List<Place> places = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
