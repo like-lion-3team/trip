@@ -9,6 +9,7 @@ import com.traveloper.tourfinder.auth.dto.SignInDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.service.MemberService;
+import com.traveloper.tourfinder.board.dto.ArticleDto;
 import com.traveloper.tourfinder.common.util.RandomCodeUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -60,21 +61,22 @@ public class MemberController {
     @GetMapping("/my")
     public void getMyInfo(){
         // TODO: 내 정보 ( 마이페이지 )
-
     }
 
     @PutMapping("/me/password")
     public void updatePassword(
-            @RequestParam String currentPassword,
-            @RequestParam String newPassword,
-            @RequestParam String confirmPassword
+            @RequestParam String currentPw,
+            @RequestParam String newPw,
+            @RequestParam String confirmPw
     ){
         // TODO: 비밀번호 수정 ( 마이페이지 )
 
     }
 
     @PutMapping("/password-recovery")
-    public void recoverPassword(){
+    public void recoverPassword(
+            @RequestParam String changePw
+    ){
         // TODO: 비밀번호 복구 ( 비밀번호 찾기 -> 변경 )
     }
 
