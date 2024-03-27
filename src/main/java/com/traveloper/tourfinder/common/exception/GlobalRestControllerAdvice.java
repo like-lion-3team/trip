@@ -13,7 +13,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestControllerAdvice
-public class GlobalControllerAdvice {
+public class GlobalRestControllerAdvice {
 
 
     /**
