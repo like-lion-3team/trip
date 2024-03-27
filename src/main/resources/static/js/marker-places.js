@@ -64,6 +64,16 @@ function renderSelectedPlaces() {
     selectedPlaces.forEach(place => {
         let listItem = document.createElement("li");
         listItem.textContent = place.title; // 여행지 이름 등 필요한 정보를 여기서 표시
+
+        // 삭제 버튼 추가
+        let removeButton = document.createElement("button");
+        removeButton.textContent = "X";
+        removeButton.classList.add("remove-button"); // CSS 클래스 추가
+
+        // 리스트 아이템에 삭제 버튼 추가
+        listItem.appendChild(removeButton);
+
+        // 리스트 아이템을 목록에 추가
         selectedPlacesList.appendChild(listItem);
     });
 }

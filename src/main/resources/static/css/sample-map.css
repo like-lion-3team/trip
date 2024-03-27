@@ -132,6 +132,8 @@ body {
     display: block;
     margin-bottom: 10px;
     background-color: #4CAF50;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     color: white;
     border: none;
     cursor: pointer;
@@ -178,19 +180,33 @@ body {
     color: #777;
 }
 
-#selected-places-list li button {
-    background-color: #4CAF50;
+#selected-places-list li button.remove-button {
+    background-color: #dc3545; /* btn-warning 색상 대신 빨간색 계열로 설정 */
     color: white;
     border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    border-radius: 5px;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin-left: auto;
 }
 
-#selected-places-list li button:hover {
-    background-color: #45a049;
+#selected-places-list li {
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
 }
+
+#selected-places-list li .place-info {
+    flex: 1;
+}
+
