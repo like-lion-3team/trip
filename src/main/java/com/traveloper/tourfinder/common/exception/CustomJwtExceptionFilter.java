@@ -1,6 +1,7 @@
 package com.traveloper.tourfinder.common.exception;
 
 import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
+import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.config.PermitAllPath;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -33,6 +34,7 @@ public class CustomJwtExceptionFilter extends OncePerRequestFilter {
     private final PermitAllPath permitAllPath;
     // ExceptionFilter에서 검증하지 않고 넘길 url정의
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
+    private final RedisRepo redisRepo;
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -54,6 +56,7 @@ public class CustomJwtExceptionFilter extends OncePerRequestFilter {
 
 
         try {
+
                 log.info("필터 시작");
                 String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
@@ -72,6 +75,13 @@ public class CustomJwtExceptionFilter extends OncePerRequestFilter {
                 if (!jwtTokenUtils.validate(token)) {
                     log.info("올바르지 않은 토큰");
                     setErrorResponse(CustomGlobalErrorCode.MALFORMED_TOKEN, response);
+                    return;
+                }
+
+            System.out.println(redisRepo.getRefreshToken(token).isEmpty() + "토큰이 있는지 체크");
+                if(redisRepo.getRefreshToken(token).isEmpty()){
+                    log.info("만료되었거나, 삭제 처리된 토큰");
+                    setErrorResponse(CustomGlobalErrorCode.TOKEN_EXPIRED,response);
                     return;
                 }
 
