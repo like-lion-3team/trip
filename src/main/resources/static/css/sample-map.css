@@ -114,6 +114,7 @@ body {
 #places-list ul li {
     margin-bottom: 10px;
     background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 10px;
     border-radius: 5px;
     position: relative; /* 부모 요소에 대해 상대적으로 위치를 지정합니다 */
@@ -139,4 +140,57 @@ body {
     font-size: 16px;
 }
 
+/* 선택한 여행지 스타일링 */
+#selected-places-list {
+    list-style-type: none;
+    padding: 0;
+}
 
+#selected-places-list li {
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+#selected-places-list li img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+#selected-places-list li .place-info {
+    flex: 1;
+}
+
+#selected-places-list li h4 {
+    margin: 0;
+    font-size: 18px;
+}
+
+#selected-places-list li p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #777;
+}
+
+#selected-places-list li button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#selected-places-list li button:hover {
+    background-color: #45a049;
+}
