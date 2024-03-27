@@ -34,11 +34,11 @@ public class MemberController {
 
     // 회원가입
     @PostMapping("/sign-up")
-    public MemberDto signUp(
+    public ResponseEntity<MemberDto>  signUp(
             @RequestBody
             CreateMemberDto dto
     ) {
-        return memberService.signup(dto);
+        return ResponseEntity.ok(memberService.signup(dto));
     }
 
     // 로그인
