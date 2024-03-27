@@ -11,6 +11,7 @@ import com.traveloper.tourfinder.auth.entity.Role;
 import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.auth.repo.RoleRepository;
+import com.traveloper.tourfinder.common.AppConstants;
 import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
@@ -100,8 +101,8 @@ public class MemberService implements UserDetailsService {
 
 
 
-        String accessToken = jwtTokenUtils.generateToken(member);
-        String refreshToken = jwtTokenUtils.generateToken(member);
+        String accessToken = jwtTokenUtils.generateToken(member, AppConstants.ACCESS_TOKEN_EXPIRE_SECOND);
+        String refreshToken = jwtTokenUtils.generateToken(member, AppConstants.REFRESH_TOKEN_EXPIRE_SECOND);
         redisRepo.saveRefreshToken(accessToken,refreshToken);
 
         if(redisRepo.getRefreshToken(accessToken).isEmpty()){
@@ -110,8 +111,8 @@ public class MemberService implements UserDetailsService {
 
         return TokenDto.builder()
                 .accessToken(accessToken)
-                .expiredDate(LocalDateTime.now().plusSeconds(60 * 60))
-                .expiredSecond(60 * 60)
+                .expiredDate(LocalDateTime.now().plusSeconds(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND))
+                .expiredSecond(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND)
                 .build();
     }
 
