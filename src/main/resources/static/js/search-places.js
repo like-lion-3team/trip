@@ -104,9 +104,15 @@ function displaySearchResults(results) {
     // 응답 데이터에서 각 여행지의 제목과 상세정보 버튼을 추출하여 리스트에 추가
     results.response.body.items.item.forEach(item => {
         const listItem = document.createElement('li');
-        // listItem.textContent = item.title; // 여행지 제목을 리스트 아이템에 추가
-        // 여행지 제목과 상세정보 버튼을 포함한 HTML을 생성
-        listItem.innerHTML = `<span>${item.title}</span> <button onclick="getPlaceDetails('${item.contentid}')">상세정보</button> <button class="add-to-course-button" onclick="addToCourse('${item.contentid}')">코스에 추가</button>`;
+        // 이미지 크기를 100 x 75로 조정하고, float 및 여백 설정 추가
+        listItem.innerHTML = `
+            <img src="${item.firstimage}" alt="여행지 이미지" style="width: 100px; height: 75px; object-fit: cover; float: left; margin-right: 10px;"> <!-- 이미지 크기 조정 -->
+            <div>
+                <span>${item.title}</span> 
+                <p style="font-size: 0.8em; color: gray;">${item.addr1} ${item.addr2}</p> <!-- 주소 글씨를 회색으로 변경 -->
+                <button onclick="getPlaceDetails('${item.contentid}')">상세정보</button> 
+                <button class="add-to-course-button" onclick="addToCourse('${item.contentid}')">코스에 추가</button>
+            </div>`;
 
         // 생성한 항목을 검색 결과 리스트에 추가
         searchResultsList.appendChild(listItem);
@@ -125,3 +131,4 @@ function displaySearchResults(results) {
         document.getElementById('page-info').style.display = 'none';
     }
 }
+
