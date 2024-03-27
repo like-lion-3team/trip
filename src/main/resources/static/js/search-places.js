@@ -104,9 +104,9 @@ function displaySearchResults(results) {
     // 응답 데이터에서 각 여행지의 제목과 상세정보 버튼을 추출하여 리스트에 추가
     results.response.body.items.item.forEach(item => {
         const listItem = document.createElement('li');
-        // 여행지 제목과 상세정보 버튼을 포함한 HTML을 생성
+        // 이미지 크기를 100 x 75로 조정하고, float 및 여백 설정 추가
         listItem.innerHTML = `
-            <img src="${item.firstimage}" alt="여행지 이미지" style="width: 100px; height: auto; float: left; margin-right: 10px;"> <!-- 이미지 표시 -->
+            <img src="${item.firstimage}" alt="여행지 이미지" style="width: 100px; height: 75px; object-fit: cover; float: left; margin-right: 10px;"> <!-- 이미지 크기 조정 -->
             <div>
                 <span>${item.title}</span> 
                 <p style="font-size: 0.8em; color: gray;">${item.addr1} ${item.addr2}</p> <!-- 주소 글씨를 회색으로 변경 -->
