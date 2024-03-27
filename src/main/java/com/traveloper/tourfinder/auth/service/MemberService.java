@@ -100,10 +100,16 @@ public class MemberService implements UserDetailsService {
 
 
 
-        String token = jwtTokenUtils.generateToken(member);
+        String accessToken = jwtTokenUtils.generateToken(member);
+        String refreshToken = jwtTokenUtils.generateToken(member);
+        redisRepo.saveRefreshToken(accessToken,refreshToken);
+
+        if(redisRepo.getRefreshToken(accessToken).isEmpty()){
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+        }
 
         return TokenDto.builder()
-                .accessToken(token)
+                .accessToken(accessToken)
                 .expiredDate(LocalDateTime.now().plusSeconds(60 * 60))
                 .expiredSecond(60 * 60)
                 .build();
