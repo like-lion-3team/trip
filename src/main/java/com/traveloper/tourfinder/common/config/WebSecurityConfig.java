@@ -76,7 +76,7 @@ public class WebSecurityConfig {
                         new JwtTokenFilter(jwtTokenUtils, memberService),
                         AuthorizationFilter.class
                 ).addFilterBefore(
-                        new CustomJwtExceptionFilter(), UsernamePasswordAuthenticationFilter.class
+                        new CustomJwtExceptionFilter(jwtTokenUtils), UsernamePasswordAuthenticationFilter.class
                 );
 
         return http.build();
