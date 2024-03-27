@@ -21,9 +21,12 @@ public class PlaceController {
     @GetMapping("/api-test/search")
     public KTOKeywordSearchDto searchPlaces(
             @RequestParam("keyword")
-            String keyword
-    ) throws JsonProcessingException {
-        return ktoApiService.getTripPlaces(keyword);
+            String keyword,
+            @RequestParam("pageNo")
+            Integer pageNo
+
+    ) {
+        return ktoApiService.getTripPlaces(keyword, pageNo);
     }
 
     // 관광정보 서비스 API 여행지 정보 검색

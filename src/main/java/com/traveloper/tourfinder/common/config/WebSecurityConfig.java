@@ -54,7 +54,9 @@ public class WebSecurityConfig {
                                 "api/v1/**",
 
                                 // html
-                                "admin/**"
+                                "admin/**",
+                                "/css/**",
+                                "/js/**"
                         )
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/*")
