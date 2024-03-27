@@ -13,6 +13,7 @@ import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.auth.repo.RoleRepository;
 import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.util.RandomCodeUtils;
+import com.traveloper.tourfinder.course.service.CourseService;
 import jakarta.transaction.Transactional;
 
 import java.util.UUID;
@@ -40,6 +41,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
+
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -140,6 +142,23 @@ public class MemberService implements UserDetailsService {
         } else {
             return ResponseEntity.badRequest().body("코드 불일치");
         }
+    }
+
+    public MemberDto findMember(String uuid){
+        Member member = memberRepository.findMemberByUuid(uuid).orElseThrow(
+                () -> new AccessDeniedException("유저를 찾을 수 없습니다.")
+        );
+
+        return MemberDto.builder()
+                .id(null)
+                .uuid(member.getUuid())
+                .email(member.getEmail())
+                .memberName(member.getMemberName())
+                .nickname(member.getNickname())
+                .role(member.getRole().getName())
+                .build();
+
+
     }
 
     public boolean isPossibleSendCode(
