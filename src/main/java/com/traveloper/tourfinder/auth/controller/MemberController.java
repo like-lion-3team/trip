@@ -4,20 +4,23 @@ package com.traveloper.tourfinder.auth.controller;
 import com.nimbusds.openid.connect.sdk.assurance.request.VerifiedClaimsSetRequest;
 import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
-import com.traveloper.tourfinder.auth.dto.PasswordDto;
 import com.traveloper.tourfinder.auth.dto.SignInDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import com.traveloper.tourfinder.auth.entity.Member;
+import com.traveloper.tourfinder.auth.password.UpdatePasswordReq;
 import com.traveloper.tourfinder.auth.service.MemberService;
 import com.traveloper.tourfinder.board.dto.ArticleDto;
 import com.traveloper.tourfinder.common.util.RandomCodeUtils;
+import com.traveloper.tourfinder.common.util.ValidateUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.MemberUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Auth", description = "Auth API")
@@ -65,12 +68,16 @@ public class MemberController {
 
     @PutMapping("/me/password")
     public void updatePassword(
-            @RequestParam String currentPw,
-            @RequestParam String newPw,
-            @RequestParam String confirmPw
+            @Validated
+            @RequestBody
+            UpdatePasswordReq updatePasswordReq
     ){
         // TODO: 비밀번호 수정 ( 마이페이지 )
-
+//        String email = 현재 로그인한 회원
+//        memberService.updatePassword(
+//                email,
+//                updatePasswordReq.getCurrentPassword(),
+//                updatePasswordReq.getNewPassword());
     }
 
     @PutMapping("/password-recovery")

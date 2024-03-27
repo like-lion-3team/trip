@@ -9,6 +9,7 @@ import com.traveloper.tourfinder.auth.entity.CustomUserDetails;
 import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.entity.Role;
 import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
+import com.traveloper.tourfinder.auth.password.InvalidPasswordException;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.auth.repo.RoleRepository;
 import com.traveloper.tourfinder.common.RedisRepo;
@@ -102,11 +103,20 @@ public class MemberService implements UserDetailsService {
     }
 
     // 비밀번호 수정
-    public void updatePassword(String email, String newPassword) {
-        Optional<Member> member = memberRepository.findMemberByEmail(email);
-//        if (member != null) {
-//            member.setPassword(newPassword);
-//            memberRepository.save(member);
+    @Transactional
+    public void updatePassword(String email, String currentPassword, String newPassword) {
+        Member member = validatePassword(email, currentPassword);
+        member.updatePassword(passwordEncoder.encode(newPassword));
+    }
+
+    private Member validatePassword(String email, String password) {
+
+        Member member = memberRepository.findMemberByEmail(email)
+                .orElseThrow(InvalidPasswordException::new);
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+        return member;
     }
 
 
