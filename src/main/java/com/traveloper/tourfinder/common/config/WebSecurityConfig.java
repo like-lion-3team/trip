@@ -52,6 +52,7 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "api/v1/auth/**",
                                 "api-test/**",
+                                "api/v1/courses",
                                 "api/v1/place",
                                 "api/v1/**",
 
