@@ -1,6 +1,6 @@
 // "코스에 추가" 버튼 클릭 시 호출되는 함수
 function addToCourse(contentId) {
-    // 선택한 여행지의 상세 정보를 가져와 마커 표시
+    // 추가되지 않은 경우 해당 여행지의 좌표를 가져와 마커를 표시하고 상태를 업데이트
     getPlaceCoordinates(contentId);
 }
 
@@ -33,15 +33,9 @@ function getPlaceCoordinates(contentId) {
         });
 }
 
+
 // 여행지의 좌표를 지도에 마커로 표시하는 함수
 function displayMarkers(coordinates) {
-    // 기존의 마커들을 모두 삭제합니다
-    if (map.markers) {
-        map.markers.forEach(marker => {
-            marker.setMap(null); // 지도에서 마커 제거
-        });
-    }
-
     // 새로운 마커들을 추가합니다
     coordinates.forEach(coord => {
         var position = new naver.maps.LatLng(coord.mapy, coord.mapx);
