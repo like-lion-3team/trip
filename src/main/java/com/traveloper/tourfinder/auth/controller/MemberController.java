@@ -64,8 +64,7 @@ public class MemberController {
     }
 
     @GetMapping("/my")
-    public void getMyInfo(){
-        // TODO: 내 정보 ( 마이페이지 )
+
     public ResponseEntity<MyPageDto> getMyInfo() {
         return ResponseEntity.ok(MyPageDto.builder()
                 .member(memberService.findMember(authenticationFacade.getCurrentMember().getUuid()))
@@ -79,11 +78,7 @@ public class MemberController {
             @RequestParam String newPw,
             @RequestParam String confirmPw
     ){
-
-    ) {
-
         // TODO: 비밀번호 수정 ( 마이페이지 )
-
     }
 
     @PutMapping("/password-recovery")
