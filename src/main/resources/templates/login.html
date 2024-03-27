@@ -11,24 +11,31 @@
 
 </head>
 <body>
-<th:block th:replace="~{fragments/header :: header}"></th:block>
 
-<div class="d-flex justify-content-center mt-5">
-    <div class="w-25">
-        <div class="mb-3">
-            <label for="email" class="form-label">이메일</label>
-            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
-            <div id="emailHelp" class="form-text">
-                비밀번호 분실시 관리자에게 문의 해주세요
+<div class="d-flex flex-column min-vh-100">
+    <!-- 헤더 -->
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+
+    <!-- 중앙 내용 -->
+    <div class="container my-auto">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="email" class="form-label">이메일</label>
+                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text">비밀번호 분실시 관리자에게 문의 해주세요</div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">비밀번호</label>
+                    <input type="password" class="form-control" id="password">
+                </div>
+                <button class="btn btn-primary" onclick="login()">로그인</button>
             </div>
         </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" class="form-control" id="password">
-        </div>
-
-        <button class="btn btn-primary" onclick="login()">로그인</button>
     </div>
+
+    <!-- 푸터 -->
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </div>
 
 

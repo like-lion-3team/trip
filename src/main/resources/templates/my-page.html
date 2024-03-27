@@ -5,6 +5,30 @@
     <title>마이페이지</title>
 </head>
 <body>
-<th:block th:replace="~{fragments/header :: header}"></th:block>
+<div class="d-flex flex-column min-vh-100">
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+    <div class="container flex-grow-1" style="align-items: flex-start;">
+        <div class="container white-box">
+            <div class="row">
+                <div class="col-md-8 profile-simple">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <img src="/profile_image.jpg" alt="My Image" />
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3>닉네임</h3>
+
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+</div>
+
+
 </body>
 </html>
