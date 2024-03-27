@@ -9,6 +9,13 @@ jwt:
   expire_time: 600 # 10 min
 
 spring:
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: false
+  thymeleaf:
+    cache: false
   security:
     user:
       name: user

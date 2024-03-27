@@ -33,11 +33,24 @@ public class ViewController {
         return "sample-course-create";
     }
 
+    @GetMapping("api-test/sample-course-list")
+    public String sampleCourseList(
+            Model model
+    ) {
+        model.addAttribute("clientId", NCP_CLIENT_ID);
+        return "sample-course-list";
+    }
+
     @GetMapping("/login")
     public String login(){
         return "login";
     }
 
-    @GetMapping("/signUp")
+    @GetMapping("/sign-up")
     public String signUp() {return "signUp";}
+
+    @GetMapping("/my-page")
+    public String myPage() {return "my-page";}
+
+
 }
