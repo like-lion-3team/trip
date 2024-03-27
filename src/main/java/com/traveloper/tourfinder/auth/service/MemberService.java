@@ -12,6 +12,8 @@ import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.auth.repo.RoleRepository;
 import com.traveloper.tourfinder.common.RedisRepo;
+import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
+import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.common.util.RandomCodeUtils;
 import com.traveloper.tourfinder.course.service.CourseService;
 import jakarta.transaction.Transactional;
@@ -83,7 +85,7 @@ public class MemberService implements UserDetailsService {
     ) {
 
         Member member = memberRepository.findMemberByEmail(dto.getEmail()).orElseThrow(
-                () -> new EntityNotFoundException("로그인 실패")
+                () -> new GlobalExceptionHandler(CustomGlobalErrorCode.CREDENTIALS_NOT_MATCH)
         );
         // TODO: 로그인 - 비밀번호 검증
 
