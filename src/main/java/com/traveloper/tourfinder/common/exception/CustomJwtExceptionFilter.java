@@ -1,6 +1,7 @@
 package com.traveloper.tourfinder.common.exception;
 
 import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
+import com.traveloper.tourfinder.common.config.PermitAllPath;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -15,17 +16,41 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
 @Slf4j
 public class CustomJwtExceptionFilter extends OncePerRequestFilter {
     private final JwtTokenUtils jwtTokenUtils;
+    private final PermitAllPath permitAllPath;
+    // ExceptionFilter에서 검증하지 않고 넘길 url정의
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
+
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
+
+
+
+
+        // permitAllPath에 포함된 경로 중에서 현재 요청 URI와 매치되는지 확인
+        for (String path : permitAllPath.getPERMIT_ALL_PATTERN()) {
+            System.out.println(path + " and " + request.getContextPath());
+            if (new AntPathRequestMatcher(path).matches(request)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+        }
+
+
 
 
         try {
