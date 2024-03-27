@@ -14,6 +14,7 @@ import com.traveloper.tourfinder.auth.repo.RoleRepository;
 import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
+import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import com.traveloper.tourfinder.common.util.RandomCodeUtils;
 import com.traveloper.tourfinder.course.service.CourseService;
 import jakarta.transaction.Transactional;
@@ -49,6 +50,7 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
     private final RedisRepo redisRepo;
+    private final AuthenticationFacade authenticationFacade;
 
 
     /**
@@ -105,6 +107,10 @@ public class MemberService implements UserDetailsService {
                 .expiredDate(LocalDateTime.now().plusSeconds(60 * 60))
                 .expiredSecond(60 * 60)
                 .build();
+    }
+
+    public void signOut(String accessToken){
+        redisRepo.destroyRefreshToken(accessToken);
     }
 
     // 비밀번호 수정
