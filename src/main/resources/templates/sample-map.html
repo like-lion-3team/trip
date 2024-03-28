@@ -36,22 +36,19 @@
 
 <!-- 코스 생성 버튼과 선택한 여행지 리스트 -->
 <div class="extra-content">
-    <button id="course-create-btn" onclick="toggleCourseForm()">코스 생성</button>
-
+    <h3>코스 생성하기</h3>
     <!-- HTML 코드 -->
-    <div id="courseForm" style="display: none;">
+    <div id="courseForm">
         <form th:action="@{/api/v1/courses}" method="post">
             <input type="text" id="courseTitle" name="title" placeholder="코스 제목">
-            <input type="text" id="courseDesc" name="desc" placeholder="코스 설명">
-            <!-- 여기에 코스의 장소를 입력받는 UI를 추가할 수 있습니다. -->
-            <button type="submit">코스 생성</button>
+            <textarea id="courseDesc" name="desc" placeholder="코스 설명" style="width: 100%; height: 100px;"></textarea>
         </form>
+        <h3>선택한 여행지</h3>
+        <ul id="selected-places-list">
+            <!-- 선택한 여행지가 여기에 동적으로 추가됩니다 -->
+        </ul>
+        <button class="course-create-btn" onclick="createCourse()">코스 생성</button>
     </div>
-
-    <h3>선택한 여행지</h3>
-    <ul id="selected-places-list">
-        <!-- 선택한 여행지가 여기에 동적으로 추가됩니다 -->
-    </ul>
 </div>
 
 <!-- 모달 창 -->
@@ -70,17 +67,5 @@
 <script th:src="@{/js/search-places.js}"></script>
 <script th:src="@{/js/details-places.js}"></script>
 <script th:src="@{/js/marker-places.js}"></script>
-<script>
-    // JavaScript 코드
-    function toggleCourseForm() {
-        const courseForm = document.getElementById('courseForm');
-        if (courseForm.style.display === 'none') {
-            courseForm.style.display = 'block'; // 코스 생성 폼 보이기
-        } else {
-            courseForm.style.display = 'none'; // 코스 생성 폼 숨기기
-        }
-    }
-
-</script>
 </body>
 </html>

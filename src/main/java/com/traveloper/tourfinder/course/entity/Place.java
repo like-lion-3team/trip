@@ -21,6 +21,8 @@ public class Place extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private Long contentId;
     private String title;
     private String thumbnailUrl;
     private String address;
@@ -36,6 +38,7 @@ public class Place extends BaseEntity {
     public static Place fromDto(PlaceDto dto) {
         return Place.builder()
                 .id(dto.getId())
+                .contentId(dto.getContentId())
                 .title(dto.getTitle())
                 .thumbnailUrl(dto.getThumbnailUrl())
                 .address(dto.getAddress())

@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PlaceDto {
     private Long id;
+    private Long contentId;
     private String title;
     private String thumbnailUrl;
     private String address;
@@ -23,6 +24,7 @@ public class PlaceDto {
     public static PlaceDto fromEntity(Place entity) {
         return PlaceDto.builder()
                 .id(entity.getId())
+                .contentId(entity.getContentId())
                 .title(entity.getTitle())
                 .thumbnailUrl(entity.getThumbnailUrl())
                 .address(entity.getAddress())

@@ -54,6 +54,7 @@ public class KTOApiService {
         params.put("firstImageYN", "Y");
         params.put("mapinfoYN", "Y");
         params.put("overviewYN", "Y");
+        params.put("addrinfoYN", "Y");
         return ktoSearchService.DetailCommon(params);
     }
 }

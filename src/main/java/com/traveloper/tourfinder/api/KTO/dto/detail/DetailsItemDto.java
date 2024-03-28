@@ -16,6 +16,9 @@ public class DetailsItemDto {
     private String firstimage;
     private String firstimage2;
     private String cpyrhtDivCd;
+    private String addr1;
+    private String addr2;
+    private String zipcode;
     private String mapx;
     private String mapy;
     private String mlevel;
