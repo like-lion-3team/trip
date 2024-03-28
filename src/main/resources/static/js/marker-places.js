@@ -54,6 +54,16 @@ function addToCourse(contentId) {
 }
 
 
+
+// "X" 버튼을 클릭하여 선택한 여행지를 삭제하는 함수
+function removePlace(contentId) {
+    // 선택한 여행지 배열에서 해당 contentId를 가진 여행지 제거
+    selectedPlaces = selectedPlaces.filter(place => place.contentId !== contentId);
+    // 변경된 선택한 여행지 목록을 다시 화면에 표시
+    renderSelectedPlaces();
+}
+
+
 // 선택한 여행지를 화면에 표시하는 함수
 function renderSelectedPlaces() {
     let selectedPlacesList = document.getElementById("selected-places-list");
@@ -69,6 +79,12 @@ function renderSelectedPlaces() {
         let removeButton = document.createElement("button");
         removeButton.textContent = "X";
         removeButton.classList.add("remove-button"); // CSS 클래스 추가
+
+        // 삭제 버튼에 이벤트 리스너 추가
+        removeButton.addEventListener("click", () => {
+            // 해당 여행지를 선택한 여행지 배열에서 삭제
+            removePlace(place.contentId);
+        });
 
         // 리스트 아이템에 삭제 버튼 추가
         listItem.appendChild(removeButton);
@@ -89,3 +105,4 @@ function displayMarkers(coordinates) {
         });
     });
 }
+
