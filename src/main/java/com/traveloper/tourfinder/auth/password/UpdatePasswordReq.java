@@ -1,4 +1,4 @@
-package com.traveloper.tourfinder.auth;
+package com.traveloper.tourfinder.auth.password;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

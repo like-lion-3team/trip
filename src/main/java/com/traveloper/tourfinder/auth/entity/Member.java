@@ -24,4 +24,8 @@ public class Member extends BaseEntity {
 
     @ManyToOne
     private Role role;
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }

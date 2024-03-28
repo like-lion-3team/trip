@@ -2,23 +2,30 @@ package com.traveloper.tourfinder.auth.controller;
 
 
 import com.nimbusds.openid.connect.sdk.assurance.request.VerifiedClaimsSetRequest;
-import com.traveloper.tourfinder.auth.dto.*;
+
+import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
+import com.traveloper.tourfinder.auth.dto.MemberDto;
+import com.traveloper.tourfinder.auth.dto.SignInDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import com.traveloper.tourfinder.auth.entity.Member;
+import com.traveloper.tourfinder.auth.password.UpdatePasswordReq;
 import com.traveloper.tourfinder.auth.service.MemberService;
 import com.traveloper.tourfinder.board.dto.ArticleDto;
 import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import com.traveloper.tourfinder.common.util.RandomCodeUtils;
+import com.traveloper.tourfinder.common.util.ValidateUtils;
 import com.traveloper.tourfinder.course.dto.CourseDto;
 import com.traveloper.tourfinder.course.entity.Course;
 import com.traveloper.tourfinder.course.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.MemberUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,13 +61,13 @@ public class MemberController {
     }
 
     @GetMapping("/sign-out")
-    public void signOut() {
+    public ResponseEntity signOut(
+            @RequestHeader("Authorization")
+            String accessToken
+    ) {
         // TODO: 로그아웃 기능
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
-
-        return;
+        memberService.signOut(accessToken);
+        return ResponseEntity.ok("");
     }
 
     @GetMapping("/my")
@@ -74,11 +81,17 @@ public class MemberController {
 
     @PutMapping("/me/password")
     public void updatePassword(
-            @RequestParam String currentPw,
-            @RequestParam String newPw,
-            @RequestParam String confirmPw
+            @Validated
+            @RequestBody
+            UpdatePasswordReq updatePasswordReq
     ){
         // TODO: 비밀번호 수정 ( 마이페이지 )
+//        String email = 현재 로그인한 회원
+//        memberService.updatePassword(
+//                email,
+//                updatePasswordReq.getCurrentPassword(),
+//                updatePasswordReq.getNewPassword());
+
     }
 
     @PutMapping("/password-recovery")
