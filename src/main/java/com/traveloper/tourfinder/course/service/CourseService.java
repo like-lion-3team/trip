@@ -4,6 +4,7 @@ import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import com.traveloper.tourfinder.course.dto.CourseDto;
+import com.traveloper.tourfinder.course.dto.PlaceDto;
 import com.traveloper.tourfinder.course.entity.Course;
 import com.traveloper.tourfinder.course.entity.Place;
 import com.traveloper.tourfinder.course.repo.CourseRepository;
@@ -27,20 +28,23 @@ public class CourseService {
     private final AuthenticationFacade facade;
 
     @Transactional
-    public CourseDto addCourse(CourseDto courseDto) {
+    public void addCourse(CourseDto courseDto) {
         Member member = facade.getCurrentMember();
 
-        List<Place> places = courseDto.getPlaces().stream()
-                .map(Place::fromDto).toList();
-        placeRepository.saveAll(places);
-
-        // TODO places의 이미지 저장
         Course course = Course.builder()
                 .title(courseDto.getTitle())
                 .desc(courseDto.getDesc())
                 .member(member)
                 .build();
-        return CourseDto.fromEntity(courseRepository.save(course));
+        course = courseRepository.save(course);
+
+        List<PlaceDto> placeDtos = courseDto.getPlaces();
+        List<Place> placeList = placeDtos.stream().map(Place::fromDto).toList();
+        for (Place place : placeList) {
+            place.setCourse(course);
+        }
+
+        placeRepository.saveAll(placeList);
     }
 
     public List<CourseDto> getCourse(Pageable pageable) {
@@ -93,21 +97,21 @@ public class CourseService {
         if (!course.getMember().getUuid().equals(member.getUuid()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
+        // course 엔티티 수정 및 저장
+        course.setTitle(courseDto.getTitle());
+        course.setDesc(courseDto.getDesc());
+        courseRepository.save(course);
+
         // 이전 Place들 전부 삭제
         placeRepository.deleteAll(course.getPlaces());
 
         // 새로운 Place들 저장
         List<Place> newPlaces = courseDto.getPlaces().stream()
                 .map(Place::fromDto).toList();
+        for (Place place : newPlaces) {
+            place.setCourse(course);
+        }
         placeRepository.saveAll(newPlaces);
-
-        // TODO Place 이미지 저장 및 삭제
-
-        // course 엔티티 수정 및 저장
-        course.setTitle(courseDto.getTitle());
-        course.setDesc(courseDto.getDesc());
-        course.setPlaces(newPlaces);
-        courseRepository.save(course);
     }
 
     @Transactional
@@ -126,7 +130,5 @@ public class CourseService {
         // 연관된 Place들도 전부 삭제
         placeRepository.deleteAll(course.getPlaces());
         courseRepository.deleteById(courseId);
-
-        // TODO 삭제하면서 저장된 Place 이미지도 삭제
     }
 }

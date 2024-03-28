@@ -19,11 +19,11 @@ public class CourseController {
     private final CourseService courseService;
 
     @PostMapping
-    public CourseDto addCourse(
+    public void addCourse(
             @RequestBody
             CourseDto courseDto
     ) {
-        return courseService.addCourse(courseDto);
+        courseService.addCourse(courseDto);
     }
 
     @GetMapping

@@ -3,6 +3,7 @@ package com.traveloper.tourfinder.common.config;
 import com.traveloper.tourfinder.auth.jwt.JwtTokenFilter;
 import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
 import com.traveloper.tourfinder.auth.service.MemberService;
+import com.traveloper.tourfinder.common.exception.CustomJwtExceptionFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -25,6 +27,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     private final JwtTokenUtils jwtTokenUtils;
+    private final PermitAllPath permitAllPath;
     private final MemberService memberService;
 
     @Bean
@@ -47,29 +50,16 @@ public class WebSecurityConfig {
                 }))
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "api/v1/auth/**",
-                                "api-test/**",
-                                "api/v1/place",
-                                "api/v1/**",
-
-                                // html
-                                "admin/**",
-                                "/css/**",
-                                "/js/**"
-                        )
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/swagger-ui/*")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v1/api-docs/*")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v1/api-docs")
+                        .requestMatchers(permitAllPath.getPERMIT_ALL_PATTERN())
                         .permitAll()
                         .anyRequest()
                         .authenticated()
                 ).addFilterBefore(
                         new JwtTokenFilter(jwtTokenUtils, memberService),
                         AuthorizationFilter.class
+                )
+                .addFilterBefore(
+                        new CustomJwtExceptionFilter(jwtTokenUtils,permitAllPath), AuthorizationFilter.class
                 );
 
         return http.build();

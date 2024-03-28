@@ -2,6 +2,7 @@ package com.traveloper.tourfinder.auth.controller;
 
 
 import com.nimbusds.openid.connect.sdk.assurance.request.VerifiedClaimsSetRequest;
+
 import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
 import com.traveloper.tourfinder.auth.dto.SignInDto;
@@ -10,8 +11,12 @@ import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.password.UpdatePasswordReq;
 import com.traveloper.tourfinder.auth.service.MemberService;
 import com.traveloper.tourfinder.board.dto.ArticleDto;
+import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import com.traveloper.tourfinder.common.util.RandomCodeUtils;
 import com.traveloper.tourfinder.common.util.ValidateUtils;
+import com.traveloper.tourfinder.course.dto.CourseDto;
+import com.traveloper.tourfinder.course.entity.Course;
+import com.traveloper.tourfinder.course.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +28,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Auth", description = "Auth API")
 @Slf4j
 @RestController
@@ -30,14 +37,16 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final AuthenticationFacade authenticationFacade;
+    private final CourseService courseService;
 
     // 회원가입
     @PostMapping("/sign-up")
-    public MemberDto signUp(
+    public ResponseEntity<MemberDto>  signUp(
             @RequestBody
             CreateMemberDto dto
     ) {
-        return memberService.signup(dto);
+        return ResponseEntity.ok(memberService.signup(dto));
     }
 
     // 로그인
@@ -52,7 +61,7 @@ public class MemberController {
     }
 
     @GetMapping("/sign-out")
-    public void signOut(){
+    public void signOut() {
         // TODO: 로그아웃 기능
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -62,8 +71,12 @@ public class MemberController {
     }
 
     @GetMapping("/my")
-    public void getMyInfo(){
-        // TODO: 내 정보 ( 마이페이지 )
+
+    public ResponseEntity<MyPageDto> getMyInfo() {
+        return ResponseEntity.ok(MyPageDto.builder()
+                .member(memberService.findMember(authenticationFacade.getCurrentMember().getUuid()))
+                .courseList(courseService.getMyCourse())
+                .build());
     }
 
     @PutMapping("/me/password")
@@ -78,12 +91,14 @@ public class MemberController {
 //                email,
 //                updatePasswordReq.getCurrentPassword(),
 //                updatePasswordReq.getNewPassword());
+
     }
 
     @PutMapping("/password-recovery")
     public void recoverPassword(
             @RequestParam String changePw
     ){
+
         // TODO: 비밀번호 복구 ( 비밀번호 찾기 -> 변경 )
     }
 
@@ -101,12 +116,6 @@ public class MemberController {
 
 
     }
-
-
-
-
-
-
 
 
 }
