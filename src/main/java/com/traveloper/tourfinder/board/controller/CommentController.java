@@ -26,7 +26,7 @@ public class CommentController {
             String content,
             RedirectAttributes redirectAttributes
     ) {
-        CommentService.createCommment(new CommentDto(content),articleId);
+        commentService.createCommment(new CommentDto(content),articleId);
         return "redirect:/article/{articleId}";
     }
 
@@ -34,15 +34,13 @@ public class CommentController {
     @PostMapping("/{commentId}/delete")
     public String deleteComment(
             @PathVariable("articleId")
-            Long articleId
+            Long articleId,
             @PathVariable("commentId")
             Long commentId,
             RedirectAttributes redirectAttributes
     ) {
-        CommentService.deleteComment(commentId);
+        //commentService.deleteComment(commentId);
         redirectAttributes.addAttribute("articleId",articleId);
         return "redirect:/article/{articleId}";
     }
-
-
 }

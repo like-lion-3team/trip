@@ -16,9 +16,9 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
 
-    public static void createCommment(CommentDto commentDto, Long articleId) {
-        Article article = ArticleRepository.findById(id).orElseThrow();
-        Comment comment = new Comment(commentDto.getContent(), commentDto.getPassword(), article);
-        CommentDto.fromEntity(CommentRepository.save(comment));
+    public void createCommment(CommentDto commentDto, Long articleId) {
+//        Article article = articleRepository.findById(articleId).orElseThrow();
+//        Comment comment = new Comment(commentDto.getContent(), commentDto.getPassword(), article);
+//        CommentDto.fromEntity(commentRepository.save(comment));
     }
 }

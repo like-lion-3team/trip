@@ -9,7 +9,6 @@ import jakarta.persistence.*;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @Getter
-
 public class Basic {
 
     @Id

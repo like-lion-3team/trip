@@ -26,9 +26,9 @@ public class ArticleService {
 
     // 게시글 저장 메서드
     @Transactional
-    public void createArticle(ArticleDto ArticleDto){
-        Article Article = new Article(ArticleDto.getTitle(), ArticleDto.getContent(),Board);
-        ArticleDto.fromEntity(ArticleRepository.save(Article));
+    public void createArticle(ArticleDto ArticleDto) {
+        Article Article = new Article(ArticleDto.getTitle(), ArticleDto.getContent(), Board);
+        ArticleDto.fromEntity(articleRepository.save(Article));
         ArticleDto newDto = new ArticleDto(Article.getId(), Article.getTitle());
         createTagList(newDto, newDto);
     }
@@ -42,18 +42,18 @@ public class ArticleService {
 
 
     // 게시글 상세 조회
-    public ArticleDto ViewArticleDetail(Long id){
+    public ArticleDto ViewArticleDetail(Long id) {
         Article Article = ArticleRepository.findyById(id).orElseThrow();
         return ArticleDto.fromEntity(Article);
-}
+    }
 
 
     public void deleteArticle(Long id) {
         Article article = ArticleRepository.findById(id).orElse(null);
-        if (article != null){
+        if (article != null) {
             List<ArticleTag> articleTag = ArticleTagRepository.findArtilceTagByArticleId(Article.getId());
-            ArticleRepository.delete(Article);
-            ArticleTagRepository.deleteAll(ArticleTag);
+            articleRepository.delete(Article);
+            tagRepository.deleteAll(ArticleTag);
         }
     }
-    }
+}

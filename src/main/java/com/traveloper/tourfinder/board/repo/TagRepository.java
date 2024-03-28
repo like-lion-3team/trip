@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.traveloper.tourfinder.board.entity.Tag;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@Repository
-public class TagRepository extends JpaRepository<Tag, Long> {
+
+public interface TagRepository extends JpaRepository<Tag, Long> {
     Tag findByContent(String content);
 }
