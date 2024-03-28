@@ -31,8 +31,10 @@ function addToCourse(contentId) {
                 const place = {
                     contentId: contentId,
                     title: data.response.body.items.item[0].title,
-                    mapx: parseFloat(data.response.body.items.item[0].mapx),
-                    mapy: parseFloat(data.response.body.items.item[0].mapy)
+                    lat: parseFloat(data.response.body.items.item[0].mapx),
+                    lng: parseFloat(data.response.body.items.item[0].mapy),
+                    address: data.response.body.items.item[0].addr1 + " " + data.response.body.items.item[0].addr2,
+                    thumbnailUrl: data.response.body.items.item[0].firstimage
                 };
                 addPlace(place);
 
@@ -81,7 +83,7 @@ function displayMarkers(coordinates) {
     markers = [];
     // 선택한 여행지 배열을 순회하면서 각각의 좌표에 마커를 표시
     selectedPlaces.forEach(place => {
-        var position = new naver.maps.LatLng(place.mapy, place.mapx);
+        var position = new naver.maps.LatLng(place.lng, place.lat);
         var marker = new naver.maps.Marker({
             position: position,
             map: map
@@ -127,6 +129,8 @@ function renderSelectedPlaces() {
 
 // 코스 생성 버튼 클릭 시 호출되는 함수
 function createCourse() {
+    // 선택한 여행지 배열을 콘솔에 출력
+    console.log(selectedPlaces);
     // 코스 제목과 설명 가져오기
     const courseTitle = document.getElementById("courseTitle").value;
     const courseDesc = document.getElementById("courseDesc").value;
@@ -142,25 +146,6 @@ function createCourse() {
         alert("최소 한 개의 여행지를 선택하세요.");
         return;
     }
-
-    // 각 선택한 여행지의 contentId를 이용하여 서버의 savePlaces() 메서드 호출
-    selectedPlaces.forEach(place => {
-        fetch(`/api/v1/places/save?contentId=${place.contentId}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('API 요청이 실패했습니다.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // 서버에서 반환된 데이터 처리
-                console.log(data);
-            })
-            .catch(error => {
-                alert(error.message);
-                console.error('Error:', error);
-            });
-    });
 
     // 코스 생성 서버로 요청 보내기
     fetch("/api/v1/courses", {
@@ -178,11 +163,7 @@ function createCourse() {
             if (!response.ok) {
                 throw new Error('API 요청이 실패했습니다.');
             }
-            return response.json();
-        })
-        .then(data => {
-            // 서버에서 반환된 데이터 처리
-            console.log(data);
+            alert("코스가 성공적으로 생성되었습니다.");
         })
         .catch(error => {
             alert(error.message);
