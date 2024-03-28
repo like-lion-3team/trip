@@ -4,7 +4,6 @@ import com.traveloper.tourfinder.board.dto.ArticleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import com.traveloper.tourfinder.board.service.ArticleService;
-import com.traveloper.tourfinder.board.service.BoardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -13,7 +12,6 @@ import org.springframework.ui.Model;
 @RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
-    private final BoardService boardService;
     // 게시글 등록
     @PostMapping("/register")
     public String createArticle(

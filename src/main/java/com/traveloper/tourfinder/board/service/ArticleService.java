@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
-    private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
     private final TagRepository tagRepository;
 
