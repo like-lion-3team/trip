@@ -3,6 +3,7 @@ package com.traveloper.tourfinder.common.config;
 import com.traveloper.tourfinder.auth.jwt.JwtTokenFilter;
 import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
 import com.traveloper.tourfinder.auth.service.MemberService;
+import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.exception.CustomJwtExceptionFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ public class WebSecurityConfig {
     private final JwtTokenUtils jwtTokenUtils;
     private final PermitAllPath permitAllPath;
     private final MemberService memberService;
+    private final RedisRepo redisRepo;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -59,7 +61,7 @@ public class WebSecurityConfig {
                         AuthorizationFilter.class
                 )
                 .addFilterBefore(
-                        new CustomJwtExceptionFilter(jwtTokenUtils,permitAllPath), AuthorizationFilter.class
+                        new CustomJwtExceptionFilter(jwtTokenUtils,permitAllPath,redisRepo), AuthorizationFilter.class
                 );
 
         return http.build();

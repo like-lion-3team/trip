@@ -54,13 +54,13 @@ public class MemberController {
     }
 
     @GetMapping("/sign-out")
-    public void signOut() {
+    public ResponseEntity signOut(
+            @RequestHeader("Authorization")
+            String accessToken
+    ) {
         // TODO: 로그아웃 기능
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
-
-        return;
+        memberService.signOut(accessToken);
+        return ResponseEntity.ok("");
     }
 
     @GetMapping("/my")

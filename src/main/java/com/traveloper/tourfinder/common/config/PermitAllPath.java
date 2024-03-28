@@ -10,11 +10,10 @@ import java.util.List;
 @Component
 public class PermitAllPath {
     String[] PERMIT_ALL_PATTERN= {
-            "/api/v1/auth/**",
+            "/api/v1/auth/sign-in",
             "/api-test/**",
             "api/v1/courses",
             "/api/v1/place",
-            "/api/v1/**",
 
             // html
             "/admin/**",
