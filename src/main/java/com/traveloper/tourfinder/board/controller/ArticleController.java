@@ -6,8 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import com.traveloper.tourfinder.board.service.ArticleService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -64,5 +62,14 @@ public class ArticleController {
             Long articleId
     ) {
         articleService.deleteArticle(articleId);
+    }
+
+    // 좋아요 처리
+    @PostMapping("{articleId}/like")
+    public void toggleArticleLike(
+            @PathVariable("articleId")
+            Long articleId
+    ) {
+        articleService.toggleArticleLike(articleId);
     }
 }
