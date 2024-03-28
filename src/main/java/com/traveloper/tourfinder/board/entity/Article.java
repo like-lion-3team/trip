@@ -1,5 +1,7 @@
 package com.traveloper.tourfinder.board.entity;
 
+import com.traveloper.tourfinder.auth.entity.Member;
+import com.traveloper.tourfinder.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -9,8 +11,10 @@ import java.util.*;
 
 @Getter
 @Entity
+@Builder
 @NoArgsConstructor
-public class Article extends Basic{
+@AllArgsConstructor
+public class Article extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,20 +23,14 @@ public class Article extends Basic{
     private String title;
     @Setter
     private String content;
-
-    @ManyToOne
     @Setter
-    private Board board;
+    private String imagePath;
+    @ManyToOne
+    private Member member;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
-    private final List<Comment> commentList = new ArrayList<>();
+    private final List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
-    private final Set<ArticleTag> tagSet = new HashSet<>();
-
-    @Builder
-    public Article(String title, String content, String password, Board board) {
-        this.title = title;
-        this.content = content;
-    }
+    private final Set<ArticleTag> tags = new HashSet<>();
 }

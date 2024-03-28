@@ -1,26 +1,27 @@
 package com.traveloper.tourfinder.board.entity;
 
+import com.traveloper.tourfinder.common.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
-@Entity
-@NoArgsConstructor
 @Getter
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ArticleTag extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-public class ArticleTag extends Basic{
     @ManyToOne(fetch = FetchType.LAZY)
-    private Article Article;
+    private Article article;
 
     @ManyToOne(fetch= FetchType.LAZY)
-    private Tag Tag;
-
-    @Builder
-    public ArticleTag(Article article, Tag tag){
-        this.Article = article;
-        this.Tag = tag;
-    }
+    private Tag tag;
 
     public static ArticleTag fromEntity(ArticleTag map) {
         return null;

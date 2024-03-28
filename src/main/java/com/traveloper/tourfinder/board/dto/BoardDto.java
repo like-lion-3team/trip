@@ -1,7 +1,6 @@
 package com.traveloper.tourfinder.board.dto;
 
 import com.traveloper.tourfinder.board.entity.Article;
-import com.traveloper.tourfinder.board.entity.Board;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

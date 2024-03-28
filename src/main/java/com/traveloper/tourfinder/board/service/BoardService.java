@@ -1,7 +1,6 @@
 package com.traveloper.tourfinder.board.service;
 
 import com.traveloper.tourfinder.board.dto.BoardDto;
-import com.traveloper.tourfinder.board.entity.Board;
 import com.traveloper.tourfinder.board.repo.BoardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
