@@ -18,6 +18,7 @@ public class PlaceService {
         Place place = Place.builder()
                 .title(detailsCommonDto.getTitle())
                 .thumbnailUrl(detailsCommonDto.getFirstimage())
+                .address(detailsCommonDto.getAddr1() + " " + detailsCommonDto.getAddr2())
                 .lng(Double.valueOf(detailsCommonDto.getMapx()))
                 .lat(Double.valueOf(detailsCommonDto.getMapy()))
                 .build();
