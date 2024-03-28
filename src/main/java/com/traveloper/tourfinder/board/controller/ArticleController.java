@@ -15,16 +15,7 @@ public class ArticleController {
     // 게시글 등록
     @PostMapping("/register")
     public String createArticle(
-            @PathVariable("articleId")
-            Long articleId,
-            @RequestParam("title")
-            String title,
-            @RequestParam("content")
-            String content
-//            @RequestParam(member-id)
-//            Long memberId,
-//            @RequestParam(board-id)
-//            Long boardId
+            @
     ) {
         articleService.createArticle(new ArticleDto(articleId, title,content));
         return "redirect:/boards";
