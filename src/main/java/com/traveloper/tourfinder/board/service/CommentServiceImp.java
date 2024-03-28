@@ -7,6 +7,8 @@ import com.traveloper.tourfinder.board.entity.Article;
 import com.traveloper.tourfinder.board.entity.Comment;
 import com.traveloper.tourfinder.board.repo.ArticleRepository;
 import com.traveloper.tourfinder.board.repo.CommentRepository;
+import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
+import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,7 @@ public class CommentServiceImp implements CommentService {
         Optional<Article> optionalArticle = articleRepository.findById(articleId);
         // article이 존재하지 않을 시
         if (optionalArticle.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_NOT_EXISTS);
 
         Member currentMember = facade.getCurrentMember();
         Comment comment = Comment.builder()
@@ -47,19 +49,23 @@ public class CommentServiceImp implements CommentService {
         Optional<Article> optionalArticle = articleRepository.findById(articleId);
         // article이 존재하지 않을 시
         if (optionalArticle.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_NOT_EXISTS);
         }
         Article article = optionalArticle.get();
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        // comment가 존재하지 않는 경우
+        if (optionalComment.isEmpty())
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.COMMENT_NOT_EXISTS);
+
+        Comment comment = optionalComment.get();
         // comment가 article의 댓글이 아닐 경우
         if (!comment.getArticle().getId().equals(articleId))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_COMMENT_MISMATCH);
 
         Member currentMember = facade.getCurrentMember();
         // 코멘트의 주인이 현재 접속 유저가 아닐 경우
         if (!comment.getMember().getUuid().equals(currentMember.getUuid()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.COMMENT_FORBIDDEN);
 
         comment.setContent(commentDto.getContent());
         return CommentDto.fromEntity(commentRepository.save(comment));
@@ -70,19 +76,23 @@ public class CommentServiceImp implements CommentService {
         Optional<Article> optionalArticle = articleRepository.findById(articleId);
         // article이 존재하지 않을 시
         if (optionalArticle.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_NOT_EXISTS);
         }
         Article article = optionalArticle.get();
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+                    Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        // comment가 존재하지 않는 경우
+        if (optionalComment.isEmpty())
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.COMMENT_NOT_EXISTS);
+
+        Comment comment = optionalComment.get();
         // comment가 article의 댓글이 아닐 경우
         if (!comment.getArticle().getId().equals(articleId))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_COMMENT_MISMATCH);
 
         Member currentMember = facade.getCurrentMember();
         // 코멘트의 주인이 현재 접속 유저가 아닐 경우
         if (!comment.getMember().getUuid().equals(currentMember.getUuid()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.COMMENT_FORBIDDEN);
 
         commentRepository.deleteById(commentId);
     }

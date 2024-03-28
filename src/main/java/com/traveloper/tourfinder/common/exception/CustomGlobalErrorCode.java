@@ -18,13 +18,25 @@ public enum CustomGlobalErrorCode {
     CREDENTIALS_NOT_MATCH(401, "2001", "아이디 또는 비밀번호가 일치하지 않습니다."),
     USER_BLOCKED(403, "2002", "차단된 사용자."),
 
-
     // JWT 관련 에러
     TOKEN_EXPIRED(401, "3001", "토큰이 만료되었습니다."),
     UNSUPPORTED_TOKEN(400, "3002", "지원하지 않는 토큰입니다."),
     MALFORMED_TOKEN(400, "3003", "잘못된 형식의 토큰입니다."),
     SIGNATURE_INVALID(400, "3004", "토큰의 서명이 유효하지 않습니다."),
-    TOKEN_EMPTY(400, "3005", "토큰이 제공되지 않았습니다.");
+    TOKEN_EMPTY(400, "3005", "토큰이 제공되지 않았습니다."),
+
+    // 게시판 관련 에러
+    ARTICLE_NOT_EXISTS(404, "4001", "존재하지 않는 게시글입니다."),
+    ARTICLE_FORBIDDEN(403, "4002", "게시글의 소유 권한이 없습니다."),
+    COMMENT_NOT_EXISTS(404, "4003", "존재하지 않는 댓글입니다."),
+    ARTICLE_COMMENT_MISMATCH(401, "4004", "요청한 댓글이 해당 게시글의 댓글이 아닙니다."),
+    COMMENT_FORBIDDEN(403, "4005", "댓글의 소유 권한이 없습니다."),
+
+    // 코스 관련 에러
+    COURSE_NOT_EXISTS(404, "5001", "존재하지 않는 코스입니다."),
+    COURSE_FORBIDDEN(403, "5002", "코스의 소유 권한이 없습니다.");
+
+
 
 
 

@@ -4,6 +4,8 @@ import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.board.dto.*;
 import com.traveloper.tourfinder.board.entity.*;
 import com.traveloper.tourfinder.board.repo.*;
+import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
+import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +51,7 @@ public class ArticleService {
         Optional<Article> optionalArticle = articleRepository.findById(articleId);
         // article이 존재하지 않는 경우
         if (optionalArticle.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_NOT_EXISTS);
 
         Article article = optionalArticle.get();
         return ArticleDto.fromEntity(article);
@@ -60,13 +62,13 @@ public class ArticleService {
         Optional<Article> optionalArticle = articleRepository.findById(articleId);
         // 존재하지 않는 article일 경우
         if (optionalArticle.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_NOT_EXISTS);
 
         Article article = optionalArticle.get();
         Member currentMember = facade.getCurrentMember();
         // article의 주인이 아닌 경우
         if (!article.getMember().getUuid().equals(currentMember.getUuid()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_FORBIDDEN);
 
         // article 수정
         article.setTitle(articleDto.getTitle());
@@ -82,13 +84,13 @@ public class ArticleService {
         Optional<Article> optionalArticle = articleRepository.findById(articleId);
         // article이 존재하지 않는 경우
         if (optionalArticle.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_NOT_EXISTS);
 
         Article article = optionalArticle.get();
         Member currentMember = facade.getCurrentMember();
         // article의 주인이 아닌 경우
         if (!article.getMember().getUuid().equals(currentMember.getUuid()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_FORBIDDEN);
 
         // TODO 저장된 image 삭제하는 로직 추가해야함
         articleRepository.delete(article);
@@ -96,9 +98,10 @@ public class ArticleService {
 
     // 게시글 좋아요 처리
     public void toggleArticleLike(Long articleId) {
+        // article이 존재하지 않는 경우
         Optional<Article> optionalArticle = articleRepository.findById(articleId);
         if (optionalArticle.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_NOT_EXISTS);
 
         Article article = optionalArticle.get();
         Member currentMember = facade.getCurrentMember();
