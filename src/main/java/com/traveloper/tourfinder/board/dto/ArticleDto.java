@@ -1,6 +1,7 @@
 package com.traveloper.tourfinder.board.dto;
 
 import com.traveloper.tourfinder.board.entity.Article;
+import com.traveloper.tourfinder.board.entity.ArticleTag;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -19,21 +20,39 @@ public class ArticleDto {
     private String content;
     @Setter
     private List<CommentDto> comments = new ArrayList<>();
+    @Setter
+    private Set<ArticleTag> tagSet = new HashSet<>();
 
 
-
-    public ArticleDto(Long articleId, String title, String content){
+    public ArticleDto(String id, String title, String content){
         this.title = title;
         this.content = content;
     }
 
+    public ArticleDto(Long id, String title, String content){
+        this.id = id;
+        this.title = title;
+        this.content = content;
+    }
+
+    public ArticleDto(Long id, String title, String content, Set<ArticleTag> tagSet){
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.tagSet = tagSet;
+    }
+
     public static ArticleDto fromEntity(Article entity) {
-        ArticleDto dto = new ArticleDto(articleId, title, content);
+        ArticleDto dto = new ArticleDto();
         dto.id = entity.getId();
         dto.title = entity.getTitle();
         dto.content = entity.getContent();
         dto.comments = new ArrayList<>();
 
+        dto.tagSet = new HashSet<>();
+        for (ArticleTag map : entity.getTagSet()){
+            dto.tagSet.add(ArticleTag.fromEntity(map));
+        }
         return dto;
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.traveloper.tourfinder.board.dto.ArticleDto;
+
 
 @Controller
 @RequestMapping("/articles")
@@ -16,8 +18,8 @@ public class BoardController {
 
     // 게시글 전체 조회
     @GetMapping
-    public String listAllBoards() {
-        return null;
+    public String listAllBoards(){
+        return "listboard";
     }
 
     // 게시글 상세보기
@@ -27,6 +29,6 @@ public class BoardController {
             Long boardId
     ) {
         BoardDto boardDto = boardService.read(boardId);
-        return null;
+        return "article";
     }
 }

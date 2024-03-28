@@ -8,6 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -15,6 +19,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
+    private final TagRepository tagRepository;
 
     public static ArticleDto viewArticleDetail(Long id) {
     }
@@ -22,19 +27,19 @@ public class ArticleService {
     // 게시글 저장 메서드
     @Transactional
     public void createArticle(ArticleDto ArticleDto){
-        Article Article = new Article(ArticleDto.getTitle(), ArticleDto.getTitle(), ArticleDto.getContent(),Board);
+        Article Article = new Article(ArticleDto.getTitle(), ArticleDto.getContent(),Board);
         ArticleDto.fromEntity(ArticleRepository.save(Article));
-        ArticleDto new Dto = new ArticleDto(articleId, Article.getId(), Article.getTitle());
+        ArticleDto newDto = new ArticleDto(Article.getId(), Article.getTitle());
         createTagList(newDto, newDto);
     }
 
-    // 게시글 수정
     @Transactional
-    puvlic void UpdateArticle(ArticleDto ArticleDto){
-        Article OriginalAritlce = ArticleRepository.findById(ArticleDto.getId()).orElseThrow();
+    public void updateArticle(ArticleDto articleDto) {
+        Article OriginalArticle = ArticleRepository.findById(ArticleDto.getId()).orElseThrow();
         ArticleDto newDto = new ArticleDto(ArticleDto.getId(), ArticleDto.getTitle(), ArticleDto.getContent(),
                 ArticleDto.getTagSet());
     }
+
 
     // 게시글 상세 조회
     public ArticleDto ViewArticleDetail(Long id){
@@ -42,8 +47,13 @@ public class ArticleService {
         return ArticleDto.fromEntity(Article);
 }
 
-    public void updateArticle(ArticleDto articleDto) {
-    }
 
-    public void deleteArticle(Long articleId) {
+    public void deleteArticle(Long id) {
+        Article article = ArticleRepository.findById(id).orElse(null);
+        if (article != null){
+            List<ArticleTag> articleTag = ArticleTagRepository.findArtilceTagByArticleId(Article.getId());
+            ArticleRepository.delete(Article);
+            ArticleTagRepository.deleteAll(ArticleTag);
+        }
+    }
     }

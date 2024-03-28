@@ -17,6 +17,8 @@ public class ArticleController {
     // 게시글 등록
     @PostMapping("/register")
     public String createArticle(
+            @PathVariable("articleId")
+            Long articleId,
             @RequestParam("title")
             String title,
             @RequestParam("content")
