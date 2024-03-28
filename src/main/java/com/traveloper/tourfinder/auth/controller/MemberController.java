@@ -5,6 +5,7 @@ import com.nimbusds.openid.connect.sdk.assurance.request.VerifiedClaimsSetReques
 
 import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
+import com.traveloper.tourfinder.auth.dto.MyPageDto;
 import com.traveloper.tourfinder.auth.dto.SignInDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import com.traveloper.tourfinder.auth.entity.Member;
@@ -106,17 +107,6 @@ public class MemberController {
     public void recoverPasswordRequest() {
         // TODO: 비밀번호 복구 요청 ( 이메일 전송 )
     }
-
-    @PatchMapping("/email")
-    public void updateEmail(
-            @RequestParam String newEmail
-    ) {
-        // TODO: 이메일 변경 기능
-        // TODO: 이메일로 전송된 코드 검증 후 변경
-
-
-    }
-
 
 }
 
