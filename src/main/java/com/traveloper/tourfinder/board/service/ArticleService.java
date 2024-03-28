@@ -22,6 +22,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
     private final TagRepository tagRepository;
+    private final ArticleLikeRepository articleLikeRepository;
     private final AuthenticationFacade facade;
 
     // 게시글 저장 메서드
@@ -91,5 +92,26 @@ public class ArticleService {
 
         // TODO 저장된 image 삭제하는 로직 추가해야함
         articleRepository.delete(article);
+    }
+
+    // 게시글 좋아요 처리
+    public void toggleArticleLike(Long articleId) {
+        Optional<Article> optionalArticle = articleRepository.findById(articleId);
+        if (optionalArticle.isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
+        Article article = optionalArticle.get();
+        Member currentMember = facade.getCurrentMember();
+
+        Optional<ArticleLike> optionalLike = articleLikeRepository.findByMemberAndArticle(currentMember, article);
+        if (optionalLike.isPresent()) {
+            articleLikeRepository.delete(optionalLike.get());
+        } else {
+            ArticleLike newLike = ArticleLike.builder()
+                    .member(currentMember)
+                    .article(article)
+                    .build();
+            articleLikeRepository.save(newLike);
+        }
     }
 }
