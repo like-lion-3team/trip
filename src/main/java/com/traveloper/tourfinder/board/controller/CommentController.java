@@ -1,6 +1,7 @@
 package com.traveloper.tourfinder.board.controller;
 
 import com.traveloper.tourfinder.board.dto.CommentDto;
+import com.traveloper.tourfinder.board.service.CommentServiceImp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ public class CommentController {
             String content,
             RedirectAttributes redirectAttributes
     ) {
-        commentService.createCommment(new CommentDto(content),articleId);
+        commentService.createComment(new CommentDto(content),articleId);
         return "redirect:/article/{articleId}";
     }
 
