@@ -3,42 +3,45 @@ package com.traveloper.tourfinder.board.controller;
 import com.traveloper.tourfinder.board.dto.CommentDto;
 import com.traveloper.tourfinder.board.service.CommentServiceImp;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/articles/{articleId}/comments")
+@RestController
+@RequestMapping("api/vi/articles/{articleId}/comments")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentServiceImp commentService;
     // 댓글 작성 POST /articles/{articleId}/comments
     @PostMapping
-    public String createComment(
+    public CommentDto createComment(
             @PathVariable("articleId")
             Long articleId,
-            @RequestParam("content")
-            String content,
-            RedirectAttributes redirectAttributes
+            @RequestBody
+            CommentDto commentDto
+
     ) {
-        commentService.createComment(new CommentDto(content),articleId);
-        return "redirect:/article/{articleId}";
+        return commentService.createComment(articleId, commentDto);
     }
 
-    // 댓글 삭제 DELETE /articles/{articleId}/comments/delete
-    @PostMapping("/{commentId}/delete")
-    public String deleteComment(
+    @PutMapping("{commentId}")
+    public CommentDto updateComment(
             @PathVariable("articleId")
             Long articleId,
             @PathVariable("commentId")
             Long commentId,
-            RedirectAttributes redirectAttributes
+            @RequestBody
+            CommentDto commentDto
     ) {
-        //commentService.deleteComment(commentId);
-        redirectAttributes.addAttribute("articleId",articleId);
-        return "redirect:/article/{articleId}";
+        return commentService.updateComment(articleId, commentId, commentDto);
+    }
+
+    // 댓글 삭제 DELETE /articles/{articleId}/comments/delete
+    @PostMapping("/{commentId}/delete")
+    public void deleteComment(
+            @PathVariable("articleId")
+            Long articleId,
+            @PathVariable("commentId")
+            Long commentId
+    ) {
+        commentService.deleteComment(articleId, commentId);
     }
 }

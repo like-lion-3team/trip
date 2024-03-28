@@ -2,6 +2,7 @@ package com.traveloper.tourfinder.board.dto;
 
 import com.traveloper.tourfinder.board.entity.Article;
 import com.traveloper.tourfinder.board.entity.ArticleTag;
+import com.traveloper.tourfinder.board.entity.Comment;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -23,14 +24,16 @@ public class ArticleDto {
     private List<TagDto> tags = new ArrayList<>();
 
     public static ArticleDto fromEntity(Article entity) {
-        // TODO CommentDto로 변경해서 articleDto에 포함시키기
+        List<CommentDto> commentDtoList = entity.getComments().stream()
+                .map(CommentDto::fromEntity)
+                .toList();
         // TODO tag 추가
         return ArticleDto.builder()
                 .title(entity.getTitle())
                 .content(entity.getContent())
                 .imagePath(entity.getImagePath())
                 .memberId(entity.getMember().getId())
-                //.comments()
+                .comments(commentDtoList)
                 //.tags()
                 .build();
     }

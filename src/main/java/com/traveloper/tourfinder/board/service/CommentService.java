@@ -5,9 +5,9 @@ import com.traveloper.tourfinder.board.dto.CommentDto;
 import java.util.List;
 
 public interface CommentService {
-    Long createComment(CommentDto commentDto, Long articleId);
+    CommentDto createComment(Long articleId, CommentDto commentDto);
 
-    void updateComment(CommentDto commentDto, Long commentID);
+    CommentDto updateComment(Long articleId, Long commentId, CommentDto commentDto);
 
-    void deleteComment(Long commentId);
+    void deleteComment(Long articleId, Long commentId);
 }
