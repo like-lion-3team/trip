@@ -16,6 +16,7 @@ public class Comment extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
+    @Setter
     private String content;
 
     @ManyToOne
@@ -23,8 +24,4 @@ public class Comment extends BaseEntity {
 
     @ManyToOne
     private Member member;
-
-    public void update(String content){
-        this.content = content;
-    }
 }
