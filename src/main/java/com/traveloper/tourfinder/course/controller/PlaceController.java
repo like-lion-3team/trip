@@ -8,6 +8,7 @@ import com.traveloper.tourfinder.api.KTO.service.KTOApiService;
 import com.traveloper.tourfinder.course.dto.PlaceDto;
 import com.traveloper.tourfinder.course.service.PlaceService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,13 +48,19 @@ public class PlaceController {
     }
 
     // 여행지 저장 (코스에 추가를 누를떄마다)
-    @PostMapping("/save")
+    @GetMapping("/save")
     public PlaceDto savePlaces(
             @RequestParam("contentId")
             String contentId
     ) {
-        DetailsItemDto itemDto = (DetailsItemDto) ktoApiService
-                .getPlaceDetails(contentId).getResponse().getBody().getItems().getItem();
+        DetailsItemDto itemDto = ktoApiService
+                .getPlaceDetails(contentId)
+                .getResponse()
+                .getBody()
+                .getItems()
+                .getItem()
+                .get(0); // item 리스트에서 첫번째 원소를 가져와서 사용해야 함.
+
         return placeService.savePlaces(itemDto);
     }
 }
