@@ -1,4 +1,4 @@
-package com.traveloper.tourfinder.auth.controller;
+package com.traveloper.tourfinder.oauth2.controller;
 
 
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package com.traveloper.tourfinder.auth.service;
+package com.traveloper.tourfinder.oauth2.service;
 
 import org.springframework.stereotype.Service;
 
