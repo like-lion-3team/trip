@@ -4,21 +4,25 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.traveloper.tourfinder.api.KTO.dto.KTOKeywordSearchDto;
 import com.traveloper.tourfinder.api.KTO.dto.detail.DetailsCommonDto;
 import com.traveloper.tourfinder.api.KTO.service.KTOApiService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Slf4j
+@Tag(name = "Place", description = "여행지와 관련된 API")
 @RestController
+@RequestMapping("api/v1/places")
 @RequiredArgsConstructor
 public class PlaceController {
     private final KTOApiService ktoApiService;
 
     // 관광정보 서비스 API 여행지 정보 검색
-    @GetMapping("/api-test/search")
+    @GetMapping("/search")
     public KTOKeywordSearchDto searchPlaces(
             @RequestParam("keyword")
             String keyword,
@@ -30,11 +34,12 @@ public class PlaceController {
     }
 
     // 관광정보 서비스 API 여행지 정보 검색
-    @GetMapping("/api-test/detail")
+    @GetMapping("/detail")
     public DetailsCommonDto placesDetails(
             @RequestParam("contentId")
             String contentId
     ) {
         return ktoApiService.getPlaceDetails(contentId);
     }
+
 }
