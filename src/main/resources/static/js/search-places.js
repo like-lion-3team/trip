@@ -12,7 +12,7 @@ function searchPlaces() {
         alert("검색어를 입력하세요.");
     } else {
         // 검색어가 비어있지 않을 경우 API 요청 보내기
-        fetch(`/api-test/search?keyword=${searchQuery}&pageNo=${currentPage}`)
+        fetch(`/api/v1/places/search?keyword=${searchQuery}&pageNo=${currentPage}`)
             .then(response => {
                 if (!response.ok) {
                     // 응답이 성공적이지 않을 때 에러 처리

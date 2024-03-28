@@ -1,7 +1,7 @@
 // 여행지 상세 정보 API 호출
 function getPlaceDetails(contentId) {
     // API 호출
-    fetch(`/api-test/detail?contentId=${contentId}`)
+    fetch(`/api/v1/places/detail?contentId=${contentId}`)
         .then(response => {
             if (!response.ok) {
                 // 응답이 성공적이지 않을 때 에러 처리
