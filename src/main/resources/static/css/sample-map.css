@@ -243,7 +243,8 @@ body {
     margin-bottom: 15px; /* 하단 여백 설정 */
 }
 
-#course-create-btn {
+.course-register-btn,
+.course-create-btn {
     width: 100%; /* 버튼의 너비를 부모 요소의 100%로 설정하여 가로폭을 꽉 채움 */
     padding: 10px; /* 내부 여백 설정 */
     background-color: #007bff; /* 배경색 설정 */
@@ -252,8 +253,10 @@ body {
     border-radius: 5px; /* 버튼의 모서리를 둥글게 만듦 */
     cursor: pointer; /* 커서 모양을 포인터로 변경하여 클릭 가능한 상태로 표시 */
     transition: background-color 0.3s; /* 배경색 변화에 트랜지션 효과 적용 */
+    margin-bottom: 15px; /* 하단 여백 설정 */
 }
 
-#course-create-btn:hover {
+.course-register-btn:hover,
+.course-create-btn:hover {
     background-color: #0056b3; /* 마우스 호버 시 배경색 변경 */
 }

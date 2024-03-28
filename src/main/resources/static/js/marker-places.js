@@ -119,6 +119,75 @@ function renderSelectedPlaces() {
         // 리스트 아이템을 목록에 추가
         selectedPlacesList.appendChild(listItem);
     });
+
+    // 선택한 여행지 배열을 콘솔에 출력
+    console.log(selectedPlaces);
+}
+
+
+// 코스 생성 버튼 클릭 시 호출되는 함수
+function createCourse() {
+    // 코스 제목과 설명 가져오기
+    const courseTitle = document.getElementById("courseTitle").value;
+    const courseDesc = document.getElementById("courseDesc").value;
+
+    // 코스 정보가 입력되어 있는지 확인
+    if (courseTitle.trim() === "" || courseDesc.trim() === "") {
+        alert("코스 제목과 설명을 입력하세요.");
+        return;
+    }
+
+    // 선택한 여행지가 있는지 확인
+    if (selectedPlaces.length === 0) {
+        alert("최소 한 개의 여행지를 선택하세요.");
+        return;
+    }
+
+    // 각 선택한 여행지의 contentId를 이용하여 서버의 savePlaces() 메서드 호출
+    selectedPlaces.forEach(place => {
+        fetch(`/api/v1/places/save?contentId=${place.contentId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('API 요청이 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 서버에서 반환된 데이터 처리
+                console.log(data);
+            })
+            .catch(error => {
+                alert(error.message);
+                console.error('Error:', error);
+            });
+    });
+
+    // 코스 생성 서버로 요청 보내기
+    fetch("/api/v1/courses", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            title: courseTitle,
+            desc: courseDesc,
+            places: selectedPlaces
+        })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('API 요청이 실패했습니다.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // 서버에서 반환된 데이터 처리
+            console.log(data);
+        })
+        .catch(error => {
+            alert(error.message);
+            console.error('Error:', error);
+        });
 }
 
 
