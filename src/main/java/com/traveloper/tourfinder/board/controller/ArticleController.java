@@ -1,51 +1,75 @@
 package com.traveloper.tourfinder.board.controller;
 
+import com.traveloper.tourfinder.board.dto.ArticleDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import com.traveloper.tourfinder.board.service.ArticleService;
+import org.springframework.web.multipart.MultipartFile;
 
-@RequestMapping("articles")
+import java.util.List;
+
+@RestController
+@RequestMapping("api/v1/articles")
 @RequiredArgsConstructor
 public class ArticleController {
-
+    private final ArticleService articleService;
     // 게시글 등록
-    @PostMapping("/register")
-    public String createArticle(
-            @RequestParam("title")
-            String title,
-            @RequestParam("content")
-            String content
-//            @RequestParam(member-id)
-//            Long memberId,
-//            @RequestParam(board-id)
-//            Long boardId
+    @PostMapping
+    public ArticleDto createArticle(
+            MultipartFile image,
+            @RequestBody
+            ArticleDto articleDto
     ) {
-        return null;
+        return articleService.createArticle(articleDto, image);
     }
 
-    // 게시글 수정
-    @GetMapping("/{articleId}")
-    public String updateArticle(
-            @PathVariable("articleId")
-            Long articleId,
-            @RequestParam("title")
-            String title,
-            @RequestParam("content")
-            String content
+    @GetMapping
+    public List<ArticleDto> readArticlePaged(
+            @RequestParam(value = "page", defaultValue = "1")
+            Integer page,
+            @RequestParam(value = "size", defaultValue = "10")
+            Integer size
     ) {
-        return null;
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return articleService.readArticlePaged(pageable);
     }
 
-    // 게시글 삭제
-    @PostMapping("/{articleId}/delete")
-    public String deleteArticle(
+    @GetMapping("{articleId}")
+    public ArticleDto readArticle(
             @PathVariable("articleId")
             Long articleId
     ) {
-        return null;
+        return articleService.readArticle(articleId);
     }
 
+    // 게시글 수정
+    @PutMapping("{articleId}")
+    public ArticleDto updateArticle(
+            @PathVariable("articleId")
+            Long articleId,
+            @RequestBody
+            ArticleDto articleDto
+    ) {
+        return articleService.updateArticle(articleId, articleDto);
+    }
 
+    // 게시글 삭제
+    @DeleteMapping("{articleId}")
+    public void deleteArticle(
+            @PathVariable("articleId")
+            Long articleId
+    ) {
+        articleService.deleteArticle(articleId);
+    }
 
-
-    // 게시글 상세보기 GET /articles/{articleId}
+    // 좋아요 처리
+    @PostMapping("{articleId}/like")
+    public void toggleArticleLike(
+            @PathVariable("articleId")
+            Long articleId
+    ) {
+        articleService.toggleArticleLike(articleId);
+    }
 }
