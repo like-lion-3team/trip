@@ -7,7 +7,9 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -21,8 +23,8 @@ public class Tag extends BaseEntity {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String content;
+    private String tagName;
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
-    private final Set<ArticleTag> articleSet = new HashSet<>();
+    private final List<ArticleTag> articleSet = new ArrayList<>();
 }

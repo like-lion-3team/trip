@@ -32,5 +32,5 @@ public class Article extends BaseEntity {
     private final List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
-    private final Set<ArticleTag> tags = new HashSet<>();
+    private final List<ArticleTag> tags = new ArrayList<>();
 }
