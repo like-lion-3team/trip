@@ -6,6 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum CustomGlobalErrorCode {
+    // 서버에러
+    SERVICE_UNAVAILABLE(503, "0001","Service Unavailable"),
 
     // 회원가입 에러
     EMAIL_ALREADY_EXIST(409, "1001", "이미 가입된 이메일."),

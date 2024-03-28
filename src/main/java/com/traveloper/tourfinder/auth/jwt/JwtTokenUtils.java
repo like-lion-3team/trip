@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Slf4j
@@ -28,6 +29,20 @@ public class JwtTokenUtils {
                 .parserBuilder()
                 .setSigningKey(this.siginingKey)
                 .build();
+    }
+
+
+    public String generateToken(Member member, Integer expiredSecond){
+        Instant now = Instant.now();
+        Claims jwtClaims = Jwts.claims()
+                .setSubject(member.getUuid())
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plusSeconds(expiredSecond)));
+
+        return Jwts.builder()
+                .setClaims(jwtClaims)
+                .signWith(this.siginingKey)
+                .compact();
     }
 
     public String generateToken(Member member) {

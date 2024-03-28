@@ -20,5 +20,18 @@ public class ArticleDto {
     private String imagePath;
     private Long memberId;
     private List<CommentDto> comments = new ArrayList<>();
-    private List<TagDto> tagSet = new ArrayList<>();
+    private List<TagDto> tags = new ArrayList<>();
+
+    public static ArticleDto fromEntity(Article entity) {
+        // TODO CommentDto로 변경해서 articleDto에 포함시키기
+        // TODO tag 추가
+        return ArticleDto.builder()
+                .title(entity.getTitle())
+                .content(entity.getContent())
+                .imagePath(entity.getImagePath())
+                .memberId(entity.getMember().getId())
+                //.comments()
+                //.tags()
+                .build();
+    }
 }

@@ -9,11 +9,14 @@ import com.traveloper.tourfinder.auth.entity.CustomUserDetails;
 import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.entity.Role;
 import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
+import com.traveloper.tourfinder.auth.password.InvalidPasswordException;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.auth.repo.RoleRepository;
+import com.traveloper.tourfinder.common.AppConstants;
 import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
+import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import com.traveloper.tourfinder.common.util.RandomCodeUtils;
 import com.traveloper.tourfinder.course.service.CourseService;
 import jakarta.transaction.Transactional;
@@ -49,6 +52,7 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
     private final RedisRepo redisRepo;
+    private final AuthenticationFacade authenticationFacade;
 
 
     /**
@@ -98,21 +102,40 @@ public class MemberService implements UserDetailsService {
 
 
 
-        String token = jwtTokenUtils.generateToken(member);
+        String accessToken = jwtTokenUtils.generateToken(member, AppConstants.ACCESS_TOKEN_EXPIRE_SECOND);
+        String refreshToken = jwtTokenUtils.generateToken(member, AppConstants.REFRESH_TOKEN_EXPIRE_SECOND);
+        redisRepo.saveRefreshToken(accessToken,refreshToken);
+
+        if(redisRepo.getRefreshToken(accessToken).isEmpty()){
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+        }
 
         return TokenDto.builder()
-                .accessToken(token)
-                .expiredDate(LocalDateTime.now().plusSeconds(60 * 60))
-                .expiredSecond(60 * 60)
+                .accessToken(accessToken)
+                .expiredDate(LocalDateTime.now().plusSeconds(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND))
+                .expiredSecond(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND)
                 .build();
     }
 
+    public void signOut(String accessToken){
+        redisRepo.destroyRefreshToken(accessToken);
+    }
+
     // 비밀번호 수정
-    public void updatePassword(String email, String newPassword) {
-        Optional<Member> member = memberRepository.findMemberByEmail(email);
-//        if (member != null) {
-//            member.setPassword(newPassword);
-//            memberRepository.save(member);
+    @Transactional
+    public void updatePassword(String email, String currentPassword, String newPassword) {
+        Member member = validatePassword(email, currentPassword);
+        member.updatePassword(passwordEncoder.encode(newPassword));
+    }
+
+    private Member validatePassword(String email, String password) {
+
+        Member member = memberRepository.findMemberByEmail(email)
+                .orElseThrow(InvalidPasswordException::new);
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+        return member;
     }
 
 
