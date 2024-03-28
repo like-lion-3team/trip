@@ -40,10 +40,12 @@
 
     <!-- HTML 코드 -->
     <div id="courseForm" style="display: none;">
-        <input type="text" id="courseTitle" placeholder="코스 제목">
-        <input type="text" id="courseDesc" placeholder="코스 설명">
-        <!-- 여기에 코스의 장소를 입력받는 UI를 추가할 수 있습니다. -->
-        <button onclick="createCourse()">코스 생성</button>
+        <form th:action="@{/api/v1/courses}" method="post">
+            <input type="text" id="courseTitle" name="title" placeholder="코스 제목">
+            <input type="text" id="courseDesc" name="desc" placeholder="코스 설명">
+            <!-- 여기에 코스의 장소를 입력받는 UI를 추가할 수 있습니다. -->
+            <button type="submit">코스 생성</button>
+        </form>
     </div>
 
     <h3>선택한 여행지</h3>
@@ -79,13 +81,6 @@
         }
     }
 
-    function createCourse() {
-        const title = document.getElementById('courseTitle').value;
-        const desc = document.getElementById('courseDesc').value;
-        // 여기에 코스의 장소를 입력받는 코드를 추가할 수 있습니다.
-
-        // AJAX 또는 다른 방법을 사용하여 서버로 DTO를 전송할 수 있습니다.
-    }
 </script>
 </body>
 </html>
