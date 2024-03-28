@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @Getter
 public class SignInDto {
-    @Schema(example = "test@test.test")
+    @Schema(example = "gallowaydaniel@jones.biz")
     private String email;
-    @Schema(example = "test123")
+    @Schema(example = "admin123")
     private String password;
 }

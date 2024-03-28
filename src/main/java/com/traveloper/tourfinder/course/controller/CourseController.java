@@ -1,12 +1,15 @@
 package com.traveloper.tourfinder.course.controller;
 
 
+import com.traveloper.tourfinder.course.dto.CourseDto;
 import com.traveloper.tourfinder.course.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Course", description = "여행 코스와 관련된 API")
 @RestController
@@ -16,68 +19,64 @@ public class CourseController {
     private final CourseService courseService;
 
     @PostMapping
-    public void addCourse(){
-        // TODO: 여행코스 등록
-        courseService.addCourse();
+    public void addCourse(
+            @RequestBody
+            CourseDto courseDto
+    ) {
+        courseService.addCourse(courseDto);
     }
 
     @GetMapping
-    public void getCourse(Pageable pageable){
-        // TODO: 여행 코스 조회
-        courseService.getCourse();
+    public List<CourseDto> getCourse(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return courseService.getCourse(pageable);
     }
 
     @GetMapping("/my-courses")
-    public void getMyCourse(){
-        // TODO: 나의 여행코스 조회
-        // TODO: 어떤 유저가 보낸 요청인지 식별
-        courseService.getMyCourse();
+    public List<CourseDto> getMyCourse() {
+        return courseService.getMyCourse();
     }
 
     @GetMapping("/users/{userId}/courses")
-    public void getTargetMemberCourse(
+    public List<CourseDto> getTargetMemberCourse(
             @PathVariable("userId")
             String userId
-    ){
-        // TODO: 특정 유저의 코스 조회
-        // TODO: 어떤 유저인지 식별
-        courseService.getTargetMemberCoruse();
+    ) {
+        return courseService.getTargetMemberCourse(userId);
     }
 
     @GetMapping("/recommended")
-    public void getRecommendedCourse(Pageable pageable){
+    public void getRecommendedCourse(Pageable pageable) {
         // TODO: 추천코스 조회
         courseService.getRecommendedCourse();
     }
 
     @GetMapping("{courseId}")
-    public void getCourseDetail(
+    public CourseDto getOneCourse(
             @PathVariable("courseId")
-            Integer courseId
-    ){
-        // TODO: 코스 상세보기
-        // TODO: 코스 아이디 받아서 상세정보 조회
-        courseService.getCourseDetail();
+            Long courseId
+    ) {
+        return courseService.getOneCourse(courseId);
     }
 
     @PutMapping("{courseId}")
     public void updateCourse(
             @PathVariable("courseId")
-            Integer courseId
-    ){
-        // TODO: 코스 수정하기
-        // TODO: 코스 아이디 받아서 코스 수정
-        courseService.updateCourse();
+            Long courseId,
+            @RequestBody
+            CourseDto courseDto
+    ) {
+        courseService.updateCourse(courseId, courseDto);
     }
 
     @DeleteMapping("{courseId}")
     public void deleteCourse(
             @PathVariable("courseId")
-            Integer courseId
-    ){
-        // TODO: 코스 삭제하기
-        // TODO: 본인만 삭제 할 수 있음. 본인인지 확인하는 과정 필요
-        // TODO: 코스 아이디 받아서 코스 삭제
-        courseService.deleteCourse();
+            Long courseId
+    ) {
+        courseService.deleteCourse(courseId);
     }
 }

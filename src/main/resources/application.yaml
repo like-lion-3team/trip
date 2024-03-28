@@ -9,6 +9,13 @@ jwt:
   expire_time: 600 # 10 min
 
 spring:
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: false
+  thymeleaf:
+    cache: false
   security:
     user:
       name: user
@@ -54,7 +61,13 @@ naver:
   developers:
     client-id: ${NAVER_DEVELOPERS_CLIENT_ID}
     client-secret: ${NAVER_DEVELOPERS_CLIENT_SECRET}
+  ncp:
+    client-id: ${NCP_CLIENT_ID}
+    client-secret: ${NCP_CLIENT_SECRET}
+    
 
+kto:
+  serviceKey: ${KTO_SERVICE_KEY}
 
 springdoc:
   swagger-ui:
