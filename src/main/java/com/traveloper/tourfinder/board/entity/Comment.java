@@ -23,4 +23,8 @@ public class Comment extends BaseEntity {
 
     @ManyToOne
     private Member member;
+
+    public void update(String content){
+        this.content = content;
+    }
 }
