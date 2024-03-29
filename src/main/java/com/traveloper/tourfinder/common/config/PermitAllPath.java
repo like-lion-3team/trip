@@ -25,7 +25,7 @@ public class PermitAllPath {
             "/*.jpeg",
             "/*.png",
 
-            "/login","sign-up","/my-page",
+            "/login","sign-up","/my-page", "/home",
             "/swagger-ui/*",
             "/v1/api-docs/*",
             "/v1/api-docs"
