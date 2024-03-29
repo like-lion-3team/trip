@@ -1,55 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>여행 코스 제작</title>
+    <script type="text/javascript" th:src="@{https://oapi.map.naver.com/openapi/v3/maps.js(ncpClientId=${clientId})}"></script>
     <!-- 여기에 필요한 CSS 링크를 추가할 수 있습니다 -->
-    <link rel="stylesheet" type="text/css" href="/css/sample-course-create.css">
+    <link rel="stylesheet" type="text/css" href="/css/sample-map.css">
 </head>
 <body>
-<!-- 컨테이너 -->
-<div class="container">
+<!-- 지도 -->
+<div id="map"></div>
+
+<!-- 사이드바 -->
+<div class="sidebar">
+    <a href="/home">Home</a>
+    <h3>여행지 검색</h3>
     <!-- 여행지 검색창 -->
     <div class="search-container">
         <input type="text" id="search" name="search" placeholder="여행지를 검색하세요">
         <button onclick="searchPlaces()">검색</button>
     </div>
 
-
     <!-- 여행지 리스트 -->
     <div id="places-list">
-        <!-- 검색 결과 및 페이지 번호 표시 -->
-        <div id="search-info">
-            <h3 id="search-results-title">검색 결과</h3>
-            <p id="page-info">총 <span id="total-results">0</span> 개의 결과 중 <span id="start-result">0</span> - <span id="end-result">0</span></p>
-            <ul id="search-results">
-                <!-- 검색 결과가 여기에 동적으로 추가됩니다 -->
-            </ul>
-            <!-- 페이지 번호 표시 -->
-            <div id="page-numbers"></div>
-        </div>
+        <h3 id="search-results-title">검색 결과</h3>
 
-        <!-- 모달 창 -->
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>상세 정보</h2>
-                <div id="modal-body">
-                    <!-- 여기에 상세 정보를 동적으로 추가할 수 있습니다 -->
-                </div>
-            </div>
-        </div>
-
-        <h3>선택한 여행지</h3>
-        <ul id="selected-places">
-            <!-- 여행지가 선택되면 여기에 동적으로 추가됩니다 -->
+        <p id="page-info">총 <span id="total-results">0</span> 개의 결과 중 <span id="start-result">0</span> - <span id="end-result">0</span></p>
+        <ul id="search-results">
+            <!-- 검색 결과가 여기에 동적으로 추가됩니다 -->
         </ul>
+        <div id="page-numbers"></div>
     </div>
+</div>
 
-    <!-- 지도 -->
-    <div id="map">
-        <script type="text/javascript" th:src="@{https://oapi.map.naver.com/openapi/v3/maps.js(ncpClientId=${clientId})}"></script>
+<!-- 코스 생성 버튼과 선택한 여행지 리스트 -->
+<div class="extra-content">
+    <h3>코스 생성하기</h3>
+    <!-- HTML 코드 -->
+    <div id="courseForm">
+        <form th:action="@{/api/v1/courses}" method="post">
+            <input type="text" id="courseTitle" name="title" placeholder="코스 제목">
+            <textarea id="courseDesc" name="desc" placeholder="코스 설명" style="width: 100%; height: 100px;"></textarea>
+        </form>
+        <h3>선택한 여행지</h3>
+        <ul id="selected-places-list">
+            <!-- 선택한 여행지가 여기에 동적으로 추가됩니다 -->
+        </ul>
+        <button class="course-create-btn" onclick="createCourse()">코스 생성</button>
+    </div>
+</div>
+
+<!-- 모달 창 -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>상세 정보</h2>
+        <div id="modal-body">
+            <!-- 여기에 상세 정보를 동적으로 추가할 수 있습니다 -->
+        </div>
     </div>
 </div>
 
