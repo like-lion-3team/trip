@@ -104,6 +104,8 @@ public class KakaoOauthService {
         UUID uuid = UUID.randomUUID();
         System.out.printf(uuid + "UUID");
 
+
+
         return "/oauth2/callback?socialProvider=" + "KAKAO" + "&" + "token=" + uuid;
     }
 
