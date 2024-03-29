@@ -1,9 +1,11 @@
 package com.traveloper.tourfinder.board.entity;
 
-import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.common.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
-import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Getter
@@ -11,18 +13,18 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment extends BaseEntity {
+public class ArticleTag extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    @Setter
-    private String content;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Article article;
 
-    @ManyToOne
-    private Member member;
+    @ManyToOne(fetch= FetchType.LAZY)
+    private Tag tag;
+
+    public static ArticleTag fromEntity(ArticleTag map) {
+        return null;
+    }
 }

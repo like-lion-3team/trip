@@ -100,7 +100,13 @@
 
     function fetchCourseData() {
         const courseId = [[${courseId}]];
-        fetch('/api/v1/courses/' + courseId)
+        fetch('/api/v1/courses/' + courseId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Content-Type': 'application/json',
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     // 응답이 성공적이지 않을 때 에러 처리

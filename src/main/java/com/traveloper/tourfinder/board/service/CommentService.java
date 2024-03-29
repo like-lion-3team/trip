@@ -1,12 +1,13 @@
 package com.traveloper.tourfinder.board.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import com.traveloper.tourfinder.board.dto.CommentDto;
 
-@Slf4j
-@Service
-@RequiredArgsConstructor
-public class CommentService {
+import java.util.List;
 
+public interface CommentService {
+    CommentDto createComment(Long articleId, CommentDto commentDto);
+
+    CommentDto updateComment(Long articleId, Long commentId, CommentDto commentDto);
+
+    void deleteComment(Long articleId, Long commentId);
 }
