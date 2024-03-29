@@ -28,6 +28,12 @@ public class PermitAllPath {
             "/login","sign-up","/my-page", "/home",
             "/swagger-ui/*",
             "/v1/api-docs/*",
-            "/v1/api-docs"
+            "/v1/api-docs",
+
+            // social
+            "/api/v1/oauth2/kakao",
+            "/api/v1/oauth2/kakao/callback/**"
+
+
     };
 }
