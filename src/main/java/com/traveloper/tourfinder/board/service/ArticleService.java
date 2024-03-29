@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 @Slf4j
@@ -28,14 +32,21 @@ public class ArticleService {
     private final AuthenticationFacade facade;
 
     // 게시글 저장 메서드
-    public ArticleDto createArticle(ArticleDto articleDto, MultipartFile image) {
+    public ArticleDto createArticle(String title, String content, MultipartFile[] images) {
         Member currentMember = facade.getCurrentMember();
+
         Article article = Article.builder()
-                .title(articleDto.getTitle())
-                .content(articleDto.getContent())
+                .title(title)
+                .content(content)
                 //.imagePath() TODO image 저장후 path 저장
                 .member(currentMember)
                 .build();
+
+        for (MultipartFile image : images) {
+            String imagePath = saveImage(image);
+            article.getImages().add(imagePath);
+        }
+
         return ArticleDto.fromEntity(articleRepository.save(article));
     }
 
@@ -74,7 +85,6 @@ public class ArticleService {
         article.setTitle(articleDto.getTitle());
         article.setContent(articleDto.getContent());
         // TODO 이미지 관련 로직 추가해야함 (이미지 Multipart 파일 저장, 기존 파일 삭제 등)
-        article.setImagePath(articleDto.getImagePath());
 
         return ArticleDto.fromEntity(articleRepository.save(article));
     }
@@ -116,5 +126,20 @@ public class ArticleService {
                     .build();
             articleLikeRepository.save(newLike);
         }
+    }
+
+    public String saveImage(MultipartFile image) {
+        String imgDir = "img/articles/";
+        String imgName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+        Path imgPath = Path.of(imgDir + imgName);
+
+        try {
+            Files.createDirectories(Path.of(imgDir));
+            image.transferTo(imgPath);
+            log.info(image.getName());
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return imgPath.toString();
     }
 }

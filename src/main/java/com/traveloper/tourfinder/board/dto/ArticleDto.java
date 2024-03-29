@@ -18,8 +18,7 @@ public class ArticleDto {
     private Long id;
     private String title;
     private String content;
-    private String imagePath;
-    private Long memberId;
+    private WriterDto writer;
     private List<CommentDto> comments;
     private List<TagDto> tags;
 
@@ -27,12 +26,19 @@ public class ArticleDto {
         List<CommentDto> commentDtoList = entity.getComments().stream()
                 .map(CommentDto::fromEntity)
                 .toList();
+
+        WriterDto writer = WriterDto.builder()
+                .memberId(entity.getMember().getId())
+                .nickname(entity.getMember().getNickname())
+                .build();
+
         // TODO tag 추가
         return ArticleDto.builder()
+                .id(entity.getId())
                 .title(entity.getTitle())
                 .content(entity.getContent())
-                .imagePath(entity.getImagePath())
-                .memberId(entity.getMember().getId())
+                //.imagePath(entity.getImagePath())
+                .writer(writer)
                 .comments(commentDtoList)
                 //.tags()
                 .build();

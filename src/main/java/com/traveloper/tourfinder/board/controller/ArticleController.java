@@ -18,11 +18,11 @@ public class ArticleController {
     // 게시글 등록
     @PostMapping
     public ArticleDto createArticle(
-            MultipartFile image,
-            @RequestBody
-            ArticleDto articleDto
+            @RequestPart("title") String title,
+            @RequestPart("content") String content,
+            @RequestPart("images") MultipartFile[] images
     ) {
-        return articleService.createArticle(articleDto, image);
+        return articleService.createArticle(title, content, images);
     }
 
     @GetMapping

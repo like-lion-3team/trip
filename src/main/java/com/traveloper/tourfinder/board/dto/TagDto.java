@@ -1,6 +1,5 @@
 package com.traveloper.tourfinder.board.dto;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import lombok.Setter;
@@ -11,7 +10,7 @@ public class TagDto {
     private Long id;
     private String content;
     @Setter
-    private Set<ArticleTagDto> articleSet = new HashSet<>();
+    private Set<ArticleTagDto> articleSet;
 
     public static TagDto fromEntity(Tag entity){
         TagDto dto = new TagDto();
