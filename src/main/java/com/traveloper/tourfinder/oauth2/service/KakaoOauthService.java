@@ -15,12 +15,10 @@ import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.oauth2.dto.KakaoTokenResponse;
 import com.traveloper.tourfinder.oauth2.dto.KakaoUserProfile;
-
 import com.traveloper.tourfinder.oauth2.entity.SocialProvider;
 import com.traveloper.tourfinder.oauth2.entity.SocialProviderMember;
 import com.traveloper.tourfinder.oauth2.repo.SocialProviderMemberRepo;
 import com.traveloper.tourfinder.oauth2.repo.SocialProviderRepo;
-
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -60,13 +58,11 @@ public class KakaoOauthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
     private final RedisRepo redisRepo;
-
     private final SocialProviderRepo socialProviderRepo;
     private final SocialProviderMemberRepo socialProviderMemberRepo;
     private final SocialOauthService socialOauthService;
 
     private final String SOCIAL_PROVIDER_NAME = "KAKAO";
-
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
@@ -94,7 +90,6 @@ public class KakaoOauthService {
         String kakaoAccessToken = getAccessTokenUsingCode(code).getAccess_token();
         KakaoUserProfile userInfo = getUserInfoUsingAccessToken(kakaoAccessToken);
         String email = userInfo.getKakaoAccount().getEmail();
-
         String nickname = userInfo.getProperties().getNickname();
 
         Optional<Member> memberOpt = memberRepository.findMemberByEmail(email);
@@ -114,81 +109,6 @@ public class KakaoOauthService {
      * </p>
      */
     public KakaoTokenResponse getAccessTokenUsingCode(String code) {
-
-        Optional<Member> member = memberRepository.findMemberByEmail(email);
-
-        // 이미 존재하는 멤버라면 연동처리
-        if (member.isPresent()) {
-            linkAccountWithSocialLogin(email,"Kakao");
-             MemberDto.builder()
-                    .nickname(member.get().getNickname())
-                    .email(member.get().getEmail())
-                    .memberName(member.get().getMemberName())
-                    .role(member.get().getRole().getName())
-                    .uuid(member.get().getUuid())
-                    .build();
-
-            String accessToken = jwtTokenUtils.generateToken(member.get().getUuid(), AppConstants.ACCESS_TOKEN_EXPIRE_SECOND);
-            String refreshToken = jwtTokenUtils.generateToken(member.get().getUuid(), AppConstants.REFRESH_TOKEN_EXPIRE_SECOND);
-            redisRepo.saveRefreshToken(accessToken,refreshToken);
-
-            if(redisRepo.getRefreshToken(accessToken).isEmpty()){
-                throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-            }
-
-            return TokenDto.builder()
-                    .accessToken(accessToken)
-                    .expiredDate(LocalDateTime.now().plusSeconds(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND))
-                    .expiredSecond(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND)
-                    .build();
-
-
-        } else {
-            // 존재하지 않는 멤버라면 회원가입 처리
-
-
-            String nickname = userInfo.getProperties().getNickname();
-            String password = passwordEncoder.encode(UUID.randomUUID().toString());
-
-            CreateMemberDto createMemberDto = CreateMemberDto.builder()
-                    .nickname(nickname)
-                    .email(email)
-                    .password(password)
-                    .build();
-
-
-            MemberDto memberDto = memberService.signup(createMemberDto);
-
-            String accessToken = jwtTokenUtils.generateToken(memberDto.getUuid(), AppConstants.ACCESS_TOKEN_EXPIRE_SECOND);
-            String refreshToken = jwtTokenUtils.generateToken(memberDto.getUuid(), AppConstants.REFRESH_TOKEN_EXPIRE_SECOND);
-            redisRepo.saveRefreshToken(accessToken,refreshToken);
-
-            if(redisRepo.getRefreshToken(accessToken).isEmpty()){
-                throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-            }
-
-            return TokenDto.builder()
-                    .accessToken(accessToken)
-                    .expiredDate(LocalDateTime.now().plusSeconds(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND))
-                    .expiredSecond(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND)
-                    .build();
-        }
-
-
-        // TODO: 카카오 로그인 기능 구현
-        // TODO: 존재하는 유저라면 연동처리
-        // TODO: 존재하지 않는 유저라면 회원가입 처리
-
-    }
-
-    /**
-     * <p>
-     * 소셜 로그인 이후 받은 code로 AccessToken을 발급 하는 메서드
-     * </p>
-     */
-    public KakaoTokenResponse getAccessTokenUsingCode(String code) {
-        // TODO 받아온 code 를 통해 accessToken 요청
-
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -214,7 +134,6 @@ public class KakaoOauthService {
         }
 
     }
-
 
     /**
      * 카카오 로그인 이후 받은 AccessToken 으로 유저 정보 조회하는 메서드
@@ -246,5 +165,6 @@ public class KakaoOauthService {
             throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
         }
     }
+
 
 }
