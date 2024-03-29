@@ -49,4 +49,14 @@ public class PlaceController {
     ) {
         return ktoApiService.getPlaceDetails(contentId);
     }
+
+
+    // 지역기반 관광정보 조회 API (코스 정보만 가져오기)
+    @GetMapping("/course-list")
+    public Object readCourses(
+            @RequestParam("pageNo")
+            Integer pageNo
+    ) {
+        return ktoApiService.getCourseList(pageNo);
+    }
 }

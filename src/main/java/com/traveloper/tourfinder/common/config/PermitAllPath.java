@@ -14,7 +14,7 @@ public class PermitAllPath {
             "/api/v1/auth/sign-up",
             "/api-test/**",
             "api/v1/courses",
-            "/api/v1/place",
+            "/api/v1/places",
 
             // html
             "/admin/**",
