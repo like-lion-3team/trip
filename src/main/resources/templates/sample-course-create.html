@@ -38,7 +38,7 @@
 <div class="sidebar">
     <h5 class="mt-3 mb-3">여행지 검색</h5>
     <!-- 토글 버튼 추가 -->
-    <button class="sidebar-toggle-btn">Extra Content 토글</button>
+    <button class="btn btn-primary" type="button" onclick="toggle()">Extra Content 토글</button>
 
     <!-- 여행지 검색창 -->
     <div class="input-group mb-3">
@@ -93,17 +93,14 @@
 <script th:src="@{/js/marker-places.js}"></script>
 </body>
 <script>
-    // 사이드바와 extra-content의 요소를 가져옵니다.
-    const sidebar = document.querySelector('.sidebar');
-    const extraContent = document.querySelector('.extra-content');
-
-    // 사이드바가 클릭될 때마다 extra-content의 너비를 변경합니다.
-    sidebar.addEventListener('click', () => {
+    function toggle() {
+        const extraContent = document.querySelector('.extra-content');
         if (extraContent.style.width === '300px') {
             extraContent.style.width = '0';
         } else {
             extraContent.style.width = '300px';
         }
-    });
+    }
 </script>
+
 </html>
