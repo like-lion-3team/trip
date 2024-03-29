@@ -126,6 +126,16 @@ function renderSelectedPlaces() {
 
         // 리스트 아이템을 목록에 추가
         selectedPlacesList.appendChild(listItem);
+
+        // 해당 여행지를 클릭했을 때 지도의 중심을 해당 위치로 이동
+        listItem.addEventListener("click", () => {
+            map.setCenter(new naver.maps.LatLng(place.lng, place.lat)); // place 객체의 lat, lng를 이용하여 이동
+
+            // 지도 확대 수준 조정 (예: 현재 줌 레벨 + 2)
+            const currentZoomLevel = map.getZoom();
+            const newZoomLevel = currentZoomLevel + 2; // 적절한 값을 설정할 수 있습니다.
+            map.setZoom(newZoomLevel);
+        });
     });
 
     // 선택한 여행지 배열을 콘솔에 출력
