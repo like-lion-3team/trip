@@ -2,10 +2,9 @@ package com.traveloper.tourfinder.oauth2.entity;
 
 import com.traveloper.tourfinder.common.BaseEntity;
 import jakarta.persistence.*;
+
 import lombok.Getter;
-
 import java.util.List;
-
 @Getter
 @Entity
 public class SocialProvider extends BaseEntity {
