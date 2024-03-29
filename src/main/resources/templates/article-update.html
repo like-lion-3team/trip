@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시글 작성</title>
+    <title>게시글 수정</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -67,7 +67,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>게시글 작성 폼</h1>
+    <h1>게시글 수정 폼</h1>
     <form id="articleForm" enctype="multipart/form-data">
         <label for="title">제목:</label>
         <input type="text" id="title" name="title" required><br><br>
@@ -77,11 +77,33 @@
         <input type="file" id="images" name="images" accept="image/*" multiple required><br><br>
         <label for="tags">태그:</label><br>
         <input type="text" id="tags" name="tags" placeholder="태그를 입력하세요 (쉼표로 구분)" required><br><br>
-        <button type="submit">게시글 작성</button>
+        <button type="submit">게시글 수정</button>
     </form>
 </div>
 
 <script>
+    // 기존 게시글의 정보를 불러와서 폼에 채워주는 함수
+    function loadArticleData() {
+        fetch(`/api/v1/articles/` + [[${articleId}]], {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('title').value = data.title;
+                // TODO 이미지 정보 표시 및 필요시 삭제 구현
+                document.getElementById('content').value = data.content;
+                document.getElementById('tags').value = data.tags.join(', ');
+            })
+    }
+
+    // 페이지 로드 시 게시글 정보를 불러옴
+    window.addEventListener('load', function() {
+        loadArticleData();
+    });
+
     document.getElementById('articleForm').addEventListener('submit', function (event) {
         event.preventDefault(); // 폼 제출 방지
 
@@ -97,7 +119,7 @@
 
         // AJAX를 사용하여 폼 데이터를 서버로 전송
         fetch('/api/v1/articles', {
-            method: 'POST',
+            method: 'PUT', // 수정 요청이므로 PUT 메서드 사용
             body: formData,
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -105,14 +127,14 @@
         })
             .then(response => {
                 if (response.ok) {
-                    console.log('게시글이 성공적으로 저장되었습니다.');
+                    console.log('게시글이 성공적으로 수정되었습니다.');
                     // 페이지 새로고침 또는 다른 작업 수행
                 } else {
-                    console.error('게시글 저장에 실패했습니다.');
+                    console.error('게시글 수정에 실패했습니다.');
                 }
             })
             .catch(error => {
-                console.error('게시글 저장 중 오류가 발생했습니다:', error);
+                console.error('게시글 수정 중 오류가 발생했습니다:', error);
             });
     });
 </script>

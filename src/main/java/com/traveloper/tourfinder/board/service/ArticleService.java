@@ -165,7 +165,7 @@ public class ArticleService {
 
     public void addTags(Article article, String tags) {
         for (String tag : tags.split(",")) {
-            article.getTags().add(tag);
+            article.getTags().add(tag.trim());
         }
     }
 
