@@ -62,6 +62,7 @@
             if (response.status === 200) {
                 alert('로그인 성공');
                 localStorage.setItem('token', data.accessToken);
+                window.location.href = "/home";
 
             } else {
                 alert('로그인 실패2');
