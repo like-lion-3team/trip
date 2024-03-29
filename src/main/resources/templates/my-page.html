@@ -205,20 +205,20 @@
     myPageProcessStart();
 
     async function populateTravelCards() {
-        // 응답 데이터를 가져옵니다.
+        // 응답 데이터를 가져오기
         const response = await fetchMyPageData();
         const data = await response.json();
 
-        // 카드가 추가될 컨테이너 요소를 가져옵니다.
+        // 카드가 추가될 컨테이너 요소를 가져오기
         const container = document.querySelector('.row-cols-xxl-6');
 
-        // 각 코스에 대해 반복합니다.
+        // 각 코스에 대해 반복
         data.courseList.forEach(course => {
-            // 새로운 카드 요소를 만듭니다.
+            // 새로운 카드 요소
             const card = document.createElement('div');
             card.classList.add('col-12', 'col-md-6');
 
-            // 카드의 내용을 설정합니다.
+            // 카드의 내용을 설정
             card.innerHTML = `
             <div class="card">
                 <img src="${course.places[0].thumbnailUrl}" class="card-img-top" alt="...">
@@ -229,12 +229,11 @@
             </div>
         `;
 
-            // 컨테이너에 카드를 추가합니다.
+            // 컨테이너에 카드를 추가
             container.appendChild(card);
         });
     }
-
-    // 여행 카드를 채우는 함수를 호출합니다.
+    // 여행 카드를 채우는 함수를 호출
     populateTravelCards();
 </script>
 
