@@ -45,7 +45,6 @@ public class CustomJwtExceptionFilter extends OncePerRequestFilter {
 
         // permitAllPath에 포함된 경로 중에서 현재 요청 URI와 매치되는지 확인
         for (String path : permitAllPath.getPERMIT_ALL_PATTERN()) {
-            System.out.println(path + " and " + request.getContextPath());
             if (new AntPathRequestMatcher(path).matches(request)) {
                 filterChain.doFilter(request, response);
                 return;

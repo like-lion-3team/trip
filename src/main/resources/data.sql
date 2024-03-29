@@ -15,6 +15,8 @@ INSERT INTO Member(is_delete, role_id, email, member_name, nickname, password, u
 INSERT INTO Member(is_delete, role_id, email, member_name, nickname, password, uuid) VALUES (false, 1, 'gallowaydaniel@jones.biz', 'Edward Ford', 'lopezjesse', '$2a$10$.f.TCAvMWWL2m5VV8GHxOOcJSjLkYW1CKA8E2EgA.rYxRCOeFQJ8a', 'cb8eb061-4ad6-465c-a0e5-65b5ab2bfa5b');
 INSERT INTO Member(is_delete, role_id, email, member_name, nickname, password, uuid) VALUES (false, 3, 'jjones@mcneil-brennan.com', 'Anthony Long', 'kbryant', '$2a$10$.f.TCAvMWWL2m5VV8GHxOOcJSjLkYW1CKA8E2EgA.rYxRCOeFQJ8a', '7e1c07d3-c538-4213-aa2e-45d1794017b7');
 
+INSERT INTO social_provider(is_delete,social_provider_name) VALUES (false, 'KAKAO');
+
 INSERT INTO course (is_delete, title, desc, member_id) VALUES (false, '서울 코스', '서울 도는 코스 예시입니다.', 6);
 
 INSERT INTO place (is_delete, title, thumbnail_url, address, lng, lat, course_id)

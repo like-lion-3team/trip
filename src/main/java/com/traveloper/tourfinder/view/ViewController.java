@@ -72,6 +72,11 @@ public class ViewController {
     public String board() {
         return "board-articles";
     }
+  
+    @GetMapping("/home")
+    public String home() {
+        return "home";
+    }
 
     @GetMapping("/board/articles/create")
     public String createArticleView() {

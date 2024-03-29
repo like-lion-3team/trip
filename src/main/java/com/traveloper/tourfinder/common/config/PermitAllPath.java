@@ -25,11 +25,17 @@ public class PermitAllPath {
             "/*.jpeg",
             "/*.png",
 
-            "/login","sign-up","/my-page",
+            "/login","sign-up","/my-page", "/home",
             "/board",
             "/board/articles/create",
             "/swagger-ui/*",
             "/v1/api-docs/*",
-            "/v1/api-docs"
+            "/v1/api-docs",
+
+            // social
+            "/api/v1/oauth2/kakao",
+            "/api/v1/oauth2/kakao/callback/**"
+
+
     };
 }
