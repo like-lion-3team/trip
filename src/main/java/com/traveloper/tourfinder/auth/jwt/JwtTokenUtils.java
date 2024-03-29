@@ -31,6 +31,18 @@ public class JwtTokenUtils {
                 .build();
     }
 
+    public String generateToken(String uuid, Integer expiredSecond){
+        Instant now = Instant.now();
+        Claims jwtClaims = Jwts.claims()
+                .setSubject(uuid)
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plusSeconds(expiredSecond)));
+
+        return Jwts.builder()
+                .setClaims(jwtClaims)
+                .signWith(this.siginingKey)
+                .compact();
+    }
 
     public String generateToken(Member member, Integer expiredSecond){
         Instant now = Instant.now();

@@ -12,9 +12,9 @@ spring:
   devtools:
     livereload:
       enabled: true
-      freemarker:
-        cache: false
-#    restart:
+    restart:
+      enabled: false
+  #    restart:
 #      additional-paths: src/main/resources/static
 #      exclude: "**"
 #      enabled: false

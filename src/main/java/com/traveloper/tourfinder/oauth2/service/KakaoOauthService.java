@@ -4,9 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
+import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import com.traveloper.tourfinder.auth.entity.Member;
+import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.auth.service.MemberService;
+import com.traveloper.tourfinder.common.AppConstants;
+import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.oauth2.dto.KakaoTokenResponse;
@@ -22,8 +26,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,6 +52,8 @@ public class KakaoOauthService {
     private final MemberRepository memberRepository;
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenUtils jwtTokenUtils;
+    private final RedisRepo redisRepo;
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
 
@@ -57,7 +66,7 @@ public class KakaoOauthService {
     @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
     private String kakaoTokenUri;
 
-    @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
+    @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
     private String kakaoUserInfoUri;
 
     public String getKakaoLoginUrl() {
@@ -67,9 +76,9 @@ public class KakaoOauthService {
 
 
     @Transactional
-    public ResponseEntity<MemberDto> kakaoLogin(String code) {
-        String accessToken = getAccessTokenUsingCode(code).getAccess_token();
-        KakaoUserProfile userInfo = getUserInfoUsingAccessToken(accessToken);
+    public TokenDto kakaoLogin(String code) {
+        String kakaoAccessToken = getAccessTokenUsingCode(code).getAccess_token();
+        KakaoUserProfile userInfo = getUserInfoUsingAccessToken(kakaoAccessToken);
         String email = userInfo.getKakaoAccount().getEmail();
 
         Optional<Member> member = memberRepository.findMemberByEmail(email);
@@ -77,18 +86,32 @@ public class KakaoOauthService {
         // 이미 존재하는 멤버라면 연동처리
         if (member.isPresent()) {
             linkAccountWithSocialLogin(email,"Kakao");
+             MemberDto.builder()
+                    .nickname(member.get().getNickname())
+                    .email(member.get().getEmail())
+                    .memberName(member.get().getMemberName())
+                    .role(member.get().getRole().getName())
+                    .uuid(member.get().getUuid())
+                    .build();
 
-            return ResponseEntity.status(200).body(
-                    MemberDto.builder()
-                            .nickname(member.get().getNickname())
-                            .email(member.get().getEmail())
-                            .memberName(member.get().getMemberName())
-                            .role(member.get().getRole().getName())
-                            .uuid(member.get().getUuid())
-                            .build()
-            );
+            String accessToken = jwtTokenUtils.generateToken(member.get().getUuid(), AppConstants.ACCESS_TOKEN_EXPIRE_SECOND);
+            String refreshToken = jwtTokenUtils.generateToken(member.get().getUuid(), AppConstants.REFRESH_TOKEN_EXPIRE_SECOND);
+            redisRepo.saveRefreshToken(accessToken,refreshToken);
+
+            if(redisRepo.getRefreshToken(accessToken).isEmpty()){
+                throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+            }
+
+            return TokenDto.builder()
+                    .accessToken(accessToken)
+                    .expiredDate(LocalDateTime.now().plusSeconds(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND))
+                    .expiredSecond(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND)
+                    .build();
+
+
         } else {
             // 존재하지 않는 멤버라면 회원가입 처리
+
 
             String nickname = userInfo.getProperties().getNickname();
             String password = passwordEncoder.encode(UUID.randomUUID().toString());
@@ -100,9 +123,21 @@ public class KakaoOauthService {
                     .build();
 
 
-            return ResponseEntity.status(201).body(
-                    memberService.signup(createMemberDto)
-            );
+            MemberDto memberDto = memberService.signup(createMemberDto);
+
+            String accessToken = jwtTokenUtils.generateToken(memberDto.getUuid(), AppConstants.ACCESS_TOKEN_EXPIRE_SECOND);
+            String refreshToken = jwtTokenUtils.generateToken(memberDto.getUuid(), AppConstants.REFRESH_TOKEN_EXPIRE_SECOND);
+            redisRepo.saveRefreshToken(accessToken,refreshToken);
+
+            if(redisRepo.getRefreshToken(accessToken).isEmpty()){
+                throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+            }
+
+            return TokenDto.builder()
+                    .accessToken(accessToken)
+                    .expiredDate(LocalDateTime.now().plusSeconds(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND))
+                    .expiredSecond(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND)
+                    .build();
         }
 
 
@@ -157,18 +192,27 @@ public class KakaoOauthService {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
 
-        HttpEntity<String> request = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = restTemplate.postForEntity(kakaoUserInfoUri, request, String.class);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        System.out.println(request.getHeaders().get("Authorization") + "    인증토큰");
 
         try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                    kakaoUserInfoUri, HttpMethod.GET, request, String.class);
+
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(response.getBody(), KakaoUserProfile.class);
+        } catch (HttpClientErrorException e) {
+            log.warn("클라이언트 오류: " + e.getStatusCode());
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+        } catch (HttpServerErrorException e) {
+            log.warn("서버 오류: " + e.getStatusCode());
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
         } catch (JsonProcessingException e) {
             log.warn("카카오 유저 정보 조회 후, 데이터 직렬화 에러");
             throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
         }
-
     }
 
     public void linkAccountWithSocialLogin(
