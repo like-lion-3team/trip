@@ -10,8 +10,11 @@ import com.traveloper.tourfinder.auth.dto.SignInDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.password.UpdatePasswordReq;
+import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.auth.service.MemberService;
 import com.traveloper.tourfinder.board.dto.ArticleDto;
+import com.traveloper.tourfinder.common.BaseEntity;
+import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import com.traveloper.tourfinder.common.util.RandomCodeUtils;
 import com.traveloper.tourfinder.common.util.ValidateUtils;
@@ -40,6 +43,7 @@ public class MemberController {
     private final MemberService memberService;
     private final AuthenticationFacade authenticationFacade;
     private final CourseService courseService;
+    private final MemberRepository memberRepository;
 
     // 회원가입
     @PostMapping("/sign-up")
@@ -80,18 +84,18 @@ public class MemberController {
                 .build());
     }
 
-    @PutMapping("/me/password")
+    @PatchMapping("/me/password")
     public void updatePassword(
             @Validated
             @RequestBody
-            UpdatePasswordReq updatePasswordReq
+            UpdatePasswordReq updatePasswordReq,
+            Member member
     ){
         // TODO: 비밀번호 수정 ( 마이페이지 )
-//        String email = 현재 로그인한 회원
-//        memberService.updatePassword(
-//                email,
-//                updatePasswordReq.getCurrentPassword(),
-//                updatePasswordReq.getNewPassword());
+        memberService.updatePassword(
+                String.valueOf(member.getEmail()),
+                updatePasswordReq.getCurrentPassword(),
+                updatePasswordReq.getNewPassword());
 
     }
 

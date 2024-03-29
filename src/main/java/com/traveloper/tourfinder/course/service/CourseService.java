@@ -2,6 +2,8 @@ package com.traveloper.tourfinder.course.service;
 
 import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
+import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
+import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import com.traveloper.tourfinder.course.dto.CourseDto;
 import com.traveloper.tourfinder.course.dto.PlaceDto;
@@ -29,12 +31,12 @@ public class CourseService {
 
     @Transactional
     public void addCourse(CourseDto courseDto) {
-        Member member = facade.getCurrentMember();
+        // Member member = facade.getCurrentMember();
 
         Course course = Course.builder()
                 .title(courseDto.getTitle())
                 .desc(courseDto.getDesc())
-                .member(member)
+           //     .member(member)
                 .build();
         course = courseRepository.save(course);
 
@@ -61,10 +63,11 @@ public class CourseService {
     }
 
     public List<CourseDto> getTargetMemberCourse(String userId) {
+        // TODO userId 라는것이 UUID 인지 논의 필요
         Optional<Member> optionalMember = memberRepository.findMemberByUuid(userId);
         // 없는 유저일 경우
         if (optionalMember.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         Member member = optionalMember.get();
 
         return courseRepository.findAllByMember(member).stream()
@@ -80,7 +83,7 @@ public class CourseService {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         // 없는 코스일 경우
         if (optionalCourse.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.COURSE_NOT_EXISTS);
         return CourseDto.fromEntity(optionalCourse.get());
     }
 
@@ -89,13 +92,13 @@ public class CourseService {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         // 없는 코스일 경우
         if (optionalCourse.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.COURSE_NOT_EXISTS);
 
         Course course = optionalCourse.get();
         Member member = facade.getCurrentMember();
         // 코스의 주인이 현재 접속 멤버와 다르다면
         if (!course.getMember().getUuid().equals(member.getUuid()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.COURSE_FORBIDDEN);
 
         // course 엔티티 수정 및 저장
         course.setTitle(courseDto.getTitle());
@@ -119,13 +122,13 @@ public class CourseService {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         // 없는 코스일 경우
         if (optionalCourse.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.COURSE_NOT_EXISTS);
 
         Course course = optionalCourse.get();
         Member member = facade.getCurrentMember();
         // 코스의 주인이 현재 접속 멤버와 다르다면
         if (!course.getMember().getUuid().equals(member.getUuid()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.COURSE_FORBIDDEN);
 
         // 연관된 Place들도 전부 삭제
         placeRepository.deleteAll(course.getPlaces());
