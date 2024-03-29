@@ -57,4 +57,19 @@ public class KTOApiService {
         params.put("addrinfoYN", "Y");
         return ktoSearchService.DetailCommon(params);
     }
+
+    // 지역기반 관광정보 조회 (코스 찾기)
+    public Object getCourseList(
+            Integer pageNo
+    ) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("numOfRows", 12);
+        params.put("pageNo", pageNo);
+        params.put("serviceKey", serviceKey);
+        params.put("MobileOS", "ETC");
+        params.put("MobileApp", "AppTest");
+        params.put("_type", "json");
+        params.put("contentTypeId", 25);
+        return ktoSearchService.AreaBasedList(params);
+    }
 }

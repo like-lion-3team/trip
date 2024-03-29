@@ -18,4 +18,8 @@ public interface KTOSearchService {
     // 공통 정보 조회
     @GetExchange("/detailCommon1")
     DetailsCommonDto DetailCommon(@RequestParam Map<String, String> params);
+
+    // 지역 기반 관광정보 조회 (코스 찾기)
+    @GetExchange("/areaBasedList1")
+    Object AreaBasedList(@RequestParam Map<String, Object> params);
 }
