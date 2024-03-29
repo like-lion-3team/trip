@@ -26,4 +26,45 @@
 
 
 </body>
+
+<script>
+     async function fetchLoginPermmition(){
+         try {
+             // 현재 URL에서 쿼리 매개변수를 추출
+             const queryParams = new URLSearchParams(window.location.search);
+             const socialProvider = queryParams.get('socialProvider');
+             const token = queryParams.get('token');
+
+             const response = await fetch(`http://localhost:8080/api/v1/oauth2/${socialProvider}/authorize?token=${token}`, {
+                 method: 'GET',
+                 headers: {
+                     'Content-Type': 'application/json'
+                 }
+             });
+
+             // if(response.status !== 200){
+             //     alert("소셜 로그인 처리 중 에러가 발생 했습니다.")
+             //     location.href = "/login"
+             //     return;
+             // }
+
+             const data = await response.json()
+             localStorage.setItem("token",data.accessToken);
+             location.href = "/my-page"
+         } catch (e) {
+             console.log(e)
+             location.href = "/login"
+         }
+
+
+
+
+
+    }
+
+
+
+    fetchLoginPermmition();
+
+</script>
 </html>

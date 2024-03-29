@@ -29,11 +29,12 @@ public class SocialController {
     private final KakaoOauthService kakaoOauthService;
     private final SocialOauthService socialOauthService;
 
-    @GetMapping("/{socialProviderName}/authorize?token={token}")
+    @GetMapping("/{socialProviderName}/authorize")
     public ResponseEntity<TokenDto> oauth2Authorize(
             @RequestParam("token")
             String token
     ){
+        System.out.println("엔트포인트 테스트");
         TokenDto tokenDto = socialOauthService.checkAuthorizeToken(token);
         return ResponseEntity.ok(tokenDto);
     }
