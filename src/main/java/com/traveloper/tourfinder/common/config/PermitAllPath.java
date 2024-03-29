@@ -14,7 +14,7 @@ public class PermitAllPath {
             "/api/v1/auth/sign-up",
             "/api-test/**",
             "api/v1/courses",
-            "/api/v1/place",
+            "/api/v1/places",
 
             // html
             "/admin/**",
@@ -25,8 +25,14 @@ public class PermitAllPath {
             "/*.jpeg",
             "/*.png",
 
-            "/login","/sign-up","/my-page", "/home",
+
+
+     
+            "/login","sign-up","/my-page", "/home",
+            "/board",
+            "/board/articles/create",
             "/oauth2/callback",
+
             "/swagger-ui/*",
             "/v1/api-docs/*",
             "/v1/api-docs",

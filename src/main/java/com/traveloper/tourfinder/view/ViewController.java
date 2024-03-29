@@ -17,15 +17,6 @@ public class ViewController {
         return "sample";
     }
 
-    // 지도 띄우는 테스트
-    @GetMapping("api-test/sample-map")
-    public String sampleMap(
-            Model model
-    ) {
-        model.addAttribute("clientId", NCP_CLIENT_ID);
-        return "sample-map";
-    }
-
     @GetMapping("api-test/sample-course-create")
     public String sampleCourseCreate(
             Model model
@@ -68,10 +59,16 @@ public class ViewController {
         return "my-page";
     }
 
+    @GetMapping("/board")
+    public String board() {
+        return "board-articles";
+    }
+  
     @GetMapping("/home")
     public String home() {
         return "home";
     }
+
 
     /**
      * <p> 소셜 로그인 성공시 서버측으로 로그인 허가 요청을 보내기 위한 callback 페이지 입니다.</p>
@@ -79,5 +76,11 @@ public class ViewController {
     @GetMapping("/oauth2/callback")
     public String oauthRedirect()
         {return "oauth2-redirect"; }
+
+
+    @GetMapping("/board/articles/create")
+    public String createArticleView() {
+        return "article-create";
+    }
 
 }

@@ -181,6 +181,8 @@ function createCourse() {
                 throw new Error('API 요청이 실패했습니다.');
             }
             alert("코스가 성공적으로 생성되었습니다.");
+            // 마이페이지로 리다이렉팅
+            window.location.href = "/my-page";
         })
         .catch(error => {
             alert(error.message);
