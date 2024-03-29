@@ -33,6 +33,16 @@ public class ViewController {
         return "sample-course-list";
     }
 
+    // 테스트용
+    @GetMapping("api-test/sample-course-list-test")
+    public String sampleCourseListTest(
+            Model model
+    ) {
+        model.addAttribute("clientId", NCP_CLIENT_ID);
+        return "sample-course-list-test";
+    }
+
+
     @GetMapping("api-test/sample-course-read/{courseId}")
     public String sampleCourseRead(
             @PathVariable("courseId")
