@@ -15,6 +15,12 @@ import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.oauth2.dto.KakaoTokenResponse;
 import com.traveloper.tourfinder.oauth2.dto.KakaoUserProfile;
+
+import com.traveloper.tourfinder.oauth2.entity.SocialProvider;
+import com.traveloper.tourfinder.oauth2.entity.SocialProviderMember;
+import com.traveloper.tourfinder.oauth2.repo.SocialProviderMemberRepo;
+import com.traveloper.tourfinder.oauth2.repo.SocialProviderRepo;
+
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +60,14 @@ public class KakaoOauthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
     private final RedisRepo redisRepo;
+
+    private final SocialProviderRepo socialProviderRepo;
+    private final SocialProviderMemberRepo socialProviderMemberRepo;
+    private final SocialOauthService socialOauthService;
+
+    private final String SOCIAL_PROVIDER_NAME = "KAKAO";
+
+
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
 
@@ -80,6 +94,26 @@ public class KakaoOauthService {
         String kakaoAccessToken = getAccessTokenUsingCode(code).getAccess_token();
         KakaoUserProfile userInfo = getUserInfoUsingAccessToken(kakaoAccessToken);
         String email = userInfo.getKakaoAccount().getEmail();
+
+        String nickname = userInfo.getProperties().getNickname();
+
+        Optional<Member> memberOpt = memberRepository.findMemberByEmail(email);
+        if (memberOpt.isEmpty()) {
+            // 사용자가 존재하지 않으면 회원가입 및 연동 후 토큰 전달
+            return socialOauthService.handleNewUser(SOCIAL_PROVIDER_NAME,nickname, email);
+        } else {
+            // 존재하는 사용자라면 연동 처리
+            return socialOauthService.handleExistingUser(SOCIAL_PROVIDER_NAME,memberOpt.get());
+        }
+    }
+
+
+    /**
+     * <p>
+     * 카카오 로그인 이후 받은 code로 AccessToken을 발급 하는 메서드
+     * </p>
+     */
+    public KakaoTokenResponse getAccessTokenUsingCode(String code) {
 
         Optional<Member> member = memberRepository.findMemberByEmail(email);
 
@@ -147,12 +181,6 @@ public class KakaoOauthService {
 
     }
 
-    public void signUp() {
-        // TODO: 소셜 회원가입
-    }
-
-    ;
-
     /**
      * <p>
      * 소셜 로그인 이후 받은 code로 AccessToken을 발급 하는 메서드
@@ -160,6 +188,7 @@ public class KakaoOauthService {
      */
     public KakaoTokenResponse getAccessTokenUsingCode(String code) {
         // TODO 받아온 code 를 통해 accessToken 요청
+
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -186,12 +215,15 @@ public class KakaoOauthService {
 
     }
 
+
+    /**
+     * 카카오 로그인 이후 받은 AccessToken 으로 유저 정보 조회하는 메서드
+     * */
     public KakaoUserProfile getUserInfoUsingAccessToken(String accessToken) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
-
 
 
         HttpEntity<String> request = new HttpEntity<>(headers);
@@ -215,11 +247,4 @@ public class KakaoOauthService {
         }
     }
 
-    public void linkAccountWithSocialLogin(
-            String email,
-            String socialProviderName
-
-    ) {
-
-    };
 }

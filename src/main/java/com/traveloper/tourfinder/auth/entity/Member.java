@@ -1,9 +1,12 @@
 package com.traveloper.tourfinder.auth.entity;
 
 import com.traveloper.tourfinder.common.BaseEntity;
+import com.traveloper.tourfinder.oauth2.entity.SocialProviderMember;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 @Getter
 @Entity
@@ -24,6 +27,9 @@ public class Member extends BaseEntity {
 
     @ManyToOne
     private Role role;
+
+    @OneToMany(mappedBy = "member")
+    private List<SocialProviderMember> socialProviderMembers;
 
     public void updatePassword(String newPassword) {
         this.password = newPassword;
