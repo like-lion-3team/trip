@@ -6,10 +6,11 @@ import lombok.Getter;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleTag extends BaseEntity {

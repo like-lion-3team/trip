@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,7 +15,7 @@ import java.util.Set;
 
 @Getter
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Tag extends BaseEntity {
