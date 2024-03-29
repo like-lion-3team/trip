@@ -76,13 +76,13 @@ public class MemberController {
     }
 
     @GetMapping("/my")
-
     public ResponseEntity<MyPageDto> getMyInfo() {
         return ResponseEntity.ok(MyPageDto.builder()
                 .member(memberService.findMember(authenticationFacade.getCurrentMember().getUuid()))
                 .courseList(courseService.getMyCourse())
                 .build());
     }
+
 
     @PatchMapping("/me/password")
     public void updatePassword(

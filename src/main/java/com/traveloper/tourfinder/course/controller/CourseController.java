@@ -1,6 +1,9 @@
 package com.traveloper.tourfinder.course.controller;
 
 
+import com.traveloper.tourfinder.auth.dto.MyPageDto;
+import com.traveloper.tourfinder.auth.entity.Member;
+import com.traveloper.tourfinder.auth.service.MemberService;
 import com.traveloper.tourfinder.course.dto.CourseDto;
 import com.traveloper.tourfinder.course.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,6 +42,13 @@ public class CourseController {
     @GetMapping("/my-courses")
     public List<CourseDto> getMyCourse() {
         return courseService.getMyCourse();
+    }
+
+
+    // 코스 찾기 목록
+    @GetMapping("/all-courses")
+    public List<CourseDto> getAllCourses() {
+        return courseService.getAllCourses();
     }
 
     @GetMapping("/users/{userId}/courses")

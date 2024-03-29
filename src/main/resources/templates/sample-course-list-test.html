@@ -19,47 +19,69 @@
     <!-- 중앙 내용 -->
     <div class="container my-auto center-align">
 
-    <!-- 데이터베이스에 저장된 모든 코스 리스트 가져와서 표시 -->
+        <div class="m-3">
+            <h5>코스 목록</h5>
+            <div class="container">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 row-cols-xxl-6 g-2">
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- 푸터 -->
     <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </div>
-</body>
 <script>
 
-    async function login() {
-        //fetch
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        try {
-            const response = await fetch('http://localhost:8080/api/v1/auth/sign-in', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email,
-                    password
-                })
-            });
-            const data = await response.json();
-            if (response.status === 200) {
-                alert('로그인 성공');
-                localStorage.setItem('token', data.accessToken);
-                window.location.href = "/home";
-
-            } else {
-                alert('로그인 실패2');
+    // 서버에서 코스 목록을 가져오는 함수
+    async function fetchCourses() {
+        const response = await fetch('http://localhost:8080/api/v1/courses/all-courses', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
             }
-        } catch (error) {
-            console.error('에러처리:', error);
-            alert('로그인 실패');
+        });
 
+        if (!response.ok) {
+            throw new Error('서버에서 코스 목록을 가져오는데 문제가 발생했습니다.');
         }
-
-
+        return response;
     }
+
+    // 코스 목록을 받아와서 HTML에 추가하는 함수
+    async function renderCourses() {
+        const response = await fetchCourses();
+        const data = await response.json();
+
+        // 응답 데이터를 콘솔에 출력
+        console.log(data);
+
+        // 카드가 추가될 컨테이너 요소를 가져오기
+        const container = document.querySelector('.row-cols-xxl-6');
+
+        data.forEach(course => {
+            const card = document.createElement('div');
+            card.classList.add('col-12', 'col-md-6');
+
+            card.innerHTML = `
+            <div class="card">
+                <img src="${course.places[0].thumbnailUrl}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">${course.title}</h5>
+                    <p class="card-text">${course.desc}</p>
+                </div>
+            </div>
+        `;
+
+            container.appendChild(card);
+        });
+    }
+
+    // 페이지 로드 시 코스 목록을 렌더링
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCourses();
+    });
 </script>
+</body>
 </html>

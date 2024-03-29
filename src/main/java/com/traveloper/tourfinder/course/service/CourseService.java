@@ -1,5 +1,6 @@
 package com.traveloper.tourfinder.course.service;
 
+import com.traveloper.tourfinder.auth.dto.MyPageDto;
 import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
@@ -15,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -61,6 +63,15 @@ public class CourseService {
                 .map(CourseDto::fromEntity)
                 .toList();
     }
+
+
+    public List<CourseDto> getAllCourses() {
+        return courseRepository.findAll().stream()
+                .map(CourseDto::fromEntity)
+                .toList();
+    }
+
+
 
     public List<CourseDto> getTargetMemberCourse(String userId) {
         // TODO userId 라는것이 UUID 인지 논의 필요
