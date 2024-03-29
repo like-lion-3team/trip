@@ -157,6 +157,7 @@ function createCourse() {
     fetch("/api/v1/courses", {
         method: "POST",
         headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token'),
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -176,6 +177,4 @@ function createCourse() {
             console.error('Error:', error);
         });
 }
-
-
 
