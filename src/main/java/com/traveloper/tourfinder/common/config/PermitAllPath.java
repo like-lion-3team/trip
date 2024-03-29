@@ -11,6 +11,7 @@ import java.util.List;
 public class PermitAllPath {
     String[] PERMIT_ALL_PATTERN= {
             "/api/v1/auth/sign-in",
+            "/api/v1/auth/sign-up",
             "/api-test/**",
             "api/v1/courses",
             "/api/v1/place",
