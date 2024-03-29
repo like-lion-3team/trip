@@ -73,4 +73,11 @@ public class ViewController {
         return "home";
     }
 
+    /**
+     * <p> 소셜 로그인 성공시 서버측으로 로그인 허가 요청을 보내기 위한 callback 페이지 입니다.</p>
+     * */
+    @GetMapping("/oauth2/callback")
+    public String oauthRedirect()
+        {return "oauth2-redirect"; }
+
 }
