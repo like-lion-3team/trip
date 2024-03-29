@@ -1,6 +1,9 @@
 // 여행지를 저장할 배열 초기화
 let selectedPlaces = [];
 
+// 마커 객체를 저장할 배열 초기화
+let markers = [];
+
 // 여행지를 선택하여 배열에 추가하는 함수
 function addPlace(place) {
     selectedPlaces.push(place);
@@ -27,20 +30,17 @@ function addToCourse(contentId) {
                 // 여행지의 정보를 가져와서 선택한 여행지 배열에 추가
                 const place = {
                     contentId: contentId,
-                    title: data.response.body.items.item[0].title
+                    title: data.response.body.items.item[0].title,
+                    mapx: parseFloat(data.response.body.items.item[0].mapx),
+                    mapy: parseFloat(data.response.body.items.item[0].mapy)
                 };
                 addPlace(place);
 
                 // 선택한 여행지 목록을 화면에 표시
                 renderSelectedPlaces();
 
-                // 여행지 좌표를 가져와 지도에 마커 표시
-                const coordinates = [{
-                    mapx: parseFloat(data.response.body.items.item[0].mapx),
-                    mapy: parseFloat(data.response.body.items.item[0].mapy)
-                }];
                 // 가져온 좌표값으로 마커를 표시합니다
-                displayMarkers(coordinates);
+                displayMarkers();
             })
             .catch(error => {
                 // API 요청이 실패했을 때 에러 처리
@@ -53,6 +53,43 @@ function addToCourse(contentId) {
     }
 }
 
+// "X" 버튼을 클릭하여 선택한 여행지를 삭제하는 함수
+function removePlace(contentId) {
+    // 선택한 여행지 배열에서 해당 contentId를 가진 여행지 제거
+    selectedPlaces = selectedPlaces.filter(place => place.contentId !== contentId);
+    // 변경된 선택한 여행지 목록을 다시 화면에 표시
+    renderSelectedPlaces();
+
+    // 해당 contentId를 가진 마커를 찾아서 제거
+    markers = markers.filter(marker => {
+        if (marker.contentId === contentId) {
+            marker.setMap(null); // 해당 마커를 지도에서 제거
+            return false; // 마커 배열에서 제거
+        }
+        return true; // 유지되어야 하는 마커는 다시 배열에 추가
+    });
+
+    // 마커 업데이트
+    displayMarkers();
+}
+
+// 여행지의 좌표를 지도에 마커로 표시하는 함수
+function displayMarkers(coordinates) {
+    markers.forEach(marker => {
+        marker.setMap(null);
+    })
+    markers = [];
+    // 선택한 여행지 배열을 순회하면서 각각의 좌표에 마커를 표시
+    selectedPlaces.forEach(place => {
+        var position = new naver.maps.LatLng(place.mapy, place.mapx);
+        var marker = new naver.maps.Marker({
+            position: position,
+            map: map
+        });
+        // 생성된 마커를 markers 배열에 추가
+        markers.push(marker);
+    });
+}
 
 // 선택한 여행지를 화면에 표시하는 함수
 function renderSelectedPlaces() {
@@ -70,6 +107,12 @@ function renderSelectedPlaces() {
         removeButton.textContent = "X";
         removeButton.classList.add("remove-button"); // CSS 클래스 추가
 
+        // 삭제 버튼에 이벤트 리스너 추가
+        removeButton.addEventListener("click", () => {
+            // 해당 여행지를 선택한 여행지 배열에서 삭제
+            removePlace(place.contentId);
+        });
+
         // 리스트 아이템에 삭제 버튼 추가
         listItem.appendChild(removeButton);
 
@@ -78,14 +121,5 @@ function renderSelectedPlaces() {
     });
 }
 
-// 여행지의 좌표를 지도에 마커로 표시하는 함수
-function displayMarkers(coordinates) {
-    // 새로운 마커들을 추가합니다
-    coordinates.forEach(coord => {
-        var position = new naver.maps.LatLng(coord.mapy, coord.mapx);
-        var marker = new naver.maps.Marker({
-            position: position,
-            map: map
-        });
-    });
-}
+
+
