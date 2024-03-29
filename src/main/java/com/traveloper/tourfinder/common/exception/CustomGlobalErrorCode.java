@@ -34,12 +34,11 @@ public enum CustomGlobalErrorCode {
 
     // 코스 관련 에러
     COURSE_NOT_EXISTS(404, "5001", "존재하지 않는 코스입니다."),
-    COURSE_FORBIDDEN(403, "5002", "코스의 소유 권한이 없습니다.");
+    COURSE_FORBIDDEN(403, "5002", "코스의 소유 권한이 없습니다."),
 
 
-
-
-
+    // oauth2
+    NOT_SUPPORT_SOCIAL_PROVIDER(400,"6001","지원하지 않는 소셜 사업자 입니다.");
     private int status;
     private String code;
     private String message;

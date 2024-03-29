@@ -15,6 +15,10 @@ import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.oauth2.dto.KakaoTokenResponse;
 import com.traveloper.tourfinder.oauth2.dto.KakaoUserProfile;
+import com.traveloper.tourfinder.oauth2.entity.SocialProvider;
+import com.traveloper.tourfinder.oauth2.entity.SocialProviderMember;
+import com.traveloper.tourfinder.oauth2.repo.SocialProviderMemberRepo;
+import com.traveloper.tourfinder.oauth2.repo.SocialProviderRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +58,9 @@ public class KakaoOauthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
     private final RedisRepo redisRepo;
+    private final SocialProviderRepo socialProviderRepo;
+    private final SocialProviderMemberRepo socialProviderMemberRepo;
+
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
 
@@ -85,7 +92,7 @@ public class KakaoOauthService {
 
         // 이미 존재하는 멤버라면 연동처리
         if (member.isPresent()) {
-            linkAccountWithSocialLogin(email,"Kakao");
+            linkAccountWithKakaoLogin(member.get());
              MemberDto.builder()
                     .nickname(member.get().getNickname())
                     .email(member.get().getEmail())
@@ -110,9 +117,7 @@ public class KakaoOauthService {
 
 
         } else {
-            // 존재하지 않는 멤버라면 회원가입 처리
-
-
+            // 존재하지 않는 멤버라면 회원가입 처리 후 연동 처리
             String nickname = userInfo.getProperties().getNickname();
             String password = passwordEncoder.encode(UUID.randomUUID().toString());
 
@@ -124,6 +129,13 @@ public class KakaoOauthService {
 
 
             MemberDto memberDto = memberService.signup(createMemberDto);
+            Member findMember = memberRepository.findMemberByUuid(memberDto.getUuid()).orElseThrow(
+                    () -> {
+                        log.warn("회원 가입이 정상 처리되지 않았습니다.");
+                        return new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+                    });
+
+            linkAccountWithKakaoLogin(findMember);
 
             String accessToken = jwtTokenUtils.generateToken(memberDto.getUuid(), AppConstants.ACCESS_TOKEN_EXPIRE_SECOND);
             String refreshToken = jwtTokenUtils.generateToken(memberDto.getUuid(), AppConstants.REFRESH_TOKEN_EXPIRE_SECOND);
@@ -146,12 +158,6 @@ public class KakaoOauthService {
         // TODO: 존재하지 않는 유저라면 회원가입 처리
 
     }
-
-    public void signUp() {
-        // TODO: 소셜 회원가입
-    }
-
-    ;
 
     /**
      * <p>
@@ -215,11 +221,27 @@ public class KakaoOauthService {
         }
     }
 
-    public void linkAccountWithSocialLogin(
-            String email,
-            String socialProviderName
-
+    /**
+     * <p>카카오 로그인시 기존 계정과 소셜 계정을 연동하는 메서드 </p>
+     * */
+    public void linkAccountWithKakaoLogin(
+            Member member
     ) {
+        String SOCIAL_PRIVIDER_NAME = "KAKAO";
 
+        // DB에 소셜 사업자 이름이 정의되어있지 않으면 에러 발생시킴
+        SocialProvider socialProvider = socialProviderRepo.findSocialProviderBySocialProviderName(SOCIAL_PRIVIDER_NAME).orElseThrow(
+                () -> new GlobalExceptionHandler(CustomGlobalErrorCode.NOT_SUPPORT_SOCIAL_PROVIDER) );
+
+        SocialProviderMember socialProviderMember = SocialProviderMember.builder()
+                .member(member)
+                .socialProvider(socialProvider)
+                .build();
+
+        try {
+            socialProviderMemberRepo.save(socialProviderMember);
+        }catch (RuntimeException e){
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+        }
     };
 }
