@@ -108,14 +108,38 @@ function displaySearchResults(results) {
     results.response.body.items.item.forEach(item => {
         const listItem = document.createElement('li');
         // 이미지 크기를 100 x 75로 조정하고, float 및 여백 설정 추가
-        listItem.innerHTML = `
-            <img src="${item.firstimage}" alt="여행지 이미지" style="width: 100px; height: 75px; object-fit: cover; float: left; margin-right: 10px;"> <!-- 이미지 크기 조정 -->
-            <div>
-                <span>${item.title}</span> 
-                <p style="font-size: 0.8em; color: gray;">${item.addr1} ${item.addr2}</p> <!-- 주소 글씨를 회색으로 변경 -->
-                <button onclick="getPlaceDetails('${item.contentid}')">상세정보</button> 
-                <button class="add-to-course-button" onclick="addToCourse('${item.contentid}')">코스에 추가</button>
-            </div>`;
+        listItem.innerHTML =
+        `<div class="card">
+            <div class="row g-0">
+                <div class="col-md-3 d-flex align-items-center">
+                    <!-- 이미지가 카드 이미지 부분에 꽉 차게 설정 -->
+                    <img src="${item.firstimage}" class="card-img img-square" alt="여행지 이미지"> 
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <!-- 제목을 클릭하면 getPlaceDetails 함수 실행 -->
+                        <h6 class="card-title" style="" onclick="getPlaceDetails('${item.contentid}')">${item.title}</h6>
+                        <p class="card-text" style="font-size: 0.65rem; color: gray;">${item.addr1} ${item.addr2}</p> <!-- 주소 글씨를 회색으로 변경 -->
+                    </div>
+                </div>
+                <div class="col-md-2 d-flex align-items-center">
+                    <!-- 코스에 추가 버튼을 부트스트랩 아이콘 +로 대체 -->
+                    <button onclick="addToCourse('${item.contentid}')" class="btn btn-lg"><i class="bi bi-plus-circle-fill"></i></button>
+                </div>
+            </div>
+        </div>
+    `;
+
+
+
+
+            // `<img src="${item.firstimage}" alt="여행지 이미지" style="width: 100px; height: 75px; object-fit: cover; float: left; margin-right: 10px;"> <!-- 이미지 크기 조정 -->
+            // <div>
+            //     <span>${item.title}</span>
+            //     <p style="font-size: 0.8em; color: gray;">${item.addr1} ${item.addr2}</p> <!-- 주소 글씨를 회색으로 변경 -->
+            //     <button onclick="getPlaceDetails('${item.contentid}')">상세정보</button>
+            //     <button class="add-to-course-button" onclick="addToCourse('${item.contentid}')">코스에 추가</button>
+            // </div>`;
 
         // 생성한 항목을 검색 결과 리스트에 추가
         searchResultsList.appendChild(listItem);
@@ -134,4 +158,6 @@ function displaySearchResults(results) {
         document.getElementById('page-info').style.display = 'none';
     }
 }
+
+
 

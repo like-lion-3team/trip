@@ -1,57 +1,40 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>여행 코스 제작</title>
     <script type="text/javascript" th:src="@{https://oapi.map.naver.com/openapi/v3/maps.js(ncpClientId=${clientId})}"></script>
-    <!-- 여기에 필요한 CSS 링크를 추가할 수 있습니다 -->
     <link rel="stylesheet" type="text/css" href="/css/sample-map.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+    <style>
+        /* 여행지 검색창 및 결과 리스트 스타일링 */
+        .search-container input[type="text"],
+        #search-results-title,
+        #page-info {
+            font-size: 12px; /* 폰트 크기를 줄입니다. */
+        }
+    </style>
 </head>
 <body>
 <!-- 지도 -->
 <div id="map"></div>
 
-<!-- 메뉴바 -->
-<div class="menu-bar">
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <a class="nav-link active" href="/home">홈</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link disabled" href="#">일정선택</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">장소 선택</a>
-        </li>
-    </ul>
-</div>
 
 <!-- 사이드바 -->
 <div class="sidebar">
-    <h5 class="mt-3 mb-3">여행지 검색</h5>
-    <!-- 토글 버튼 추가 -->
-    <button class="sidebar-toggle-btn">Extra Content 토글</button>
-
+    <h3>여행지 검색</h3>
     <!-- 여행지 검색창 -->
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" id="search" name="search" placeholder="여행지를 검색하세요">
-        <button class="btn btn-primary" type="button" onclick="searchPlaces()">검색</button>
+    <div class="search-container">
+        <input type="text" id="search" name="search" placeholder="여행지를 검색하세요">
+        <button onclick="searchPlaces()">검색</button>
     </div>
 
     <!-- 여행지 리스트 -->
     <div id="places-list">
-        <h5 id="search-results-title">검색 결과</h5>
-
+        <h3 id="search-results-title">검색 결과</h3>
         <p id="page-info">총 <span id="total-results">0</span> 개의 결과 중 <span id="start-result">0</span> - <span id="end-result">0</span></p>
-        <ul id="search-results" class="list-group">
+        <ul id="search-results">
             <!-- 검색 결과가 여기에 동적으로 추가됩니다 -->
         </ul>
         <div id="page-numbers"></div>
@@ -60,14 +43,14 @@
 
 <!-- 코스 생성 버튼과 선택한 여행지 리스트 -->
 <div class="extra-content">
-    <h5>코스 생성하기</h5>
+    <h3>코스 생성하기</h3>
     <!-- HTML 코드 -->
     <div id="courseForm">
         <form th:action="@{/api/v1/courses}" method="post">
             <input type="text" id="courseTitle" name="title" placeholder="코스 제목">
             <textarea id="courseDesc" name="desc" placeholder="코스 설명" style="width: 100%; height: 100px;"></textarea>
         </form>
-        <h5>선택한 여행지</h5>
+        <h3>선택한 여행지</h3>
         <ul id="selected-places-list">
             <!-- 선택한 여행지가 여기에 동적으로 추가됩니다 -->
         </ul>
@@ -92,18 +75,4 @@
 <script th:src="@{/js/details-places.js}"></script>
 <script th:src="@{/js/marker-places.js}"></script>
 </body>
-<script>
-    // 사이드바와 extra-content의 요소를 가져옵니다.
-    const sidebar = document.querySelector('.sidebar');
-    const extraContent = document.querySelector('.extra-content');
-
-    // 사이드바가 클릭될 때마다 extra-content의 너비를 변경합니다.
-    sidebar.addEventListener('click', () => {
-        if (extraContent.style.width === '300px') {
-            extraContent.style.width = '0';
-        } else {
-            extraContent.style.width = '300px';
-        }
-    });
-</script>
 </html>
