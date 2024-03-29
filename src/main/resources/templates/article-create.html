@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 작성</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 150px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .image-preview img {
+            max-width: 200px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>게시글 작성 폼</h1>
+    <form id="articleForm" enctype="multipart/form-data">
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" required><br><br>
+        <label for="content">내용:</label><br>
+        <textarea id="content" name="content" rows="4" required></textarea><br><br>
+        <label for="images">이미지:</label><br>
+        <input type="file" id="images" name="images" accept="image/*" multiple required><br><br>
+        <button type="submit">게시글 작성</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('articleForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // 폼 제출 방지
+
+        const formData = new FormData();
+        formData.append('title', document.getElementById('title').value);
+        formData.append('content', document.getElementById('content').value);
+
+        const images = document.getElementById('images').files;
+        for (let i = 0; i < images.length; i++) {
+            formData.append('images', images[i]);
+        }
+
+        // AJAX를 사용하여 폼 데이터를 서버로 전송
+        fetch('/api/v1/articles', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('게시글이 성공적으로 저장되었습니다.');
+                    // 페이지 새로고침 또는 다른 작업 수행
+                } else {
+                    console.error('게시글 저장에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('게시글 저장 중 오류가 발생했습니다:', error);
+            });
+    });
+</script>
+</body>
+</html>
