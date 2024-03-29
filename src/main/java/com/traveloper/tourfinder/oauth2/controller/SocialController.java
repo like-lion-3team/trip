@@ -1,6 +1,7 @@
 package com.traveloper.tourfinder.oauth2.controller;
 
 
+import com.traveloper.tourfinder.auth.dto.MemberDto;
 import com.traveloper.tourfinder.oauth2.service.KakaoOauthService;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,12 +40,12 @@ public class SocialController {
     }
 
     @GetMapping("/kakao/callback")
-    public void redirectSocialKakao(
+    public ResponseEntity<MemberDto> redirectSocialKakao(
             @RequestParam("code")
             String code
     ){
         // TODO: 카카오 로그인 클릭시 리다이렉트 되는 url
-        kakaoOauthService.kakaoLogin(code);
+        return kakaoOauthService.kakaoLogin(code);
     }
 
     @GetMapping("/naver/callback")

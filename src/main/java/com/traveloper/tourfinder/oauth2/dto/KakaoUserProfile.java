@@ -13,6 +13,7 @@ public class KakaoUserProfile {
 
 
 
+    @Getter
     public static class Properties {
         private String nickname;
         private String profileImage;
