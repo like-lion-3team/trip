@@ -31,8 +31,8 @@ public class PermitAllPath {
             "/login","sign-up","/my-page", "/home",
             "/board",
             "/board/articles/create",
+            "/board/articles/{articleId}/update",
             "/oauth2/callback",
-
             "/swagger-ui/*",
             "/v1/api-docs/*",
             "/v1/api-docs",

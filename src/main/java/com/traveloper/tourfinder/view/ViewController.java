@@ -83,4 +83,15 @@ public class ViewController {
         return "article-create";
     }
 
+
+    @GetMapping("/board/articles/{articleId}/update")
+    public String updateArticleView(
+            @PathVariable("articleId")
+            Long articleId,
+            Model model
+    ) {
+        model.addAttribute("articleId", articleId);
+        return "article-update";
+    }
+
 }
