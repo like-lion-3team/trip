@@ -5,6 +5,7 @@ import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
 import com.traveloper.tourfinder.auth.dto.SignInDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
+import com.traveloper.tourfinder.auth.dto.VerifyCodeSendSuccessDto;
 import com.traveloper.tourfinder.auth.entity.CustomUserDetails;
 import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.entity.Role;
@@ -19,6 +20,7 @@ import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import com.traveloper.tourfinder.common.util.RandomCodeUtils;
 import com.traveloper.tourfinder.course.service.CourseService;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 
 import java.util.UUID;
@@ -29,6 +31,8 @@ import org.springframework.http.HttpStatus;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -52,7 +56,7 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
     private final RedisRepo redisRepo;
-    private final AuthenticationFacade authenticationFacade;
+    private final JavaMailSender javaMailSender;
 
 
     /**
@@ -142,17 +146,30 @@ public class MemberService implements UserDetailsService {
     /**
      * <p>이메일 인증용 코드 전송</p>
      */
-    public void sendCode(
+    public VerifyCodeSendSuccessDto sendCode(
             String email
     ) {
         // TODO: 이메일 인증 - 받아온 이메일로 인증코드 전송
         // TODO: 이메일 인증 - Redis에 이메일 (key) : 코드 (value)  형태로 값 저장
         String key = String.valueOf(redisRepo.getVerifyCode(email));
-        String value = RandomCodeUtils.generate(6);
+        String code = RandomCodeUtils.generate(6);
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+            messageHelper.setFrom(email);
+            messageHelper.setSubject("[TourFinder] 요청하신 인증 코드입니다.");
+            messageHelper.setText("비밀번호 변경 인증 코드입니다");
 
-        redisRepo.saveVerifyCode(key, value);
+            javaMailSender.send(message);
 
+        } catch (Exception e) {
 
+        }
+        redisRepo.saveVerifyCode(email, code);
+        return VerifyCodeSendSuccessDto.builder()
+                .email(email)
+                .code(code)
+                .build();
     }
 
     public ResponseEntity<String> verifyCode(
