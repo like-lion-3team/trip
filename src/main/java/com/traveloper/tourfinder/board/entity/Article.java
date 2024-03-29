@@ -5,13 +5,14 @@ import com.traveloper.tourfinder.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Objects;
 import java.util.*;
 
 @Getter
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Article extends BaseEntity {

@@ -20,8 +20,8 @@ public class ArticleDto {
     private String content;
     private String imagePath;
     private Long memberId;
-    private List<CommentDto> comments = new ArrayList<>();
-    private List<TagDto> tags = new ArrayList<>();
+    private List<CommentDto> comments;
+    private List<TagDto> tags;
 
     public static ArticleDto fromEntity(Article entity) {
         List<CommentDto> commentDtoList = entity.getComments().stream()

@@ -4,10 +4,11 @@ import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment extends BaseEntity {
