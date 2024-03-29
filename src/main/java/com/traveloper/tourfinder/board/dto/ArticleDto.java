@@ -27,14 +27,16 @@ public class ArticleDto {
         List<CommentDto> commentDtoList = entity.getComments().stream()
                 .map(CommentDto::fromEntity)
                 .toList();
-        // TODO tag 추가
+        List<TagDto> tagDtoList = entity.getTags().stream()
+                .map((ArticleTag entity1) -> TagDto.fromEntity(entity1.getTag()))
+                .toList();
         return ArticleDto.builder()
                 .title(entity.getTitle())
                 .content(entity.getContent())
                 .imagePath(entity.getImagePath())
                 .memberId(entity.getMember().getId())
                 .comments(commentDtoList)
-                //.tags()
+                .tags(tagDtoList)
                 .build();
     }
 }

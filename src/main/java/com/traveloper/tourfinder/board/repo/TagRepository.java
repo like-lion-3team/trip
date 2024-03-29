@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 
 public interface TagRepository extends JpaRepository<Tag, Long> {
+    Tag findByContent(String content);
 }
