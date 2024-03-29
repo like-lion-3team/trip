@@ -31,12 +31,12 @@ public class CourseService {
 
     @Transactional
     public void addCourse(CourseDto courseDto) {
-        Member member = facade.getCurrentMember();
+        // Member member = facade.getCurrentMember();
 
         Course course = Course.builder()
                 .title(courseDto.getTitle())
                 .desc(courseDto.getDesc())
-                .member(member)
+           //     .member(member)
                 .build();
         course = courseRepository.save(course);
 
