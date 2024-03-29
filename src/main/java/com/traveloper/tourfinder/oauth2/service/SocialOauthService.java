@@ -138,4 +138,12 @@ public class SocialOauthService {
         redisRepo.saveOauth2AuthorizeToken(randomUUID,generateTokenDto(memberDto.getUuid())  );
         return "/oauth2/callback?socialProvider=" + socialProviderName + "&" + "token=" + randomUUID;
     }
+
+    // TODO : redis 에서 임시 토큰 조회하는 서비스 구현
+    public TokenDto checkAuthorizeToken(String token){
+        return redisRepo.getOauth2AuthorizeToken(token).orElseThrow(
+                () -> new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE)
+        );
+
+    }
 }

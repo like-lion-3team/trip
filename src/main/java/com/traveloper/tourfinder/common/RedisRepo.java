@@ -1,12 +1,14 @@
 package com.traveloper.tourfinder.common;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -16,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class RedisRepo {
     private RedisTemplate<String, String> redisTemplate;
     private RedisTemplate<String, TokenDto> redisOauthAuthorizeTokenTemplate;
+    private ObjectMapper objectMapper;
 
     /**
      * <p>리프래시 토큰을 Redis에 저장할 때 사용합니다.</p>
@@ -89,5 +92,24 @@ public class RedisRepo {
     public boolean destroyOauth2AuthorizeToken(UUID uuid){
         Boolean result = redisOauthAuthorizeTokenTemplate.delete(uuid.toString());
         return result != null && result;
+    }
+
+    /*
+     * <p>임시토큰 조회 메서드 입니다. <br />
+     * 임시토큰이 존재한다면 저장된 TokenDto 정보를 얻을 수 있습니다.
+     * </p>
+     */
+    public Optional<TokenDto> getOauth2AuthorizeToken(String uuid) {
+        String value = redisTemplate.opsForValue().get(uuid);
+        if (value == null) {
+            return Optional.empty();
+        }
+        try {
+            TokenDto tokenDto = objectMapper.readValue(value, TokenDto.class);
+            return Optional.of(tokenDto);
+        } catch (IOException e) {
+            // 적절한 예외 처리
+            throw new RuntimeException("Error deserializing TokenDto", e);
+        }
     }
 }

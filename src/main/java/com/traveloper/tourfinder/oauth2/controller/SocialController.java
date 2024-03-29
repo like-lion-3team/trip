@@ -4,6 +4,7 @@ package com.traveloper.tourfinder.oauth2.controller;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import com.traveloper.tourfinder.oauth2.service.KakaoOauthService;
+import com.traveloper.tourfinder.oauth2.service.SocialOauthService;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -11,10 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -28,6 +27,16 @@ import java.util.UUID;
 @AllArgsConstructor
 public class SocialController {
     private final KakaoOauthService kakaoOauthService;
+    private final SocialOauthService socialOauthService;
+
+    @GetMapping("/{socialProviderName}/authorize?token={token}")
+    public ResponseEntity<TokenDto> oauth2Authorize(
+            @RequestParam("token")
+            String token
+    ){
+        TokenDto tokenDto = socialOauthService.checkAuthorizeToken(token);
+        return ResponseEntity.ok(tokenDto);
+    }
 
 
     @GetMapping("/kakao")
