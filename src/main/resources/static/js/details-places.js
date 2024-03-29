@@ -1,7 +1,13 @@
 // 여행지 상세 정보 API 호출
 function getPlaceDetails(contentId) {
     // API 호출
-    fetch(`/api/v1/places/detail?contentId=${contentId}`)
+    fetch(`/api/v1/places/detail?contentId=${contentId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            'Content-Type': 'application/json',
+        }
+    })
         .then(response => {
             if (!response.ok) {
                 // 응답이 성공적이지 않을 때 에러 처리

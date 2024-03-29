@@ -17,7 +17,13 @@ function addToCourse(contentId) {
     // 이미 선택한 여행지가 아니라면 정보를 가져와서 배열에 추가
     if (!isAlreadySelected) {
         // API 호출하여 여행지의 정보 가져오기
-        fetch(`/api/v1/places/detail?contentId=${contentId}`)
+        fetch(`/api/v1/places/detail?contentId=${contentId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Content-Type': 'application/json',
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     // 응답이 성공적이지 않을 때 에러 처리
