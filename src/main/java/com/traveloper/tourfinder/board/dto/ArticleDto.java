@@ -1,14 +1,9 @@
 package com.traveloper.tourfinder.board.dto;
 
 import com.traveloper.tourfinder.board.entity.Article;
-import com.traveloper.tourfinder.board.entity.ArticleTag;
-import com.traveloper.tourfinder.board.entity.Comment;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Builder
@@ -20,7 +15,7 @@ public class ArticleDto {
     private String content;
     private WriterDto writer;
     private List<CommentDto> comments;
-    private List<TagDto> tags;
+    private List<String> tags;
 
     public static ArticleDto fromEntity(Article entity) {
         List<CommentDto> commentDtoList = entity.getComments().stream()
@@ -32,7 +27,6 @@ public class ArticleDto {
                 .nickname(entity.getMember().getNickname())
                 .build();
 
-        // TODO tag 추가
         return ArticleDto.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
@@ -40,7 +34,7 @@ public class ArticleDto {
                 //.imagePath(entity.getImagePath())
                 .writer(writer)
                 .comments(commentDtoList)
-                //.tags()
+                .tags(entity.getTags())
                 .build();
     }
 }

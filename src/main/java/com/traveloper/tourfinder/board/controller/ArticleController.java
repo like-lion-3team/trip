@@ -15,14 +15,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
+
     // 게시글 등록
     @PostMapping
     public ArticleDto createArticle(
             @RequestPart("title") String title,
             @RequestPart("content") String content,
-            @RequestPart("images") MultipartFile[] images
+            @RequestPart("images") MultipartFile[] images,
+            @RequestPart("tags") String tags
     ) {
-        return articleService.createArticle(title, content, images);
+        return articleService.createArticle(title, content, images, tags);
     }
 
     @GetMapping
@@ -47,12 +49,13 @@ public class ArticleController {
     // 게시글 수정
     @PutMapping("{articleId}")
     public ArticleDto updateArticle(
-            @PathVariable("articleId")
-            Long articleId,
-            @RequestBody
-            ArticleDto articleDto
+            @PathVariable("articleId") Long articleId,
+            @RequestPart("title") String title,
+            @RequestPart("content") String content,
+            @RequestPart("images") MultipartFile[] images,
+            @RequestPart("tags") String tags
     ) {
-        return articleService.updateArticle(articleId, articleDto);
+        return articleService.updateArticle(articleId, title, content, images, tags);
     }
 
     // 게시글 삭제
