@@ -4,9 +4,11 @@ package com.traveloper.tourfinder.common;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Repository
@@ -75,17 +77,17 @@ public class RedisRepo {
      * @param tokenDto 로그인시 전달하는 토큰 Dto 입니다.
      *
      * */
-    public String saveOauthAuthorizeToken(String uuid, TokenDto tokenDto){
-        redisOauthAuthorizeTokenTemplate.opsForValue().set(uuid, tokenDto);
-        return uuid;
+    public String saveOauth2AuthorizeToken(UUID uuid, TokenDto tokenDto){
+        redisOauthAuthorizeTokenTemplate.opsForValue().set(uuid.toString(), tokenDto, AppConstants.OAUTH2_AUTHORIZE_TOKEN_EXPIRE_SECOND, TimeUnit.SECONDS);
+        return uuid.toString();
     }
 
     /**
      * <p>임시토큰 삭제 메서드 입니다.</p>
      * @param uuid 토큰 조회시 사용한 key입니다.
      * */
-    public boolean destroyOauthAuthorizeToken(String uuid){
-        Boolean result = redisOauthAuthorizeTokenTemplate.delete(uuid);
+    public boolean destroyOauth2AuthorizeToken(UUID uuid){
+        Boolean result = redisOauthAuthorizeTokenTemplate.delete(uuid.toString());
         return result != null && result;
     }
 }

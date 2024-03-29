@@ -63,7 +63,7 @@ public class SocialOauthService {
     /**
      * <p>새로운 유저를 생성하고 해당 유저를 소셜로그인 연동</p>
      * */
-    public TokenDto handleNewUser( String socialProviderName,String nickname , String email) {
+    public MemberDto handleNewUser( String socialProviderName,String nickname , String email) {
         String password = passwordEncoder.encode(UUID.randomUUID().toString());
 
         CreateMemberDto createMemberDto = CreateMemberDto.builder()
@@ -80,14 +80,15 @@ public class SocialOauthService {
                 });
 
         linkAccountWithSocialLogin(socialProviderName, findMember);
-        return generateTokenDto(findMember.getUuid());
+        return memberDto;
+
     }
 
 
     /**
      * <p>이미 존재하는 유저 연동</p>
      * */
-    public TokenDto handleExistingUser(String socialProviderName, Member member) {
+    public MemberDto handleExistingUser(String socialProviderName, Member member) {
         boolean isLinkedSocial = member.getSocialProviderMembers().stream()
                 .anyMatch(spm -> socialProviderName.equals(spm.getSocialProvider().getSocialProviderName()));
 
@@ -98,13 +99,18 @@ public class SocialOauthService {
             handleNewUser(socialProviderName, member.getNickname(), member.getEmail());
         }
 
-        return generateTokenDto(member.getUuid());
+        return MemberDto.builder()
+                .nickname(member.getNickname())
+                .role(member.getRole().toString())
+                .memberName(member.getMemberName())
+                .email(member.getEmail())
+                .build();
     }
 
     /**
      * <p>엑세스 토큰을 생성하는 메서드</p>
      * */
-    private TokenDto generateTokenDto(String uuid) {
+    public TokenDto generateTokenDto(String uuid) {
         String accessToken = jwtTokenUtils.generateToken(uuid, AppConstants.ACCESS_TOKEN_EXPIRE_SECOND);
         String refreshToken = jwtTokenUtils.generateToken(uuid, AppConstants.REFRESH_TOKEN_EXPIRE_SECOND);
         redisRepo.saveRefreshToken(accessToken,refreshToken);
@@ -118,5 +124,18 @@ public class SocialOauthService {
                 .expiredDate(LocalDateTime.now().plusSeconds(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND))
                 .expiredSecond(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND)
                 .build();
+    }
+
+    /**
+     * <p>임시 인증용 토큰 생성 및 path 생성 메서드 입니다.</p>
+     * @param socialProviderName 소셜 사업자 종류 입니다. 대문자로 입력 해주세요. ex) KAKAO, NAVER. DB에 대문자로 저장중
+     * @param memberDto 멤버 Dto입니다. 멤버고유의 uuid를 얻을 목적입니다.
+     * */
+    public String getRedirectPathAndSaveOauth2AuthorizeToken(String socialProviderName, MemberDto memberDto){
+        UUID randomUUID = UUID.randomUUID();
+
+        System.out.printf(randomUUID + "UUID");
+        redisRepo.saveOauth2AuthorizeToken(randomUUID,generateTokenDto(memberDto.getUuid())  );
+        return "/oauth2/callback?socialProvider=" + socialProviderName + "&" + "token=" + randomUUID;
     }
 }

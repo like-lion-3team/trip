@@ -95,20 +95,16 @@ public class KakaoOauthService {
         Optional<Member> memberOpt = memberRepository.findMemberByEmail(email);
         if (memberOpt.isEmpty()) {
             // 사용자가 존재하지 않으면 회원가입 및 연동 후 토큰 전달
-            socialOauthService.handleNewUser(SOCIAL_PROVIDER_NAME,nickname, email);
+            MemberDto memberDto = socialOauthService.handleNewUser(SOCIAL_PROVIDER_NAME,nickname, email);
+            return socialOauthService.getRedirectPathAndSaveOauth2AuthorizeToken(SOCIAL_PROVIDER_NAME, memberDto);
         } else {
             // 존재하는 사용자라면 연동 처리
-            socialOauthService.handleExistingUser(SOCIAL_PROVIDER_NAME,memberOpt.get());
+            MemberDto memberDto = socialOauthService.handleExistingUser(SOCIAL_PROVIDER_NAME,memberOpt.get());
+            return socialOauthService.getRedirectPathAndSaveOauth2AuthorizeToken(SOCIAL_PROVIDER_NAME, memberDto);
         }
 
-        UUID uuid = UUID.randomUUID();
-        System.out.printf(uuid + "UUID");
 
-
-
-        return "/oauth2/callback?socialProvider=" + "KAKAO" + "&" + "token=" + uuid;
     }
-
 
     /**
      * <p>
