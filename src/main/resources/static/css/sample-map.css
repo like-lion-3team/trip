@@ -66,13 +66,14 @@ body {
     /* 카드 배경색 */
     border-radius: 10px;
     /* 카드 모서리 둥글게 */
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     /* 카드 그림자 */
 }
 
 
 .extra-content {
     position: fixed; /* 절대적으로 위치를 고정합니다. */
+    padding: 20px;
     top: 0;
     left: 470px; /* 사이드바의 너비만큼 왼쪽으로 이동하여 배치합니다. */
     width: 280px; /* extra-content의 너비를 250px로 설정합니다. */

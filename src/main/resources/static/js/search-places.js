@@ -63,36 +63,49 @@ function updatePageNumbers() {
 
     // 이전 페이지로 이동하는 화살표 추가
     if (currentPage > 1) {
-        const prevPageButton = document.createElement('button');
-        prevPageButton.textContent = '←';
-        prevPageButton.addEventListener('click', function() {
+        const prevPageButton = document.createElement('li');
+        prevPageButton.classList.add('page-item');
+        const link = document.createElement('button');
+        link.textContent = '←';
+        link.classList.add('page-link');
+        link.addEventListener('click', function() {
             currentPage--;
             searchPlaces();
         });
+        prevPageButton.appendChild(link);
         pageNumbersContainer.appendChild(prevPageButton);
     }
 
     for (let i = startPage; i <= endPage; i++) {
-        const pageNumberButton = document.createElement('button');
-        pageNumberButton.textContent = i;
-        pageNumberButton.addEventListener('click', function() {
+        const pageNumberButton = document.createElement('li');
+        pageNumberButton.classList.add('page-item');
+        const link = document.createElement('button');
+        link.textContent = i;
+        link.classList.add('page-link');
+        link.addEventListener('click', function() {
             currentPage = i;
             searchPlaces();
         });
+        pageNumberButton.appendChild(link);
         pageNumbersContainer.appendChild(pageNumberButton);
     }
 
     // 다음 페이지로 이동하는 화살표 추가
     if (currentPage < totalPages) {
-        const nextPageButton = document.createElement('button');
-        nextPageButton.textContent = '→';
-        nextPageButton.addEventListener('click', function() {
+        const nextPageButton = document.createElement('li');
+        nextPageButton.classList.add('page-item');
+        const link = document.createElement('button');
+        link.textContent = '→';
+        link.classList.add('page-link');
+        link.addEventListener('click', function() {
             currentPage++;
             searchPlaces();
         });
+        nextPageButton.appendChild(link);
         pageNumbersContainer.appendChild(nextPageButton);
     }
 }
+
 
 
 
@@ -111,14 +124,14 @@ function displaySearchResults(results) {
         listItem.innerHTML =
         `<div class="card">
             <div class="row g-0">
-                <div class="col-md-3 d-flex align-items-center">
+                <div class="col-md-3 d-flex align-items-center" style="margin-left: 10px">
                     <!-- 이미지가 카드 이미지 부분에 꽉 차게 설정 -->
                     <img src="${item.firstimage}" class="card-img img-square" alt="여행지 이미지"> 
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-6">
                     <div class="card-body">
                         <!-- 제목을 클릭하면 getPlaceDetails 함수 실행 -->
-                        <h6 class="card-title" style="" onclick="getPlaceDetails('${item.contentid}')">${item.title}</h6>
+                        <h6 class="card-title" style="font-size: 13px;  cursor: pointer;" onclick="getPlaceDetails('${item.contentid}')">${item.title}</h6>
                         <p class="card-text" style="font-size: 0.65rem; color: gray;">${item.addr1} ${item.addr2}</p> <!-- 주소 글씨를 회색으로 변경 -->
                     </div>
                 </div>
@@ -129,17 +142,6 @@ function displaySearchResults(results) {
             </div>
         </div>
     `;
-
-
-
-
-            // `<img src="${item.firstimage}" alt="여행지 이미지" style="width: 100px; height: 75px; object-fit: cover; float: left; margin-right: 10px;"> <!-- 이미지 크기 조정 -->
-            // <div>
-            //     <span>${item.title}</span>
-            //     <p style="font-size: 0.8em; color: gray;">${item.addr1} ${item.addr2}</p> <!-- 주소 글씨를 회색으로 변경 -->
-            //     <button onclick="getPlaceDetails('${item.contentid}')">상세정보</button>
-            //     <button class="add-to-course-button" onclick="addToCourse('${item.contentid}')">코스에 추가</button>
-            // </div>`;
 
         // 생성한 항목을 검색 결과 리스트에 추가
         searchResultsList.appendChild(listItem);
