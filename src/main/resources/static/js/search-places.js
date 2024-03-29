@@ -7,10 +7,7 @@ function searchPlaces() {
     const searchQuery = document.getElementById('search').value;
 
     // 2. 검색어가 빈 문자열인지 확인
-    if (searchQuery.trim() === '') {
-        // 검색어가 비어있을 경우 알람 표시
-        alert("검색어를 입력하세요.");
-    } else {
+    if (searchQuery.trim() !== '') {
         // 검색어가 비어있지 않을 경우 API 요청 보내기
         fetch(`/api/v1/places/search?keyword=${searchQuery}&pageNo=${currentPage}`, {
             method: 'GET',

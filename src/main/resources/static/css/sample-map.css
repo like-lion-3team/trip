@@ -260,3 +260,10 @@ body {
 .course-create-btn:hover {
     background-color: #0056b3; /* 마우스 호버 시 배경색 변경 */
 }
+
+
+
+/* CSS */
+.list-item:hover {
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+}

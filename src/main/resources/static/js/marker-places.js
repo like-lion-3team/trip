@@ -49,6 +49,10 @@ function addToCourse(contentId) {
 
                 // 가져온 좌표값으로 마커를 표시합니다
                 displayMarkers();
+
+                // 선택한 여행지의 좌표로 지도의 중심 이동 및 확대
+                moveToSelectedPlace(place);
+
             })
             .catch(error => {
                 // API 요청이 실패했을 때 에러 처리
@@ -109,6 +113,7 @@ function renderSelectedPlaces() {
     selectedPlaces.forEach(place => {
         let listItem = document.createElement("li");
         listItem.textContent = place.title; // 여행지 이름 등 필요한 정보를 여기서 표시
+        listItem.classList.add("list-item"); // CSS 클래스 추가
 
         // 삭제 버튼 추가
         let removeButton = document.createElement("button");
@@ -126,6 +131,11 @@ function renderSelectedPlaces() {
 
         // 리스트 아이템을 목록에 추가
         selectedPlacesList.appendChild(listItem);
+
+        // 해당 여행지를 클릭했을 때 지도의 중심을 해당 위치로 이동
+        listItem.addEventListener("click", () => {
+            moveToSelectedPlace(place);
+        });
     });
 
     // 선택한 여행지 배열을 콘솔에 출력
@@ -157,6 +167,7 @@ function createCourse() {
     fetch("/api/v1/courses", {
         method: "POST",
         headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token'),
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -177,5 +188,13 @@ function createCourse() {
         });
 }
 
+// 여행지의 좌표로 지도의 중심 이동 및 확대하는 함수
+function moveToSelectedPlace(place) {
+    // 선택한 여행지의 좌표로 지도의 중심 이동
+    map.setCenter(new naver.maps.LatLng(place.lng, place.lat));
 
-
+    // 지도 확대 수준 조정 (예: 현재 줌 레벨 + 2)
+    const currentZoomLevel = map.getZoom();
+    const newZoomLevel = currentZoomLevel + 1; // 적절한 값을 설정할 수 있습니다.
+    map.setZoom(newZoomLevel);
+}

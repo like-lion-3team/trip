@@ -68,5 +68,9 @@ public class ViewController {
         return "my-page";
     }
 
+    @GetMapping("/home")
+    public String home() {
+        return "home";
+    }
 
 }
