@@ -2,28 +2,30 @@ package com.traveloper.tourfinder.oauth2.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.traveloper.tourfinder.auth.entity.Member;
+import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.oauth2.dto.KakaoTokenResponse;
+import com.traveloper.tourfinder.oauth2.dto.KakaoUserProfile;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class KakaoOauthService {
     /**
      *
@@ -41,6 +43,7 @@ public class KakaoOauthService {
      *
      * */
 
+    private final MemberRepository memberRepository;
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
 
@@ -53,6 +56,9 @@ public class KakaoOauthService {
     @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
     private String kakaoTokenUri;
 
+    @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
+    private String kakaoUserInfoUri;
+
     public String getKakaoLoginUrl(){
         String path = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="+clientId+"&redirect_uri="+redirectUri;
         return path;
@@ -60,13 +66,16 @@ public class KakaoOauthService {
 
 
     @Transactional
-    public void kakaoLogin(String code) throws JsonProcessingException {
+    public void kakaoLogin(String code) {
+        String accessToken = getAccessTokenUsingCode(code).getAccess_token();
+        KakaoUserProfile userInfo = getUserInfoUsingAccessToken(accessToken);
+        String email = userInfo.getKakaoAccount().getEmail();
 
-        getAccessToken(code);
+
+        Optional<Member> member = memberRepository.findMemberByEmail(email);
+
+
         // TODO: 카카오 로그인 기능 구현
-        // TODO: 엑세스 토큰 요청
-        // TODO: 엑세스 토큰으로 유저 정보 요청
-        // TODO: 엑세스 토큰으로 받아온 데이터 중 이메일을 MemberRepository에서 조회
         // TODO: 존재하는 유저라면 연동처리
         // TODO: 존재하지 않는 유저라면 회원가입 처리
 
@@ -75,7 +84,13 @@ public class KakaoOauthService {
     public void signUp(){
         // TODO: 소셜 회원가입
     };
-    public String getAccessToken(String code) throws JsonProcessingException {
+
+    /**
+     * <p>
+     *     소셜 로그인 이후 받은 code로 AccessToken을 발급 하는 메서드
+     * </p>
+     * */
+    public KakaoTokenResponse getAccessTokenUsingCode(String code) {
         // TODO 받아온 code 를 통해 accessToken 요청
         RestTemplate restTemplate = new RestTemplate();
 
@@ -95,11 +110,28 @@ public class KakaoOauthService {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            KakaoTokenResponse tokenResponse = mapper.readValue(response.getBody(), KakaoTokenResponse.class);
-
-            return tokenResponse.getAccess_token();
+            return mapper.readValue(response.getBody(), KakaoTokenResponse.class);
         } catch (JsonProcessingException e) {
-            log.warn("직렬화 에러");
+            log.warn("카카오 엑세스 토큰 받아온 후, 직렬화 에러");
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+        }
+
+    }
+    public KakaoUserProfile getUserInfoUsingAccessToken(String accessToken){
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(kakaoUserInfoUri,request,String.class);
+
+        try {
+           ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.getBody(), KakaoUserProfile.class);
+        } catch (JsonProcessingException e) {
+            log.warn("카카오 유저 정보 조회 후, 데이터 직렬화 에러");
             throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
         }
 

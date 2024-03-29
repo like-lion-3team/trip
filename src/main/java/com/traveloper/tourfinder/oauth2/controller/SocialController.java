@@ -43,7 +43,7 @@ public class SocialController {
             String code
     ){
         // TODO: 카카오 로그인 클릭시 리다이렉트 되는 url
-//        kakaoOauthService.kakaoLogin(code);
+        kakaoOauthService.kakaoLogin(code);
     }
 
     @GetMapping("/naver/callback")
