@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판</title>
+    <!-- Font Awesome CDN 추가 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-fJREhaEQ8rPcLXjA0Fx7cT9DSMkctkPTGow9iqm/3scTuZo8Rn1OipmDwXszPxOSv8IvhhB8yBvt4SCtLiqcOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* 간단한 스타일링 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .post {
+            border-bottom: 1px solid #ccc;
+            padding: 20px 0;
+        }
+        .post img {
+            max-width: 100px;
+            height: auto;
+            float: left;
+            margin-right: 20px;
+        }
+        .post h2 {
+            margin-top: 0;
+        }
+        .post p {
+            margin-bottom: 10px;
+        }
+        .post .info {
+            font-size: 14px;
+            color: #666;
+        }
+        .post .icons {
+            font-size: 16px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="postContainer">
+    <!-- 여기에 동적으로 추가될 게시물이 표시됩니다. -->
+</div>
+
+<script>
+    // 서버에서 데이터를 가져와 동적으로 게시물을 추가하는 함수
+    function fetchPosts(page, size) {
+        fetch(`api/v1/articles?page=${page}&size=${size}` ,{
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                // 서버로부터 받은 데이터를 기반으로 HTML 생성
+                data.forEach(article => {
+                    const postHTML = `
+                            <div class="post">
+                                <img src="${article.imagePath}" alt="썸네일">
+                                <h2>${article.title}</h2>
+                                <p>${article.content}</p>
+                                <p class="info">
+                                    작성자: ${article.memberId} |
+                                    <span class="icons">
+                                        <i class="far fa-thumbs-up"></i> 0
+                                        <i class="far fa-comment"></i> ${article.comments.length}
+                                    </span>
+                                </p>
+                            </div>
+                        `;
+                    // 생성한 HTML을 postContainer에 추가
+                    document.getElementById('postContainer').innerHTML += postHTML;
+                });
+            })
+            .catch(error => {
+                console.error('데이터를 불러오는 동안 오류가 발생했습니다:', error);
+            });
+    }
+
+    // 페이지 로드 시 초기 데이터 불러오기
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchPosts(1, 10); // 페이지와 사이즈는 여기에 맞게 설정
+    });
+</script>
+</body>
+</html>

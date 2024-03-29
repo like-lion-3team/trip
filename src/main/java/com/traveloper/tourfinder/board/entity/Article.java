@@ -24,14 +24,15 @@ public class Article extends BaseEntity {
     private String title;
     @Setter
     private String content;
-    @Setter
-    private String imagePath;
     @ManyToOne
     private Member member;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private final List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
-    private final List<ArticleTag> tags = new ArrayList<>();
+    @ElementCollection
+    private final List<String> images = new ArrayList<>();
+
+    @ElementCollection
+    private final List<String> tags = new ArrayList<>();
 }
