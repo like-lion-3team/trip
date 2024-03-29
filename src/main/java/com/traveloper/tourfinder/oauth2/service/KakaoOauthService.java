@@ -86,7 +86,7 @@ public class KakaoOauthService {
 
 
     @Transactional
-    public TokenDto kakaoLogin(String code) {
+    public String kakaoLogin(String code) {
         String kakaoAccessToken = getAccessTokenUsingCode(code).getAccess_token();
         KakaoUserProfile userInfo = getUserInfoUsingAccessToken(kakaoAccessToken);
         String email = userInfo.getKakaoAccount().getEmail();
@@ -95,11 +95,16 @@ public class KakaoOauthService {
         Optional<Member> memberOpt = memberRepository.findMemberByEmail(email);
         if (memberOpt.isEmpty()) {
             // 사용자가 존재하지 않으면 회원가입 및 연동 후 토큰 전달
-            return socialOauthService.handleNewUser(SOCIAL_PROVIDER_NAME,nickname, email);
+            socialOauthService.handleNewUser(SOCIAL_PROVIDER_NAME,nickname, email);
         } else {
             // 존재하는 사용자라면 연동 처리
-            return socialOauthService.handleExistingUser(SOCIAL_PROVIDER_NAME,memberOpt.get());
+            socialOauthService.handleExistingUser(SOCIAL_PROVIDER_NAME,memberOpt.get());
         }
+
+        UUID uuid = UUID.randomUUID();
+        System.out.printf(uuid + "UUID");
+
+        return "/oauth2/callback?socialProvider=" + "KAKAO" + "&" + "token=" + uuid;
     }
 
 

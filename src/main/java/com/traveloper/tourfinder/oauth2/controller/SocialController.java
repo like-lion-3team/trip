@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * <p>소셜 로그인 및 관련 기능 컨트롤러 입니다.</p>
@@ -41,13 +42,14 @@ public class SocialController {
     }
 
     @GetMapping("/kakao/callback")
-    public ResponseEntity<TokenDto> redirectSocialKakao(
+    public void redirectSocialKakao(
             @RequestParam("code")
-            String code
-    ){
-        return ResponseEntity.ok(
-                kakaoOauthService.kakaoLogin(code)
-        );
+            String code,
+            HttpServletResponse response
+    ) throws IOException {
+
+        String redirectPath = kakaoOauthService.kakaoLogin(code);
+        response.sendRedirect(redirectPath);
     }
 
     @GetMapping("/naver/callback")
