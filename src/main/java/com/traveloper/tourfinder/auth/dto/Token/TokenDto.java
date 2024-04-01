@@ -1,13 +1,14 @@
 package com.traveloper.tourfinder.auth.dto.Token;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 
 @Getter
 @Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class TokenDto {
     // 엑세스 토큰
     private String accessToken;

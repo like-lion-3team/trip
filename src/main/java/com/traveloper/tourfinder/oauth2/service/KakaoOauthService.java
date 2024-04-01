@@ -86,7 +86,7 @@ public class KakaoOauthService {
 
 
     @Transactional
-    public TokenDto kakaoLogin(String code) {
+    public String kakaoLogin(String code) {
         String kakaoAccessToken = getAccessTokenUsingCode(code).getAccess_token();
         KakaoUserProfile userInfo = getUserInfoUsingAccessToken(kakaoAccessToken);
         String email = userInfo.getKakaoAccount().getEmail();
@@ -95,13 +95,16 @@ public class KakaoOauthService {
         Optional<Member> memberOpt = memberRepository.findMemberByEmail(email);
         if (memberOpt.isEmpty()) {
             // 사용자가 존재하지 않으면 회원가입 및 연동 후 토큰 전달
-            return socialOauthService.handleNewUser(SOCIAL_PROVIDER_NAME,nickname, email);
+            MemberDto memberDto = socialOauthService.handleNewUser(SOCIAL_PROVIDER_NAME,nickname, email);
+            return socialOauthService.getRedirectPathAndSaveOauth2AuthorizeToken(SOCIAL_PROVIDER_NAME, memberDto);
         } else {
             // 존재하는 사용자라면 연동 처리
-            return socialOauthService.handleExistingUser(SOCIAL_PROVIDER_NAME,memberOpt.get());
+            MemberDto memberDto = socialOauthService.handleExistingUser(SOCIAL_PROVIDER_NAME,memberOpt.get());
+            return socialOauthService.getRedirectPathAndSaveOauth2AuthorizeToken(SOCIAL_PROVIDER_NAME, memberDto);
         }
-    }
 
+
+    }
 
     /**
      * <p>
@@ -114,6 +117,7 @@ public class KakaoOauthService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setCacheControl(CacheControl.noCache());
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("grant_type", "authorization_code");
