@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
@@ -13,60 +16,119 @@
 <!-- 지도 -->
 <div id="map"></div>
 
-<!-- 사이드바 -->
-<div class="sidebar">
-    <a href="/home">Home</a>
-    <h3>여행지 검색</h3>
+<!-- 메뉴바 -->
+<div class="menu-bar">
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link active" href="/home">홈</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">일정선택</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" aria-current="page" href="#">장소 선택</a>
+        </li>
+    </ul>
+</div>
+
+<div class="sidebar relative">
+    <!-- 추가한 버튼 -->
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" type="button" onclick="toggle()">
+            <i class="bi bi-chevron-right"></i>
+        </button>
+    </div>
+
     <!-- 여행지 검색창 -->
-    <div class="search-container">
-        <input type="text" id="search" name="search" placeholder="여행지를 검색하세요">
-        <button onclick="searchPlaces()">검색</button>
+    <h5 class="mt-3 mb-3">여행지 검색</h5>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" id="search" name="search" placeholder="여행지를 검색하세요">
+        <button class="btn btn-primary" type="button" onclick="searchPlaces()">검색</button>
     </div>
 
     <!-- 여행지 리스트 -->
     <div id="places-list">
-        <h3 id="search-results-title">검색 결과</h3>
-
+        <h5 id="search-results-title">검색 결과</h5>
         <p id="page-info">총 <span id="total-results">0</span> 개의 결과 중 <span id="start-result">0</span> - <span id="end-result">0</span></p>
-        <ul id="search-results">
+        <ul id="search-results" class="list-group">
             <!-- 검색 결과가 여기에 동적으로 추가됩니다 -->
         </ul>
-        <div id="page-numbers"></div>
+        <nav aria-label="Page navigation">
+            <ul id="page-numbers" class="pagination justify-content-center">
+                <!-- 페이지 번호가 여기에 동적으로 추가됩니다 -->
+            </ul>
+        </nav>
     </div>
 </div>
 
-<!-- 코스 생성 버튼과 선택한 여행지 리스트 -->
-<div class="extra-content">
-    <h3>코스 생성하기</h3>
-    <!-- HTML 코드 -->
-    <div id="courseForm">
-        <form th:action="@{/api/v1/courses}" method="post">
-            <input type="text" id="courseTitle" name="title" placeholder="코스 제목">
-            <textarea id="courseDesc" name="desc" placeholder="코스 설명" style="width: 100%; height: 100px;"></textarea>
-        </form>
-        <h3>선택한 여행지</h3>
-        <ul id="selected-places-list">
-            <!-- 선택한 여행지가 여기에 동적으로 추가됩니다 -->
-        </ul>
-        <button class="course-create-btn" onclick="createCourse()">코스 생성</button>
-    </div>
-</div>
 
-<!-- 모달 창 -->
-<div id="myModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2>상세 정보</h2>
-        <div id="modal-body">
-            <!-- 여기에 상세 정보를 동적으로 추가할 수 있습니다 -->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            </div>
         </div>
     </div>
 </div>
+
+
+
+<!-- 코스 생성 버튼과 선택한 여행지 리스트 -->
+<div class="extra-content">
+    <div id="courseForm" class="p-4">
+        <h5 class="mb-3">코스 생성하기</h5>
+        <form th:action="@{/api/v1/courses}" method="post">
+            <div class="mb-3">
+                <label for="courseTitle" class="form-label">코스 제목</label>
+                <input type="text" class="form-control" id="courseTitle" name="title" placeholder="코스 제목" style="font-size: 14px;">
+            </div>
+            <div class="mb-3">
+                <label for="courseDesc" class="form-label">코스 설명</label>
+                <textarea class="form-control" id="courseDesc" name="desc" placeholder="코스 설명" style="height: 100px; font-size: 14px; overflow-y: auto; resize: none;"></textarea>
+            </div>
+        </form>
+        <hr>
+        <h5 class="mt-3" style="margin-bottom: 20px;">선택한 여행지</h5>
+        <ul id="selected-places-list" class="list-group">
+            <!-- 선택한 여행지가 여기에 동적으로 추가됩니다 -->
+        </ul>
+        <button type="submit" class="btn btn-primary" style="margin-top: 20px;" onclick="createCourse()">코스 생성</button>
+    </div>
+</div>
+
 
 <!-- 필요한 JavaScript 코드를 추가할 수 있습니다 -->
 <script th:src="@{/js/sample-course-create.js}"></script>
 <script th:src="@{/js/search-places.js}"></script>
 <script th:src="@{/js/details-places.js}"></script>
 <script th:src="@{/js/marker-places.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
+<script>
+    function toggle() {
+        const extraContent = document.querySelector('.extra-content');
+        const courseForm = document.getElementById('courseForm');
+        const selectedPlacesList = document.getElementById('selected-places-list');
+        const courseCreateBtn = document.querySelector('.course-create-btn');
+
+        if (extraContent.style.width === '300px') {
+            extraContent.style.width = '0';
+            courseForm.style.display = 'none';
+            selectedPlacesList.style.display = 'none';
+            courseCreateBtn.style.display = 'none';
+        } else {
+            extraContent.style.width = '300px';
+            courseForm.style.display = 'block';
+            selectedPlacesList.style.display = 'block';
+            courseCreateBtn.style.display = 'block';
+        }
+    }
+</script>
+
 </html>
