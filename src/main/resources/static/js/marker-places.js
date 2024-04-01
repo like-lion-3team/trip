@@ -37,8 +37,8 @@ function addToCourse(contentId) {
                 const place = {
                     contentId: contentId,
                     title: data.response.body.items.item[0].title,
-                    lat: parseFloat(data.response.body.items.item[0].mapx),
-                    lng: parseFloat(data.response.body.items.item[0].mapy),
+                    lng: parseFloat(data.response.body.items.item[0].mapx),
+                    lat: parseFloat(data.response.body.items.item[0].mapy),
                     address: data.response.body.items.item[0].addr1 + " " + data.response.body.items.item[0].addr2,
                     thumbnailUrl: data.response.body.items.item[0].firstimage
                 };
