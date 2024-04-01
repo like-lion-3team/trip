@@ -77,48 +77,49 @@
 
                 </div>
                 <div class="m-3">
-                    <h6>나의 여행 코스</h6>
+                    <h5>나의 여행 코스</h5>
                     <div class="container">
-                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 row-cols-xxl-6 g-2">
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 row-cols-xxl-6 g-2">
 
-                            <div class="col-12 col-md-6">
-                                <div class="card">
-                                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Card Title 1</h5>
-                                        <p class="card-text">This is a longer card with supporting text below as a
-                                            natural lead-in to additional content. This content is a little bit
-                                            longer.</p>
+                                <div class="col-12 col-md-6">
+                                    <div class="card">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card Title 1</h5>
+                                            <p class="card-text">This is a longer card with supporting text below as a
+                                                natural lead-in to additional content. This content is a little bit
+                                                longer.</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-12 col-md-6">
-                                <div class="card">
-                                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Card Title 1</h5>
-                                        <p class="card-text">This is a longer card with supporting text below as a
-                                            natural lead-in to additional content. This content is a little bit
-                                            longer.</p>
+                                <div class="col-12 col-md-6">
+                                    <div class="card">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card Title 1</h5>
+                                            <p class="card-text">This is a longer card with supporting text below as a
+                                                natural lead-in to additional content. This content is a little bit
+                                                longer.</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-12 col-md-6">
-                                <div class="card">
-                                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Card Title 1</h5>
-                                        <p class="card-text">This is a longer card with supporting text below as a
-                                            natural lead-in to additional content. This content is a little bit
-                                            longer.</p>
+                                <div class="col-12 col-md-6">
+                                    <div class="card">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card Title 1</h5>
+                                            <p class="card-text">This is a longer card with supporting text below as a
+                                                natural lead-in to additional content. This content is a little bit
+                                                longer.</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- 추가 카드는 여기에 -->
-                        </div>
+                                <!-- 추가 카드는 여기에 -->
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -220,13 +221,15 @@
 
             // 카드의 내용을 설정
             card.innerHTML = `
-            <div class="card">
-                <img src="${course.places[0].thumbnailUrl}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">${course.title}</h5>
-                    <p class="card-text">${course.desc}</p>
+            <a href="/api-test/sample-course-read/${course.id}" style="text-decoration: none;">
+                <div class="card">
+                    <img src="${course.places[0].thumbnailUrl}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">${course.title}</h5>
+                        <p class="card-text">${course.desc}</p>
+                    </div>
                 </div>
-            </div>
+            </a>
         `;
 
             // 컨테이너에 카드를 추가
