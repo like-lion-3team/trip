@@ -50,7 +50,7 @@
 
              const data = await response.json()
              localStorage.setItem("token",data.accessToken);
-             location.href = "/my-page"
+             location.href = "/home"
          } catch (e) {
              console.log(e)
              location.href = "/login"
