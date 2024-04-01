@@ -164,6 +164,26 @@ body {
     height: 100vh; /* 화면의 전체 높이를 차지하도록 설정 */
 }
 
+/* 여행지 상세 정보 스타일링 */
+.modal-body {
+    color: black;
+}
+
+.modal-body img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.modal-header {
+    color: black;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
 
 /* 선택한 여행지 스타일링 */
 #selected-places-list {
