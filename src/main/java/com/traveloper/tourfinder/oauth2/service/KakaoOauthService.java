@@ -94,6 +94,7 @@ public class KakaoOauthService {
             return socialOauthService.getRedirectPathAndSaveOauth2AuthorizeToken(SOCIAL_PROVIDER_NAME, memberDto);
         } else {
             // 존재하는 사용자라면 연동 처리
+            System.out.printf(memberOpt.get().getUuid() + "멤버 UUID");
             MemberDto memberDto = socialOauthService.handleExistingUser(SOCIAL_PROVIDER_NAME,memberOpt.get());
             String path =  socialOauthService.getRedirectPathAndSaveOauth2AuthorizeToken(SOCIAL_PROVIDER_NAME, memberDto);
             return path;
