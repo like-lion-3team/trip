@@ -9,17 +9,43 @@
             crossorigin="anonymous"></script>
     <title>유저 로그인</title>
 
+    <style>
+        .hover{
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
 <div class="d-flex flex-column min-vh-100">
     <!-- 헤더 -->
     <th:block th:replace="~{fragments/header :: header}"></th:block>
+    <!-- Button trigger modal -->
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="loginLoadingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- 중앙 내용 -->
-    <div class="container my-auto">
+    <div class="container my-auto" style="max-width: 340px">
         <div class="row justify-content-center">
-            <div class="col-md-4">
+            <div class="">
                 <div class="mb-3">
                     <label for="email" class="form-label">이메일</label>
                     <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
@@ -29,9 +55,21 @@
                     <label for="password" class="form-label">비밀번호</label>
                     <input type="password" class="form-control" id="password">
                 </div>
+
                 <button class="btn btn-primary" onclick="login()">로그인</button>
+                <button class="btn btn-primary" onclick="goSignUpPage()">회원가입</button>
+                <hr>
+                <b>간편 로그인</b>
+                <div class="flex-column">
+                    <img onclick="kakaoLogin()" width="100%" height="auto" style="max-height: 65px" src="/images/oauth2/kakao_login.png" alt="카카오 로그인 버튼" class="mb-2 hover"/>
+                    <img onclick="naverLogin()" width="100%" height="auto" style="max-height: 65px" src="/images/oauth2/naver_login.png" alt="네이버 로그인 버튼" class="mb-2 hover"/>
+                    <img onclick="googleLogin()" width="100%" height="auto" style="max-height: 65px" src="/images/oauth2/google_login.png" alt="구글 로그인 버튼" class="hover"/>
+                </div>
+
             </div>
+
         </div>
+
     </div>
 
     <!-- 푸터 -->
@@ -41,7 +79,32 @@
 
 </body>
 <script>
+    function openModal(){
+        var myModal = document.getElementById('loginLoadingModal')
+        // var myInput = document.getElementById('myInput')
 
+        myModal.addEventListener('shown.bs.modal', function () {
+            // myInput.focus()
+        })
+    }
+    function closeModal(){
+
+    }
+
+    function goSignUpPage(){
+        return window.location.href = "/sign-up"
+    }
+
+    function kakaoLogin(){
+        openModal()
+        return window.location.href = "/api/v1/oauth2/kakao"
+    }
+    function naverLogin(){
+        return window.location.href = "/api/v1/oauth2/naver"
+    }
+    function googleLogin(){
+        return window.location.href = "/api/v1/oauth2/google"
+    }
     async function login() {
         //fetch
         const email = document.getElementById('email').value;

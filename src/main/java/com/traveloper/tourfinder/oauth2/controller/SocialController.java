@@ -79,6 +79,7 @@ public class SocialController {
             HttpServletResponse response
     ) throws IOException {
 
+        System.out.printf("콜백");
         String redirectPath = kakaoOauthService.kakaoLogin(code);
         response.sendRedirect(redirectPath);
     }

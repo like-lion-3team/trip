@@ -23,25 +23,37 @@ public class PermitAllPath {
             "/*.ico",
             "/*.jpg",
             "/*.jpeg",
-            "/*.png",
+            "/images/**",
 
 
 
      
-            "/login","sign-up","/my-page", "/home",
+            "/login","/sign-up","/my-page", "/home",
             "/board",
             "/board/articles/create",
             "/board/articles/{articleId}/update",
-            "/oauth2/callback",
+
             "/swagger-ui/*",
             "/v1/api-docs/*",
             "/v1/api-docs",
 
             // social
+            "/oauth2/callback",
             "/api/v1/oauth2/**",
-            "/api/v1/oauth2/kakao",
-            "/api/v1/oauth2/kakao/callback/**",
-            "/api/v1/oauth2/KAKAO/authorize/**"
+//            "/api/v1/oauth2/kakao",
+//            "/api/v1/oauth2/kakao/callback/**",
+//            "/api/v1/oauth2/KAKAO/authorize/**",
+
+//            "/api/v1/oauth2/kakao",
+//            "/api/v1/oauth2/kakao/callback/**",
+//
+//            "/api/v1/oauth2/google",
+//            "/api/v1/oauth2/google/callback/**",
+//            "/api/v1/oauth2/GOOGLE/authorize/**",
+//
+//            "/api/v1/oauth2/naver",
+//            "/api/v1/oauth2/naver/callback/**",
+//            "/api/v1/oauth2/NAVER/authorize/**"
 
 
 

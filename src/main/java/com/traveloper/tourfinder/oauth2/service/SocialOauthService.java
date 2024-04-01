@@ -95,8 +95,6 @@ public class SocialOauthService {
         // 타겟 플랫폼 연동 체크
         if (!isLinkedSocial) {
             linkAccountWithSocialLogin(socialProviderName, member);
-        }else{
-            handleNewUser(socialProviderName, member.getNickname(), member.getEmail());
         }
 
         return MemberDto.builder()
