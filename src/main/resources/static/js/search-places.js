@@ -130,8 +130,7 @@ function displaySearchResults(results) {
                 </div>
                 <div class="col-md-6">
                     <div class="card-body">
-                        <!-- 제목을 클릭하면 getPlaceDetails 함수 실행 -->
-                        <h6 class="card-title" style="font-size: 13px;  cursor: pointer;" onclick="getPlaceDetails('${item.contentid}')">${item.title}</h6>
+                         <h6 class="card-title" style="font-size: 13px;  cursor: pointer;" onclick="getPlaceDetails('${item.contentid}')" data-bs-toggle="modal" data-bs-target="#exampleModal">${item.title}</h6>
                         <p class="card-text" style="font-size: 0.65rem; color: gray;">${item.addr1} ${item.addr2}</p> <!-- 주소 글씨를 회색으로 변경 -->
                     </div>
                 </div>
