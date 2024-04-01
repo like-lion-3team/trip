@@ -104,4 +104,14 @@ public class ViewController {
         return "article-update";
     }
 
+    @GetMapping("/board/articles/{articleId}")
+    public String readArticleView(
+            @PathVariable("articleId")
+            Long articleId,
+            Model model
+    ) {
+        model.addAttribute("articleId", articleId);
+        return "article-read";
+    }
+
 }

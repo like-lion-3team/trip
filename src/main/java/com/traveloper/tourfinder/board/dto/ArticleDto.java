@@ -14,6 +14,7 @@ public class ArticleDto {
     private String title;
     private String content;
     private WriterDto writer;
+    private List<String> images;
     private List<CommentDto> comments;
     private List<String> tags;
 
@@ -22,17 +23,12 @@ public class ArticleDto {
                 .map(CommentDto::fromEntity)
                 .toList();
 
-        WriterDto writer = WriterDto.builder()
-                .memberId(entity.getMember().getId())
-                .nickname(entity.getMember().getNickname())
-                .build();
-
         return ArticleDto.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .content(entity.getContent())
-                //.imagePath(entity.getImagePath())
-                .writer(writer)
+                .images(entity.getImages())
+                .writer(WriterDto.fromMember(entity.getMember()))
                 .comments(commentDtoList)
                 .tags(entity.getTags())
                 .build();
