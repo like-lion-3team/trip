@@ -26,13 +26,17 @@
             <a class="nav-link active" href="/home">홈</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="#">일정선택</a>
+            <a class="nav-link active" href="#" id="scheduleNavItem" data-bs-toggle="modal" data-bs-target="#scheduleModal">일정선택</a>
         </li>
         <li class="nav-item">
             <a class="nav-link disabled" aria-current="page" href="#">장소 선택</a>
         </li>
     </ul>
 </div>
+
+
+
+
 
 <div class="sidebar relative">
     <!-- 추가한 버튼 -->
@@ -71,11 +75,11 @@
         <form th:action="@{/api/v1/courses}" method="post">
             <div class="mb-3">
                 <label for="courseTitle" class="form-label">코스 제목</label>
-                <input type="text" class="form-control" id="courseTitle" name="title" placeholder="코스 제목">
+                <input type="text" class="form-control" id="courseTitle" name="title" placeholder="코스 제목" style="font-size: 14px;">
             </div>
             <div class="mb-3">
                 <label for="courseDesc" class="form-label">코스 설명</label>
-                <textarea class="form-control" id="courseDesc" name="desc" placeholder="코스 설명" style="height: 100px;"></textarea>
+                <textarea class="form-control" id="courseDesc" name="desc" placeholder="코스 설명" style="height: 100px; font-size: 14px; overflow-y: auto; resize: none;"></textarea>
             </div>
         </form>
         <hr>
@@ -124,6 +128,12 @@
             courseCreateBtn.style.display = 'block';
         }
     }
+
+    // 첫 번째 모달에서 두 번째 모달로의 전환 처리
+    document.getElementById('scheduleModal').addEventListener('hide.bs.modal', function () {
+        // 첫 번째 모달이 닫힐 때 두 번째 모달을 엽니다.
+        document.getElementById('timeModal').classList.add('show');
+    });
 </script>
 
 </html>
