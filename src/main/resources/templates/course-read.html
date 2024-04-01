@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>여행 코스 조회</title>
+    <script type="text/javascript"
+            th:src="@{https://oapi.map.naver.com/openapi/v3/maps.js(ncpClientId=${clientId})}"></script>
+    <!-- 여기에 필요한 CSS 링크를 추가할 수 있습니다 -->
+    <link rel="stylesheet" type="text/css" href="/css/course-read.css">
+</head>
+<body>
+<!-- 지도 -->
+<div id="map"></div>
+
+<!-- 사이드바 -->
+<div class="sidebar">
+    <a href="/home">Home</a>
+    <h3>여행지 검색</h3>
+</div>
+
+<!-- 코스 생성 버튼과 선택한 여행지 리스트 -->
+<div class="extra-content">
+    <h3>코스 조회</h3>
+    <!-- HTML 코드 -->
+    <div id="courseForm">
+        <form th:action="@{/api/v1/courses}" method="post">
+            <input type="text" id="courseTitle" name="title" , readonly>
+            <textarea id="courseDesc" name="desc" placeholder="코스 설명" style="width: 100%; height: 100px;" ,
+                      readonly></textarea>
+        </form>
+        <h3>선택한 여행지</h3>
+        <ul id="selected-places-list">
+            <!-- 선택한 여행지가 여기에 동적으로 추가됩니다 -->
+        </ul>
+    </div>
+</div>
+
+<!-- 모달 창 -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>상세 정보</h2>
+        <div id="modal-body">
+            <!-- 여기에 상세 정보를 동적으로 추가할 수 있습니다 -->
+        </div>
+    </div>
+</div>
+
+<!-- 필요한 JavaScript 코드를 추가할 수 있습니다 -->
+<script>
+    function courseLoad(courseId) {
+        let selectedPlacesList = document.getElementById("selected-places-list");
+
+        fetch('/api/v1/courses/' + courseId, {
+            method: 'GET'
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('게시글을 불러오는데 실패했습니다.');
+            }
+            return response.json(); // JSON 형태로 변환하여 반환
+        }).then(data => {
+            document.getElementById('courseTitle').value = data.title;
+            document.getElementById('courseDesc').innerText = data.desc;
+            return data.places;
+        }).then(places => {
+            places.forEach(placeData => {
+                // 여행지의 정보를 가져와서 선택한 여행지 배열에 추가
+                const place = {
+                    contentId: placeData.contentId,
+                    title: placeData.title,
+                    lat: parseFloat(placeData.lat),
+                    lng: parseFloat(placeData.lng),
+                    address: placeData.addr,
+                    thumbnailUrl: placeData.thumbnailUrl
+                };
+                // 선택한 여행지 목록을 화면에 표시
+                renderSelectedPlaces(selectedPlacesList, place);
+
+                // 가져온 좌표값으로 마커를 표시합니다
+                displayMarker(place);
+            })
+        })
+    }
+
+    // 선택한 여행지를 화면에 표시하는 함수
+    function renderSelectedPlaces(selectedPlacesList, place) {
+        // 선택한 여행지 배열을 순회하면서 각각의 여행지를 화면에 추가
+        let listItem = document.createElement("li");
+        listItem.textContent = place.title; // 여행지 이름 등 필요한 정보를 여기서 표시
+        listItem.classList.add("list-item"); // CSS 클래스 추가
+
+        // 해당 여행지를 클릭했을 때 지도의 중심을 해당 위치로 이동
+        listItem.addEventListener("click", () => {
+            moveToSelectedPlace(place);
+        });
+
+        selectedPlacesList.appendChild(listItem);
+    }
+
+    function moveToSelectedPlace(place) {
+        // 선택한 여행지의 좌표로 지도의 중심 이동
+        map.setCenter(new naver.maps.LatLng(place.lng, place.lat));
+
+        // 지도 확대 수준 조정 (예: 현재 줌 레벨 + 2)
+        const currentZoomLevel = map.getZoom();
+        const newZoomLevel = currentZoomLevel + 1; // 적절한 값을 설정할 수 있습니다.
+        map.setZoom(newZoomLevel);
+    }
+
+    function displayMarker(place) {
+        var position = new naver.maps.LatLng(place.lat, place.lng);
+        var marker = new naver.maps.Marker({
+            position: position,
+            map: map
+        });
+    }
+
+    courseLoad([[${courseId}]]);
+</script>
+
+<!--맵 표시 자바스크립트-->
+<script th:src="@{/js/sample-course-create.js}"></script>
+
+</body>
+</html>

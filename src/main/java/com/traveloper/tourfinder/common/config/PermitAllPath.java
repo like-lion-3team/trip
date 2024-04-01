@@ -29,11 +29,15 @@ public class PermitAllPath {
 
 
             "/login","sign-up","/my-page", "/home",
+
+            // board
             "/board",
             "/board/articles",
             "/board/articles/{articleId}",
             "/board/articles/create",
             "/board/articles/{articleId}/update",
+
+
             "/oauth2/callback",
             "/swagger-ui/*",
             "/v1/api-docs/*",
