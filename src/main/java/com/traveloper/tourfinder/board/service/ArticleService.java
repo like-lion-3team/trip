@@ -50,6 +50,7 @@ public class ArticleService {
 
         for (MultipartFile image : images) {
             String imagePath = saveImage(image);
+            imagePath = imagePath.replaceAll("\\\\", "/");
             article.getImages().add(imagePath);
         }
 

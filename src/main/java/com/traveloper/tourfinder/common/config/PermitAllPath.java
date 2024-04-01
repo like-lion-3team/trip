@@ -27,9 +27,11 @@ public class PermitAllPath {
 
 
 
-     
+
             "/login","sign-up","/my-page", "/home",
             "/board",
+            "/board/articles",
+            "/board/articles/{articleId}",
             "/board/articles/create",
             "/board/articles/{articleId}/update",
             "/oauth2/callback",
@@ -42,8 +44,5 @@ public class PermitAllPath {
             "/api/v1/oauth2/kakao",
             "/api/v1/oauth2/kakao/callback/**",
             "/api/v1/oauth2/KAKAO/authorize/**"
-
-
-
     };
 }

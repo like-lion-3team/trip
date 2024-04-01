@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 조회</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333333;
+            text-align: center;
+        }
+
+        .author {
+            font-size: 16px;
+            color: #666666;
+        }
+
+        p {
+            margin-bottom: 10px;
+            color: #666666;
+        }
+
+        .image-preview {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+            color: #666666;
+        }
+
+        .comment-form {
+            margin-top: 40px;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+
+        .comment-form textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .comment-form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .comment-form button:hover {
+            background-color: #0056b3;
+        }
+
+        /* 댓글 상자 스타일 */
+        .comment-box {
+            background-color: #f2f2f2;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .comment-box p {
+            margin: 0;
+        }
+
+        .comment-box .comment-content {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .comment-box .comment-writer {
+            font-size: 12px;
+            color: #666666;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 id="articleTitle">게시글 제목 <span class="author" id="articleWriter">작성자 이름</span></h1>
+    <div class="image-preview" id="articleImage">
+        <img src="이미지 URL" alt="이미지">
+    </div>
+    <p id="articleContent">게시글 내용 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus nec velit purus. Ut malesuada neque non metus maximus malesuada. Cras ullamcorper purus vel lacus rhoncus, et accumsan est convallis.</p>
+    <p id="articleTags">태그: Tag1, Tag2, Tag3</p>
+    <h2>댓글</h2>
+    <div id="commentList">
+        <!-- 댓글이 여기에 동적으로 추가될 것입니다. -->
+    </div>
+
+    <!-- 댓글 작성 폼 -->
+    <div class="comment-form">
+        <h2>댓글 작성</h2>
+        <form id="commentForm">
+            <textarea id="commentContent" rows="4" placeholder="댓글을 입력하세요" required></textarea><br>
+            <button type="submit">댓글 작성</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 페이지 로드 후 실행될 함수
+    window.onload = function () {
+        // articleId를 받아옵니다. 이 부분은 서버에서 Thymeleaf로 articleId를 넘겨줘야 합니다.
+        const articleId = [[${articleId}]]
+
+        // 서버로부터 해당 articleId에 해당하는 게시글 정보를 받아옵니다.
+        fetch('/api/v1/articles/' + articleId, {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('게시글을 불러오는데 실패했습니다.');
+                }
+                return response.json(); // JSON 형태로 변환하여 반환
+            })
+            .then(article => {
+                // article 객체에서 필요한 정보를 추출하여 HTML에 표시합니다.
+                document.getElementById('articleTitle').innerText = article.title;
+                document.getElementById('articleImage').innerHTML = `
+                    ${article.images.map(image => {
+                    const fileName = image.substring(image.lastIndexOf('/') + 1);
+                    return `<img src="/${fileName}" alt="이미지">`;
+                }).join('')}
+                `;
+                document.getElementById('articleContent').innerText = article.content;
+                document.getElementById('articleTags').innerText = `태그: ${article.tags.join(', ')}`;
+                updateCommentList(article.comments); // 댓글 목록 업데이트
+            })
+            .catch(error => {
+                console.error('게시글을 불러오는 중 오류가 발생했습니다:', error);
+            });
+    };
+
+    // 댓글 목록 업데이트 함수
+    function updateCommentList(comments) {
+        const commentList = document.getElementById('commentList');
+        commentList.innerHTML = ''; // 댓글 목록 초기화
+
+        comments.forEach(comment => {
+            const commentBox = document.createElement('div');
+            commentBox.classList.add('comment-box');
+
+            const commentContent = document.createElement('p');
+            commentContent.classList.add('comment-content');
+            commentContent.innerText = comment.content;
+
+            const commentWriter = document.createElement('p');
+            commentWriter.classList.add('comment-writer');
+            commentWriter.innerText = `작성자: ${comment.writer.nickname}`;
+
+            commentBox.appendChild(commentContent);
+            commentBox.appendChild(commentWriter);
+
+            commentList.appendChild(commentBox);
+        });
+    }
+
+    // 댓글 작성 폼 제출 시 처리
+    document.getElementById('commentForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // 폼 제출 방지
+
+        const commentContent = document.getElementById('commentContent').value;
+
+        // 여기서는 AJAX 요청을 보내는 대신, 실제 서버에 댓글을 작성하는 코드를 추가해야 합니다.
+        // 이 코드는 댓글 작성이 완료되면 해당 댓글을 화면에 추가하는 등의 작업을 수행할 수 있습니다.
+        console.log('작성된 댓글:', commentContent);
+
+        // 여기서 실제 서버에 댓글을 전송하는 코드를 작성해야 합니다.
+        // fetch 또는 XMLHttpRequest 등의 방법을 사용하여 서버와 통신할 수 있습니다.
+        fetch('/api/v1/articles/' + [[${articleId}]] + '/comments', {
+            method: 'POST',
+            body: JSON.stringify({
+                content: commentContent
+            }),
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('게시글을 불러오는데 실패했습니다.');
+            }
+            return response.json(); // JSON 형태로 변환하여 반환
+        }).then(newComment => {
+            // 댓글 목록에 새로운 댓글 추가
+            const commentList = document.getElementById('commentList');
+            const commentBox = document.createElement('div');
+            commentBox.classList.add('comment-box');
+
+            const commentContent = document.createElement('p');
+            commentContent.classList.add('comment-content');
+            commentContent.innerText = newComment.content;
+
+            const commentWriter = document.createElement('p');
+            commentWriter.classList.add('comment-writer');
+            commentWriter.innerText = `작성자: ${newComment.writer.nickname}`;
+
+            commentBox.appendChild(commentContent);
+            commentBox.appendChild(commentWriter);
+
+            commentList.appendChild(commentBox);
+
+            // 입력 필드 초기화
+            document.getElementById('commentContent').value = '';
+        }).catch(error => {
+            console.error('댓글을 작성하는 중 오류가 발생했습니다:', error);
+        });
+    });
+
+    //TODO 댓글 수정 삭제 버튼
+</script>
+</body>
+</html>
