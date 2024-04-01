@@ -128,6 +128,8 @@ public class MemberService implements UserDetailsService {
         member.updatePassword(passwordEncoder.encode(newPassword));
     }
 
+
+
     private Member validatePassword(String email, String password) {
 
         Member member = memberRepository.findMemberByEmail(email)
