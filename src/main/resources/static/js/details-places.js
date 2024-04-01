@@ -60,17 +60,17 @@ function displayPlaceDetails(details) {
     var modalBody = document.querySelector('.modal-body');
     var modalHeader = document.querySelector('.modal-header');
 
-    if (modalBody !== null) {
+    if (modalBody !== null && modalHeader !== null) {
+        modalHeader.innerHTML = '';
         modalBody.innerHTML = '';
     }
 
     // 상세 정보 표시
     details.forEach(item => {
-        console.log(item.title);
         if (item.title) {
             var titleElement = document.createElement('h3');
             titleElement.textContent = item.title; // 제목 설정
-            titleElement.classList.add('modal-title'); // modal-title 클래스 추가
+            // titleElement.classList.add('modal-title'); // modal-title 클래스 추가
             modalHeader.appendChild(titleElement); // 모달 바디에 추가
         }
 
@@ -80,6 +80,25 @@ function displayPlaceDetails(details) {
             imageElement.src = item.firstimage;
             modalBody.appendChild(imageElement);
         }
+
+        if (item.overview) {
+            var overviewElement = document.createElement('p');
+            overviewElement.textContent = item.overview;
+            modalBody.appendChild(overviewElement);
+        }
+
+        if (item.tel) {
+            var telElement = document.createElement('p');
+            telElement.textContent = '전화번호: ' + item.tel;
+            modalBody.appendChild(telElement);
+        }
+
+        if (item.homepage) {
+            var homepageElement = document.createElement('p');
+            homepageElement.innerHTML = '홈페이지: ' + item.homepage;
+            modalBody.appendChild(homepageElement);
+        }
+
     });
 
     // 모달 열기
