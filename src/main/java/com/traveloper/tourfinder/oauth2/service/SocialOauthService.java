@@ -91,15 +91,14 @@ public class SocialOauthService {
     public MemberDto handleExistingUser(String socialProviderName, Member member) {
         boolean isLinkedSocial = member.getSocialProviderMembers().stream()
                 .anyMatch(spm -> socialProviderName.equals(spm.getSocialProvider().getSocialProviderName()));
-
+        log.info("소셜 회원인지 체크:"+ isLinkedSocial);
         // 타겟 플랫폼 연동 체크
         if (!isLinkedSocial) {
             linkAccountWithSocialLogin(socialProviderName, member);
-        }else{
-            handleNewUser(socialProviderName, member.getNickname(), member.getEmail());
         }
 
         return MemberDto.builder()
+                .uuid(member.getUuid())
                 .nickname(member.getNickname())
                 .role(member.getRole().toString())
                 .memberName(member.getMemberName())
@@ -134,6 +133,7 @@ public class SocialOauthService {
     public String getRedirectPathAndSaveOauth2AuthorizeToken(String socialProviderName, MemberDto memberDto){
         UUID randomUUID = UUID.randomUUID();
 
+        System.out.printf(memberDto.getUuid() + "UUID");
         System.out.printf(randomUUID + "UUID");
         redisRepo.saveOauth2AuthorizeToken(randomUUID,generateTokenDto(memberDto.getUuid())  );
         return "/oauth2/callback?socialProvider=" + socialProviderName + "&" + "token=" + randomUUID;
