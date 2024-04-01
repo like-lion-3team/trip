@@ -17,6 +17,7 @@ INSERT INTO Member(is_delete, role_id, email, member_name, nickname, password, u
 
 INSERT INTO social_provider(is_delete,social_provider_name) VALUES (false, 'KAKAO');
 INSERT INTO social_provider(is_delete,social_provider_name) VALUES (false, 'NAVER');
+INSERT INTO social_provider(is_delete,social_provider_name) VALUES (false, 'GOOGLE');
 
 INSERT INTO course (is_delete, title, desc, member_id) VALUES (false, '서울 코스', '서울 도는 코스 예시입니다.', 6);
 
