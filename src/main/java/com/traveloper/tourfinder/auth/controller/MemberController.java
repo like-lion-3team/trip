@@ -1,38 +1,22 @@
 package com.traveloper.tourfinder.auth.controller;
 
 
-import com.nimbusds.openid.connect.sdk.assurance.request.VerifiedClaimsSetRequest;
-
-import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
-import com.traveloper.tourfinder.auth.dto.MemberDto;
-import com.traveloper.tourfinder.auth.dto.MyPageDto;
-import com.traveloper.tourfinder.auth.dto.SignInDto;
+import com.traveloper.tourfinder.auth.dto.*;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.password.UpdatePasswordReq;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
+import com.traveloper.tourfinder.auth.service.EmailService;
 import com.traveloper.tourfinder.auth.service.MemberService;
-import com.traveloper.tourfinder.board.dto.ArticleDto;
-import com.traveloper.tourfinder.common.BaseEntity;
-import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.util.AuthenticationFacade;
-import com.traveloper.tourfinder.common.util.RandomCodeUtils;
-import com.traveloper.tourfinder.common.util.ValidateUtils;
-import com.traveloper.tourfinder.course.dto.CourseDto;
-import com.traveloper.tourfinder.course.entity.Course;
 import com.traveloper.tourfinder.course.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.MemberUtils;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "Auth", description = "Auth API")
 @Slf4j
@@ -43,6 +27,7 @@ public class MemberController {
     private final MemberService memberService;
     private final AuthenticationFacade authenticationFacade;
     private final CourseService courseService;
+    private final EmailService emailService;
     private final MemberRepository memberRepository;
 
     // 회원가입
@@ -101,15 +86,25 @@ public class MemberController {
 
     @PutMapping("/password-recovery")
     public void recoverPassword(
-            @RequestParam String changePw
+            @RequestParam
+            String changePassword,
+            @PathVariable("email")
+            String email,
+            @PathVariable("code")
+            String code
     ){
-
         // TODO: 비밀번호 복구 ( 비밀번호 찾기 -> 변경 )
+        emailService.verifyCode(email, code);
+        memberService.updatePassword(null, null, changePassword);
     }
 
     @PostMapping("/password-recovery")
-    public void recoverPasswordRequest() {
+    public void recoverPasswordRequest(
+            @RequestParam
+            String email
+    ) {
         // TODO: 비밀번호 복구 요청 ( 이메일 전송 )
+        emailService.sendNotificationEmail(email);
     }
 
 }

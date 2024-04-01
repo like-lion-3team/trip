@@ -54,7 +54,7 @@ public class EmailService {
 
 
 
-    public void sendNotificationEmail(){
+    public void sendNotificationEmail(String email){
 
     }
 
