@@ -30,6 +30,8 @@ public class PermitAllPath {
      
             "/login","/sign-up","/my-page", "/home",
             "/board",
+            "/board/articles",
+            "/board/articles/{articleId}",
             "/board/articles/create",
             "/board/articles/{articleId}/update",
 
@@ -40,22 +42,6 @@ public class PermitAllPath {
             // social
             "/oauth2/callback",
             "/api/v1/oauth2/**",
-//            "/api/v1/oauth2/kakao",
-//            "/api/v1/oauth2/kakao/callback/**",
-//            "/api/v1/oauth2/KAKAO/authorize/**",
-
-//            "/api/v1/oauth2/kakao",
-//            "/api/v1/oauth2/kakao/callback/**",
-//
-//            "/api/v1/oauth2/google",
-//            "/api/v1/oauth2/google/callback/**",
-//            "/api/v1/oauth2/GOOGLE/authorize/**",
-//
-//            "/api/v1/oauth2/naver",
-//            "/api/v1/oauth2/naver/callback/**",
-//            "/api/v1/oauth2/NAVER/authorize/**"
-
-
 
     };
 }

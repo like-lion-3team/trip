@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/vi/articles/{articleId}/comments")
+@RequestMapping("api/v1/articles/{articleId}/comments")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentServiceImp commentService;

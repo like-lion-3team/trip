@@ -121,6 +121,10 @@ spring:
       username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
 
+  web:
+    resources:
+      static-locations: classpath:/static/,file:./img/articles/
+
 naver:
   developers:
     client-id: ${NAVER_DEVELOPERS_CLIENT_ID}
