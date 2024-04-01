@@ -3,6 +3,7 @@ package com.traveloper.tourfinder.oauth2.controller;
 
 import com.traveloper.tourfinder.auth.dto.MemberDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
+import com.traveloper.tourfinder.oauth2.service.GoogleOauthService;
 import com.traveloper.tourfinder.oauth2.service.KakaoOauthService;
 import com.traveloper.tourfinder.oauth2.service.NaverOauthService;
 import com.traveloper.tourfinder.oauth2.service.SocialOauthService;
@@ -27,6 +28,7 @@ import java.util.UUID;
 @RequestMapping("api/v1/oauth2")
 @AllArgsConstructor
 public class SocialController {
+    private final GoogleOauthService googleOauthService;
     private final NaverOauthService naverOauthService;
     private final KakaoOauthService kakaoOauthService;
     private final SocialOauthService socialOauthService;
@@ -51,6 +53,23 @@ public class SocialController {
     public void naverLogin(HttpServletResponse response) throws IOException {
         String path = naverOauthService.getNaverLoginUrl();
         response.sendRedirect(path);
+    }
+
+    @GetMapping("/google")
+    public void googleLogin(HttpServletResponse response) throws IOException {
+        String path = googleOauthService.getGoogleLoginUrl();
+        response.sendRedirect(path);
+    }
+
+    @GetMapping("/google/callback")
+    public void redirectSocialGoogle(
+            @RequestParam("code")
+            String code,
+            HttpServletResponse response
+    ) throws IOException {
+
+        String redirectPath = googleOauthService.googleLogin(code);
+        response.sendRedirect(redirectPath);
     }
 
     @GetMapping("/kakao/callback")
