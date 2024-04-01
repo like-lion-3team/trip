@@ -4,6 +4,7 @@ package com.traveloper.tourfinder.oauth2.controller;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import com.traveloper.tourfinder.oauth2.service.KakaoOauthService;
+import com.traveloper.tourfinder.oauth2.service.NaverOauthService;
 import com.traveloper.tourfinder.oauth2.service.SocialOauthService;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +27,7 @@ import java.util.UUID;
 @RequestMapping("api/v1/oauth2")
 @AllArgsConstructor
 public class SocialController {
+    private final NaverOauthService naverOauthService;
     private final KakaoOauthService kakaoOauthService;
     private final SocialOauthService socialOauthService;
 
@@ -34,7 +36,6 @@ public class SocialController {
             @RequestParam("token")
             String token
     ){
-        System.out.println("엔트포인트 테스트");
         TokenDto tokenDto = socialOauthService.checkAuthorizeToken(token);
         return ResponseEntity.ok(tokenDto);
     }
@@ -47,8 +48,9 @@ public class SocialController {
     }
 
     @GetMapping("/naver")
-    public void naverLogin(){
-
+    public void naverLogin(HttpServletResponse response) throws IOException {
+        String path = naverOauthService.getNaverLoginUrl();
+        response.sendRedirect(path);
     }
 
     @GetMapping("/kakao/callback")
@@ -63,7 +65,13 @@ public class SocialController {
     }
 
     @GetMapping("/naver/callback")
-    public void redirectSocialNaver(){
+    public void redirectSocialNaver(
+            @RequestParam("code")
+            String code,
+            HttpServletResponse response
+    ) throws IOException  {
+        String redirectPath = naverOauthService.naverLogin(code);
         // TODO: 네이버 로그인 클릭 시 리다이렉트 되는 url
+        response.sendRedirect(redirectPath);
     }
 }
