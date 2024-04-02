@@ -50,7 +50,7 @@ public class ViewController {
     ) {
         model.addAttribute("clientId", NCP_CLIENT_ID);
         model.addAttribute("courseId", courseId);
-        return "sample-course-read";
+        return "course-read";
     }
 
     // 테스트용
