@@ -13,12 +13,15 @@ import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import com.traveloper.tourfinder.course.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @Tag(name = "Auth", description = "Auth API")
 @Slf4j
@@ -87,13 +90,16 @@ public class MemberController {
     }
 
     @PostMapping("/password-recovery/verify-code")
-    public ResponseEntity verifyCode(
+    public void verifyCode(
             @RequestBody
-            PasswordRecoveryVerifyCodeRequestDto dto
-    ){
+            PasswordRecoveryVerifyCodeRequestDto dto,
+            HttpServletResponse servletResponse
+
+    ) throws IOException {
         boolean isVerify = emailService.verifyCode(dto.getEmail(), dto.getCode());
         if(!isVerify) throw new GlobalExceptionHandler(CustomGlobalErrorCode.PASSWORD_RECOVERY_CODE_MISS_MATCH);
-        return ResponseEntity.ok("");
+
+        servletResponse.sendRedirect("/password-change");
     }
 
     /**
@@ -104,7 +110,6 @@ public class MemberController {
             @RequestBody
             PasswordRecoveryRequestDto dto
     ){
-
         memberService.updatePassword(null, null, dto.getNewPassword());
         return ResponseEntity.ok("");
     }
