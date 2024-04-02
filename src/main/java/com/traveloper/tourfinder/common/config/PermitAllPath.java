@@ -34,7 +34,7 @@ public class PermitAllPath {
             "/board/articles/{articleId}",
             "/board/articles/create",
             "/board/articles/{articleId}/update",
-
+            "/password-change",
             "/swagger-ui/*",
             "/v1/api-docs/*",
             "/v1/api-docs",
@@ -42,6 +42,7 @@ public class PermitAllPath {
             // social
             "/oauth2/callback",
             "/api/v1/oauth2/**",
+
             "/api/v1/auth/password-recovery",
             "/api/v1/auth/password-recovery/verify-code"
 

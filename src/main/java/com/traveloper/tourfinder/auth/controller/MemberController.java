@@ -89,6 +89,9 @@ public class MemberController {
 
     }
 
+    /**
+     * <p>비밀번호 변경시 메일로 전송된 코드 검증 메서드</p>
+     * */
     @PostMapping("/password-recovery/verify-code")
     public void verifyCode(
             @RequestBody
@@ -99,6 +102,9 @@ public class MemberController {
         boolean isVerify = emailService.verifyCode(dto.getEmail(), dto.getCode());
         if(!isVerify) throw new GlobalExceptionHandler(CustomGlobalErrorCode.PASSWORD_RECOVERY_CODE_MISS_MATCH);
 
+        // 비밀번호 변경 화면으로 리다이렉트
+        // 아래 location은 임시로 넣어 둔 값입니다.
+        // 실제 사용할 값으로 변경 해주세요
         servletResponse.sendRedirect("/password-change");
     }
 
