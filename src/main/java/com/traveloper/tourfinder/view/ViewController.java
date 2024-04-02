@@ -122,4 +122,9 @@ public class ViewController {
         return "article-read";
     }
 
+    @GetMapping("/password-change")
+    public String passwordChangeView(){
+        return "password-change";
+    }
+
 }
