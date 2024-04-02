@@ -22,4 +22,8 @@ public interface KTOSearchService {
     // 지역 기반 관광정보 조회 (코스 찾기)
     @GetExchange("/areaBasedList1")
     Object AreaBasedList(@RequestParam Map<String, Object> params);
+
+    // 지역 코드 조회
+    @GetExchange("/areaCode1")
+    Object AreaCodeList(@RequestParam Map<String, Object> params);
 }
