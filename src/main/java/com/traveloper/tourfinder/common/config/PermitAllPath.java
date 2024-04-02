@@ -42,6 +42,7 @@ public class PermitAllPath {
             // social
             "/oauth2/callback",
             "/api/v1/oauth2/**",
+            "/api/v1/auth/password-recovery"
 
     };
 }

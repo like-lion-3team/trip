@@ -84,6 +84,9 @@ public class MemberController {
 
     }
 
+    /**
+     * <p></p>
+     * */
     @PutMapping("/password-recovery")
     public void recoverPassword(
             @RequestParam
@@ -98,13 +101,15 @@ public class MemberController {
         memberService.updatePassword(null, null, changePassword);
     }
 
+    /**
+     * <p>비밀번호 복구에 사용할 본인 인증 코드를 이메일로 보냅니다.</p>
+     * */
     @PostMapping("/password-recovery")
     public void recoverPasswordRequest(
-            @RequestParam
-            String email
+            @RequestBody
+            PasswordRecoveryMailRequestDto dto
     ) {
-        // TODO: 비밀번호 복구 요청 ( 이메일 전송 )
-        emailService.sendNotificationEmail(email);
+        emailService.sendVerifyCodeMail(dto.getEmail());
     }
 
 }
