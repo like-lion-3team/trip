@@ -107,20 +107,12 @@ public class GoogleOauthService {
     }
 
     public GoogleUserProfile getProfile(String accessToken) {
-        RestTemplate restTemplate = new RestTemplate();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-
-
-        HttpEntity<String> request = new HttpEntity<>(headers);
 
         try {
-            ResponseEntity<String> response = restTemplate.exchange(
-                    googleUserInfoUri, HttpMethod.GET, request, String.class);
-
+            String body = socialOauthService.getProfileRequest(accessToken,googleUserInfoUri);
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(response.getBody(), GoogleUserProfile.class);
+            return mapper.readValue(body, GoogleUserProfile.class);
         } catch (HttpClientErrorException e) {
             log.warn("클라이언트 오류: " + e.getStatusCode());
             throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);

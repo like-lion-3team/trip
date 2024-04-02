@@ -108,21 +108,12 @@ public class NaverOauthService {
     }
 
     public NaverUserProfile getProfile(String accessToken){
-        RestTemplate restTemplate = new RestTemplate();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-
-
-        HttpEntity<String> request = new HttpEntity<>(headers);
-        System.out.println(request.getHeaders().get("Authorization") + "    인증토큰");
 
         try {
-            ResponseEntity<String> response = restTemplate.exchange(
-                    naverUserInfoUri, HttpMethod.GET, request, String.class);
-
+            String body = socialOauthService.getProfileRequest(accessToken,naverUserInfoUri);
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(response.getBody(), NaverUserProfile.class);
+            return mapper.readValue(body, NaverUserProfile.class);
         } catch (HttpClientErrorException e) {
             log.warn("클라이언트 오류: " + e.getStatusCode());
             throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);

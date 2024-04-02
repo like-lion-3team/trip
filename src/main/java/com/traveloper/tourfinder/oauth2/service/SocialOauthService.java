@@ -1,5 +1,6 @@
 package com.traveloper.tourfinder.oauth2.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
@@ -19,8 +20,13 @@ import com.traveloper.tourfinder.oauth2.repo.SocialProviderRepo;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -142,5 +148,21 @@ public class SocialOauthService {
                 () -> new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE)
         );
 
+    }
+
+    public String getProfileRequest(String accessToken, String requestUri){
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        System.out.println(request.getHeaders().get("Authorization") + "    인증토큰");
+        ResponseEntity<String> response = restTemplate.exchange(
+                requestUri, HttpMethod.GET, request, String.class);
+
+
+        return response.getBody();
     }
 }

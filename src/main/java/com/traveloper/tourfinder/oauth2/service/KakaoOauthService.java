@@ -81,8 +81,8 @@ public class KakaoOauthService {
 
     @Transactional
     public String kakaoLogin(String code) {
-        String kakaoAccessToken = getAccessTokenUsingCode(code).getAccess_token();
-        KakaoUserProfile userInfo = getUserInfoUsingAccessToken(kakaoAccessToken);
+        String kakaoAccessToken = getAccessToken(code).getAccess_token();
+        KakaoUserProfile userInfo = getProfile(kakaoAccessToken);
         String email = userInfo.getKakaoAccount().getEmail();
         String nickname = userInfo.getKakaoAccount().getEmail() + "_kakao";
 
@@ -110,7 +110,7 @@ public class KakaoOauthService {
      * 카카오 로그인 이후 받은 code로 AccessToken을 발급 하는 메서드
      * </p>
      */
-    public KakaoTokenResponse getAccessTokenUsingCode(String code) {
+    public KakaoTokenResponse getAccessToken(String code) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -141,22 +141,11 @@ public class KakaoOauthService {
     /**
      * 카카오 로그인 이후 받은 AccessToken 으로 유저 정보 조회하는 메서드
      * */
-    public KakaoUserProfile getUserInfoUsingAccessToken(String accessToken) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-
-
-        HttpEntity<String> request = new HttpEntity<>(headers);
-        System.out.println(request.getHeaders().get("Authorization") + "    인증토큰");
-
+    public KakaoUserProfile getProfile(String accessToken) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(
-                    kakaoUserInfoUri, HttpMethod.GET, request, String.class);
-
+            String body = socialOauthService.getProfileRequest(accessToken,kakaoUserInfoUri);
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(response.getBody(), KakaoUserProfile.class);
+            return mapper.readValue(body, KakaoUserProfile.class);
         } catch (HttpClientErrorException e) {
             log.warn("클라이언트 오류: " + e.getStatusCode());
             throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
@@ -168,6 +157,5 @@ public class KakaoOauthService {
             throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
         }
     }
-
 
 }
