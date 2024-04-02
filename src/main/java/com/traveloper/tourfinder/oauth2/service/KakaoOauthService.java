@@ -15,6 +15,7 @@ import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.oauth2.dto.KakaoTokenResponse;
 import com.traveloper.tourfinder.oauth2.dto.KakaoUserProfile;
+import com.traveloper.tourfinder.oauth2.dto.SocialProviderAccessTokenRequestDto;
 import com.traveloper.tourfinder.oauth2.entity.SocialProvider;
 import com.traveloper.tourfinder.oauth2.entity.SocialProviderMember;
 import com.traveloper.tourfinder.oauth2.repo.SocialProviderMemberRepo;
@@ -81,8 +82,19 @@ public class KakaoOauthService {
 
     @Transactional
     public String kakaoLogin(String code) {
-        String kakaoAccessToken = getAccessTokenUsingCode(code).getAccess_token();
-        KakaoUserProfile userInfo = getUserInfoUsingAccessToken(kakaoAccessToken);
+        KakaoTokenResponse tokenResponse = socialOauthService.getSocialProviderAccessTokenRequest(
+                SocialProviderAccessTokenRequestDto.builder()
+                        .code(code)
+                        .socialTokenUri(kakaoTokenUri)
+                        .grantType("authorization_code")
+                        .clientId(clientId)
+                        .clientSecret(clientSecret)
+                        .redirectUri(redirectUri)
+                        .build(),
+                SOCIAL_PROVIDER_NAME,
+                KakaoTokenResponse.class
+        );
+        KakaoUserProfile userInfo = socialOauthService.getProfileRequest(tokenResponse.getAccess_token(),kakaoUserInfoUri,KakaoUserProfile.class);
         String email = userInfo.getKakaoAccount().getEmail();
         String nickname = userInfo.getKakaoAccount().getEmail() + "_kakao";
 
@@ -104,70 +116,4 @@ public class KakaoOauthService {
 
 
     }
-
-    /**
-     * <p>
-     * 카카오 로그인 이후 받은 code로 AccessToken을 발급 하는 메서드
-     * </p>
-     */
-    public KakaoTokenResponse getAccessTokenUsingCode(String code) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setCacheControl(CacheControl.noCache());
-
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("grant_type", "authorization_code");
-        map.add("client_id", clientId);
-        map.add("redirect_uri", redirectUri);
-        map.add("code", code);
-        map.add("client_secret", clientSecret);
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(kakaoTokenUri, request, String.class);
-
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(response.getBody(), KakaoTokenResponse.class);
-        } catch (JsonProcessingException e) {
-            log.warn("카카오 엑세스 토큰 받아온 후, 직렬화 에러");
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        }
-
-    }
-
-    /**
-     * 카카오 로그인 이후 받은 AccessToken 으로 유저 정보 조회하는 메서드
-     * */
-    public KakaoUserProfile getUserInfoUsingAccessToken(String accessToken) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-
-
-        HttpEntity<String> request = new HttpEntity<>(headers);
-        System.out.println(request.getHeaders().get("Authorization") + "    인증토큰");
-
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(
-                    kakaoUserInfoUri, HttpMethod.GET, request, String.class);
-
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(response.getBody(), KakaoUserProfile.class);
-        } catch (HttpClientErrorException e) {
-            log.warn("클라이언트 오류: " + e.getStatusCode());
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        } catch (HttpServerErrorException e) {
-            log.warn("서버 오류: " + e.getStatusCode());
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        } catch (JsonProcessingException e) {
-            log.warn("카카오 유저 정보 조회 후, 데이터 직렬화 에러");
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        }
-    }
-
-
 }

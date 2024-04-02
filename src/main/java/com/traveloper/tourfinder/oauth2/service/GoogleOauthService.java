@@ -7,10 +7,7 @@ import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
-import com.traveloper.tourfinder.oauth2.dto.GoogleTokenResponse;
-import com.traveloper.tourfinder.oauth2.dto.GoogleUserProfile;
-import com.traveloper.tourfinder.oauth2.dto.KakaoTokenResponse;
-import com.traveloper.tourfinder.oauth2.dto.KakaoUserProfile;
+import com.traveloper.tourfinder.oauth2.dto.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,8 +59,21 @@ public class GoogleOauthService {
     public String googleLogin(
             String code
     ) {
-        String googleAccessToken = getAccessToken(code).getAccessToken();
-        GoogleUserProfile userInfo = getProfile(googleAccessToken);
+
+        GoogleTokenResponse tokenResponse = socialOauthService.getSocialProviderAccessTokenRequest(
+                SocialProviderAccessTokenRequestDto.builder()
+                        .code(code)
+                        .socialTokenUri(googleTokenUri)
+                        .grantType("authorization_code")
+                        .clientId(clientId)
+                        .clientSecret(clientSecret)
+                        .redirectUri(redirectUri)
+                        .build(),
+                SOCIAL_PROVIDER_NAME,
+                GoogleTokenResponse.class
+        );
+
+        GoogleUserProfile userInfo = socialOauthService.getProfileRequest(tokenResponse.getAccessToken(),googleUserInfoUri,GoogleUserProfile.class);
         String email = userInfo.getEmail();
         String nickname = userInfo.getEmail() + "_google";
 
@@ -78,61 +88,9 @@ public class GoogleOauthService {
 
     }
 
-    public GoogleTokenResponse getAccessToken(String code) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setCacheControl(CacheControl.noCache());
-
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("grant_type", "authorization_code");
-        map.add("client_id", clientId);
-        map.add("redirect_uri", redirectUri);
-        map.add("code", code);
-        map.add("client_secret", clientSecret);
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(googleTokenUri, request, String.class);
-
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(response.getBody(), GoogleTokenResponse.class);
-        } catch (JsonProcessingException e) {
-            System.out.printf(e.getMessage());
-            log.warn("구글 엑세스 토큰 받아온 후, 직렬화 에러");
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        }
-    }
-
-    public GoogleUserProfile getProfile(String accessToken) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
 
 
-        HttpEntity<String> request = new HttpEntity<>(headers);
 
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(
-                    googleUserInfoUri, HttpMethod.GET, request, String.class);
-
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(response.getBody(), GoogleUserProfile.class);
-        } catch (HttpClientErrorException e) {
-            log.warn("클라이언트 오류: " + e.getStatusCode());
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        } catch (HttpServerErrorException e) {
-            log.warn("서버 오류: " + e.getStatusCode());
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        } catch (JsonProcessingException e) {
-            System.out.printf(e.getMessage());
-            log.warn("구글 유저 정보 조회 후, 데이터 직렬화 에러");
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        }
-    }
 }
 
 

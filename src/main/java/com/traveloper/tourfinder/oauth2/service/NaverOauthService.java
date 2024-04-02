@@ -8,10 +8,7 @@ import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
-import com.traveloper.tourfinder.oauth2.dto.KakaoTokenResponse;
-import com.traveloper.tourfinder.oauth2.dto.KakaoUserProfile;
-import com.traveloper.tourfinder.oauth2.dto.NaverTokenResponse;
-import com.traveloper.tourfinder.oauth2.dto.NaverUserProfile;
+import com.traveloper.tourfinder.oauth2.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,8 +56,19 @@ public class NaverOauthService {
     }
 
     public String naverLogin(String code){
-        String naverAccessToken = getAccessToken(code).getAccess_token();
-        NaverUserProfile userInfo = getProfile(naverAccessToken);
+        NaverTokenResponse tokenResponse = socialOauthService.getSocialProviderAccessTokenRequest(
+                SocialProviderAccessTokenRequestDto.builder()
+                        .code(code)
+                        .socialTokenUri(naverTokenUri)
+                        .grantType("authorization_code")
+                        .clientId(clientId)
+                        .clientSecret(clientSecret)
+                        .redirectUri(redirectUri)
+                        .build(),
+                SOCIAL_PROVIDER_NAME,
+                NaverTokenResponse.class
+        );
+        NaverUserProfile userInfo = socialOauthService.getProfileRequest(tokenResponse.getAccess_token(),naverUserInfoUri,NaverUserProfile.class);
         String email = userInfo.getResponse().getEmail();
         String nickname = userInfo.getResponse().getEmail() + "_naver";
 
@@ -77,63 +85,4 @@ public class NaverOauthService {
             return socialOauthService.getRedirectPathAndSaveOauth2AuthorizeToken(SOCIAL_PROVIDER_NAME, memberDto);
         }
     }
-
-
-    public NaverTokenResponse getAccessToken(String code){
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setCacheControl(CacheControl.noCache());
-
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("grant_type", "authorization_code");
-        map.add("client_id", clientId);
-        map.add("redirect_uri", redirectUri);
-        map.add("code", code);
-        map.add("client_secret", clientSecret);
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(naverTokenUri, request, String.class);
-
-
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(response.getBody(), NaverTokenResponse.class);
-        } catch (JsonProcessingException e) {
-            log.warn("네이버 엑세스 토큰 받아온 후, 직렬화 에러");
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        }
-    }
-
-    public NaverUserProfile getProfile(String accessToken){
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-
-
-        HttpEntity<String> request = new HttpEntity<>(headers);
-        System.out.println(request.getHeaders().get("Authorization") + "    인증토큰");
-
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(
-                    naverUserInfoUri, HttpMethod.GET, request, String.class);
-
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(response.getBody(), NaverUserProfile.class);
-        } catch (HttpClientErrorException e) {
-            log.warn("클라이언트 오류: " + e.getStatusCode());
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        } catch (HttpServerErrorException e) {
-            log.warn("서버 오류: " + e.getStatusCode());
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        } catch (JsonProcessingException e) {
-            log.warn("네이버 유저 정보 조회 후, 데이터 직렬화 에러");
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        }
-    }
-
-
 }

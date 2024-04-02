@@ -1,5 +1,7 @@
 package com.traveloper.tourfinder.oauth2.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
@@ -12,6 +14,9 @@ import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.oauth2.dto.KakaoUserProfile;
+import com.traveloper.tourfinder.oauth2.dto.NaverTokenResponse;
+import com.traveloper.tourfinder.oauth2.dto.NaverUserProfile;
+import com.traveloper.tourfinder.oauth2.dto.SocialProviderAccessTokenRequestDto;
 import com.traveloper.tourfinder.oauth2.entity.SocialProvider;
 import com.traveloper.tourfinder.oauth2.entity.SocialProviderMember;
 import com.traveloper.tourfinder.oauth2.repo.SocialProviderMemberRepo;
@@ -19,10 +24,17 @@ import com.traveloper.tourfinder.oauth2.repo.SocialProviderRepo;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.UUID;
 
 @Slf4j
@@ -141,6 +153,60 @@ public class SocialOauthService {
         return redisRepo.getOauth2AuthorizeToken(token).orElseThrow(
                 () -> new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE)
         );
+
+    }
+
+    public <T> T getSocialProviderAccessTokenRequest(SocialProviderAccessTokenRequestDto dto,String socialProviderName, Class<T> socialProviderTokenResponse){
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setCacheControl(CacheControl.noCache());
+
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("grant_type", "authorization_code");
+        map.add("client_id", dto.getClientId());
+        map.add("redirect_uri", dto.getRedirectUri());
+        map.add("code", dto.getCode());
+        map.add("client_secret", dto.getClientSecret());
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(dto.getSocialTokenUri(), request, String.class);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.getBody(), socialProviderTokenResponse);
+        } catch (JsonProcessingException e) {
+            log.warn(socialProviderName + " 엑세스 토큰 받아온 후, 직렬화 에러");
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+        }
+    }
+
+    public <T> T getProfileRequest(String accessToken, String requestUri, Class<T> userProfileClass){
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        System.out.println(request.getHeaders().get("Authorization") + "    인증토큰");
+        ResponseEntity<String> response = restTemplate.exchange(
+                requestUri, HttpMethod.GET, request, String.class);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.getBody(), userProfileClass);
+        } catch (HttpClientErrorException e) {
+            log.warn("클라이언트 오류: " + e.getStatusCode());
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+        } catch (HttpServerErrorException e) {
+            log.warn("서버 오류: " + e.getStatusCode());
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+        } catch (JsonProcessingException e) {
+            log.warn("네이버 유저 정보 조회 후, 데이터 직렬화 에러");
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+        }
 
     }
 }
