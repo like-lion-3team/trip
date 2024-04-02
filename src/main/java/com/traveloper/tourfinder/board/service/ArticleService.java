@@ -44,7 +44,6 @@ public class ArticleService {
         Article article = Article.builder()
                 .title(title)
                 .content(content)
-                //.imagePath() TODO image 저장후 path 저장
                 .member(currentMember)
                 .build();
 
@@ -150,7 +149,7 @@ public class ArticleService {
     }
 
     public String saveImage(MultipartFile image) {
-        String imgDir = "img/articles/";
+        String imgDir = "media/img/articles/";
         String imgName = UUID.randomUUID() + "_" + image.getOriginalFilename();
         Path imgPath = Path.of(imgDir + imgName);
 

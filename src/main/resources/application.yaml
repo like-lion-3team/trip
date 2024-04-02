@@ -123,7 +123,7 @@ spring:
 
   web:
     resources:
-      static-locations: classpath:/static/,file:./img/articles/
+      static-locations: classpath:/static/,file:./media/
 
 naver:
   developers:
