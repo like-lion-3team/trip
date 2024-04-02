@@ -121,8 +121,15 @@
     <div class="image-preview" id="articleImage">
         <img src="이미지 URL" alt="이미지">
     </div>
-    <p id="articleContent">게시글 내용 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus nec velit purus. Ut malesuada neque non metus maximus malesuada. Cras ullamcorper purus vel lacus rhoncus, et accumsan est convallis.</p>
+    <p id="articleContent">게시글 내용 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus nec velit purus. Ut
+        malesuada neque non metus maximus malesuada. Cras ullamcorper purus vel lacus rhoncus, et accumsan est
+        convallis.</p>
     <p id="articleTags">태그: Tag1, Tag2, Tag3</p>
+    <!-- 게시글 수정, 삭제 버튼 -->
+    <div class="article-buttons">
+        <button onclick="editArticle()">수정</button>
+        <button onclick="deleteArticle()">삭제</button>
+    </div>
     <h2>댓글</h2>
     <div id="commentList">
         <!-- 댓글이 여기에 동적으로 추가될 것입니다. -->
@@ -174,27 +181,37 @@
             });
     };
 
+    // 게시글 수정 버튼 클릭 시
+    function editArticle() {
+        console.log('게시글 수정 버튼 클릭');
+        location.href = '/board/articles/' + [[${articleId}]] + '/update';
+    }
+
+    // 게시글 삭제 버튼 클릭 시
+    function deleteArticle() {
+        console.log('게시글 삭제 버튼 클릭');
+        fetch('/api/v1/articles/' + [[${articleId}]], {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        }).then(response => {
+            if (response.ok) {
+                alert('삭제 성공!');
+                location.href = '/board/articles';
+            } else {
+                alert('삭제 권한이 없습니다!');
+            }
+        })
+    }
+
     // 댓글 목록 업데이트 함수
     function updateCommentList(comments) {
         const commentList = document.getElementById('commentList');
         commentList.innerHTML = ''; // 댓글 목록 초기화
 
         comments.forEach(comment => {
-            const commentBox = document.createElement('div');
-            commentBox.classList.add('comment-box');
-
-            const commentContent = document.createElement('p');
-            commentContent.classList.add('comment-content');
-            commentContent.innerText = comment.content;
-
-            const commentWriter = document.createElement('p');
-            commentWriter.classList.add('comment-writer');
-            commentWriter.innerText = `작성자: ${comment.writer.nickname}`;
-
-            commentBox.appendChild(commentContent);
-            commentBox.appendChild(commentWriter);
-
-            commentList.appendChild(commentBox);
+            addComment(comment);
         });
     }
 
@@ -225,24 +242,7 @@
             }
             return response.json(); // JSON 형태로 변환하여 반환
         }).then(newComment => {
-            // 댓글 목록에 새로운 댓글 추가
-            const commentList = document.getElementById('commentList');
-            const commentBox = document.createElement('div');
-            commentBox.classList.add('comment-box');
-
-            const commentContent = document.createElement('p');
-            commentContent.classList.add('comment-content');
-            commentContent.innerText = newComment.content;
-
-            const commentWriter = document.createElement('p');
-            commentWriter.classList.add('comment-writer');
-            commentWriter.innerText = `작성자: ${newComment.writer.nickname}`;
-
-            commentBox.appendChild(commentContent);
-            commentBox.appendChild(commentWriter);
-
-            commentList.appendChild(commentBox);
-
+            addComment(newComment)
             // 입력 필드 초기화
             document.getElementById('commentContent').value = '';
         }).catch(error => {
@@ -250,7 +250,54 @@
         });
     });
 
-    //TODO 댓글 수정 삭제 버튼
+    function addComment(comment) {
+        // 댓글 목록에 새로운 댓글 추가
+        const commentList = document.getElementById('commentList');
+        const commentBox = document.createElement('div');
+        commentBox.classList.add('comment-box');
+
+        const commentContent = document.createElement('p');
+        commentContent.classList.add('comment-content');
+        commentContent.innerText = comment.content;
+
+        const commentWriter = document.createElement('p');
+        commentWriter.classList.add('comment-writer');
+        commentWriter.innerText = `작성자: ${comment.writer.nickname}`;
+
+        commentBox.appendChild(commentContent);
+        commentBox.appendChild(commentWriter);
+
+        addDeleteButton(commentList, commentBox, comment)
+
+        commentList.appendChild(commentBox);
+    }
+
+    // 댓글 삭제 버튼 추가
+    function addDeleteButton(commentList, commentBox, comment) {
+        const deleteButton = document.createElement('button');
+        deleteButton.innerText = '삭제';
+        deleteButton.addEventListener('click', function () {
+            console.log('삭제 버튼 클릭 - commentId:', comment.id);
+            deleteComment(commentList, commentBox, comment);
+        });
+
+        commentBox.appendChild(deleteButton);
+    }
+
+    function deleteComment(commentList, commentBox, comment) {
+        fetch('/api/v1/articles/' + [[${articleId}]] + '/comments/' + comment.id + '/delete', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        }).then(response => {
+            if (response.ok) {
+                commentList.removeChild(commentBox);
+            } else {
+                alert('삭제 권한이 없습니다!');
+            }
+        })
+    }
 </script>
 </body>
 </html>

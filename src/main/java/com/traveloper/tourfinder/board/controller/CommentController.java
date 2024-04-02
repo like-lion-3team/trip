@@ -35,7 +35,7 @@ public class CommentController {
     }
 
     // 댓글 삭제 DELETE /articles/{articleId}/comments/delete
-    @PostMapping("/{commentId}/delete")
+    @DeleteMapping("/{commentId}/delete")
     public void deleteComment(
             @PathVariable("articleId")
             Long articleId,

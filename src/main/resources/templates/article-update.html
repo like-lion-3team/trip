@@ -90,12 +90,21 @@
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('존재하지 않는 게시글 입니다.');
+                }
+                return response.json();
+            })
             .then(data => {
                 document.getElementById('title').value = data.title;
                 // TODO 이미지 정보 표시 및 필요시 삭제 구현
                 document.getElementById('content').value = data.content;
                 document.getElementById('tags').value = data.tags.join(', ');
+            })
+            .catch(error => {
+                console.log('Error:', error);
+                alert(error.message);
             })
     }
 
@@ -118,7 +127,7 @@
         }
 
         // AJAX를 사용하여 폼 데이터를 서버로 전송
-        fetch('/api/v1/articles', {
+        fetch('/api/v1/articles/' + [[${articleId}]], {
             method: 'PUT', // 수정 요청이므로 PUT 메서드 사용
             body: formData,
             headers: {
@@ -128,14 +137,17 @@
             .then(response => {
                 if (response.ok) {
                     console.log('게시글이 성공적으로 수정되었습니다.');
+                    location.href = '/board/articles/' + [[${articleId}]];
                     // 페이지 새로고침 또는 다른 작업 수행
                 } else {
+                    alert('수정 권한이 없습니다!');
                     console.error('게시글 수정에 실패했습니다.');
+                    location.href = '/board/articles/' + [[${articleId}]];
                 }
             })
             .catch(error => {
                 console.error('게시글 수정 중 오류가 발생했습니다:', error);
-            });
+            })
     });
 </script>
 </body>
