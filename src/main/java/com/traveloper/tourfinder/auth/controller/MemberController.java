@@ -132,6 +132,14 @@ public class MemberController {
         emailService.sendVerifyCodeMail(dto.getEmail());
     }
 
+    /**
+     * <p>현재 로그인한 멤버의 Id를 반환합니다.</p>
+     */
+    @GetMapping("/current-member")
+    public ResponseEntity<MemberIdDto> getCurrentMemberId() {
+        return ResponseEntity.ok(memberService.getCurrentMemberId());
+    }
+
 }
 
 
