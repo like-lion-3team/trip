@@ -42,7 +42,7 @@ public class MemberController {
             @RequestBody
             CreateMemberDto dto
     ) {
-        return ResponseEntity.ok(memberService.signup(dto));
+        return ResponseEntity.ok(memberService.signup(dto,"COMMON"));
     }
 
     @GetMapping("/send/{email}/code")
