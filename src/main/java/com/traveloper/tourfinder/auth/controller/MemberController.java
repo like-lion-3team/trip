@@ -61,14 +61,12 @@ public class MemberController {
             @PathVariable("nickname")
             String nickname
     ){
-        Random random = new Random();
-        boolean randomBoolean = random.nextBoolean();
-
-        if(randomBoolean){
-            return ResponseEntity.ok(true);
+        if(memberService.nicknameDuplicateCheck(nickname)){
+            return ResponseEntity.status(400).body(true);
         }else{
-            return ResponseEntity.status(401).body(false);
+            return ResponseEntity.ok(false);
         }
+
     }
 
     @GetMapping("/sign-out")

@@ -88,6 +88,11 @@ public class MemberService implements UserDetailsService {
                 .build()));
     }
 
+    public boolean nicknameDuplicateCheck(String nickname){
+        return memberRepository.existsByNickname(nickname);
+    }
+
+
     public TokenDto login(
             SignInDto dto
     ) {

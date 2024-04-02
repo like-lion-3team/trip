@@ -145,9 +145,11 @@
         if(response.status !== 200){
             isNicknameDuplicated = true;
             hiddenSpinner();
+            alert("이미 존재하는 닉네임 입니다")
         }else{
             isNicknameDuplicated = false;
             viewCheckBox();
+
         }
     }
      async function signUp() {
