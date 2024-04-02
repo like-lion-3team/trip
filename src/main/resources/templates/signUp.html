@@ -162,10 +162,21 @@
             headers: {
                 'Content-Type': 'application/json'
             }
+
+
         });
 
+        if(response.status === 200){
+            alert(email + " 이메일로 인증번호가 발송 되었습니다. \n 이메일 인증코드 칸에 입력 후 검증 버튼을 클릭 해주세요")
+
+        }else if(response.status = 409){
+            alert("이미 가입된 이메일 입니다. \n 로그인 페이지로 이동합니다.")
+            window.location.href = "/login"
+        }else {
+            alert("인증번호 전송에 실패했습니다. \n 관리자에게 문의 해주세요")
+        }
+
         hiddenEmailSendSpinner()
-        alert(email + " 이메일로 인증번호가 발송 되었습니다. \n 이메일 인증코드 칸에 입력 후 검증 버튼을 클릭 해주세요")
         console.log(response.status)
     };
 

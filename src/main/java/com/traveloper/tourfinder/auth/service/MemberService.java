@@ -183,6 +183,10 @@ public class MemberService implements UserDetailsService {
     public void sendCode(
             String email
     ) {
+        Optional<Member> member = memberRepository.findMemberByEmail(email);
+        if(member.isPresent()){
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.EMAIL_ALREADY_EXIST);
+        }
         VerifyCodeSendSuccessDto dto = emailService.sendVerifyCodeMail(email);
         String key = String.valueOf(redisRepo.getVerifyCode(dto.getEmail()));
 
