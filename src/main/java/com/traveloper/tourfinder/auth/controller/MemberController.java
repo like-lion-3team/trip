@@ -8,6 +8,8 @@ import com.traveloper.tourfinder.auth.password.UpdatePasswordReq;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
 import com.traveloper.tourfinder.auth.service.EmailService;
 import com.traveloper.tourfinder.auth.service.MemberService;
+import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
+import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import com.traveloper.tourfinder.course.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -84,21 +86,27 @@ public class MemberController {
 
     }
 
+    @PostMapping("/password-recovery/verify-code")
+    public ResponseEntity verifyCode(
+            @RequestBody
+            PasswordRecoveryVerifyCodeRequestDto dto
+    ){
+        boolean isVerify = emailService.verifyCode(dto.getEmail(), dto.getCode());
+        if(!isVerify) throw new GlobalExceptionHandler(CustomGlobalErrorCode.PASSWORD_RECOVERY_CODE_MISS_MATCH);
+        return ResponseEntity.ok("");
+    }
+
     /**
-     * <p></p>
+     * <p>비밀번호 변경 메서드</p>
      * */
     @PutMapping("/password-recovery")
-    public void recoverPassword(
-            @RequestParam
-            String changePassword,
-            @PathVariable("email")
-            String email,
-            @PathVariable("code")
-            String code
+    public ResponseEntity recoverPassword(
+            @RequestBody
+            PasswordRecoveryRequestDto dto
     ){
-        // TODO: 비밀번호 복구 ( 비밀번호 찾기 -> 변경 )
-        emailService.verifyCode(email, code);
-        memberService.updatePassword(null, null, changePassword);
+
+        memberService.updatePassword(null, null, dto.getNewPassword());
+        return ResponseEntity.ok("");
     }
 
     /**
