@@ -125,9 +125,34 @@ public class MemberService implements UserDetailsService {
         redisRepo.destroyRefreshToken(accessToken);
     }
 
-    // 비밀번호 수정
+
+    /**
+     * <p>인증 완료된 후 비밀번호를 변경할 때 사용하는 메서드 <br />
+     * 이메일 인증, 휴대폰 인증 등 인증을 완료 한 후에 사용 합니다.
+     * </p>
+     * */
     @Transactional
-    public void updatePassword(String email, String currentPassword, String newPassword) {
+    public void updatePassword(String email, String code, String newPassword){
+        String verifyCode = redisRepo.getVerifyCode(email).orElseThrow(
+                () -> new GlobalExceptionHandler(CustomGlobalErrorCode.NOT_FOUND_PASSWORD_RECOVERY_CODE)
+        );
+
+        if(!verifyCode.equals(code)){
+          throw new GlobalExceptionHandler(CustomGlobalErrorCode.PASSWORD_RECOVERY_CODE_MISS_MATCH);
+        }
+        Member member = memberRepository.findMemberByEmail(email).orElseThrow(
+                () -> new GlobalExceptionHandler(CustomGlobalErrorCode.NOT_FOUND_MEMBER)
+        );
+        member.updatePassword(passwordEncoder.encode(newPassword));
+    }
+
+    /**
+     *<p>마이페이지 등에서 현재 비밀번호와 대조한 후 비밀번호를 변경하는 메서드 <br />
+     * 이메일 인증, 휴대폰 인증 등 인증과정을 현재 비밀번호로 대신합니다.
+     * </p>
+     */
+    @Transactional
+    public void updatePasswordWithCurrentPassword(String email, String currentPassword, String newPassword) {
         Member member = validatePassword(email, currentPassword);
         member.updatePassword(passwordEncoder.encode(newPassword));
     }
