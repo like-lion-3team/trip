@@ -62,7 +62,7 @@ public class NaverOauthService {
         String naverAccessToken = getAccessToken(code).getAccess_token();
         NaverUserProfile userInfo = getProfile(naverAccessToken);
         String email = userInfo.getResponse().getEmail();
-        String nickname = userInfo.getResponse().getName();
+        String nickname = userInfo.getResponse().getEmail() + "_naver";
 
         Optional<Member> memberOpt = memberRepository.findMemberByEmail(email);
         if (memberOpt.isEmpty()) {
@@ -70,6 +70,8 @@ public class NaverOauthService {
             MemberDto memberDto = socialOauthService.handleNewUser(SOCIAL_PROVIDER_NAME,nickname, email);
             return socialOauthService.getRedirectPathAndSaveOauth2AuthorizeToken(SOCIAL_PROVIDER_NAME, memberDto);
         } else {
+            System.out.printf(memberOpt.get().getUuid() + "네이버 UUID");
+
             // 존재하는 사용자라면 연동 처리
             MemberDto memberDto = socialOauthService.handleExistingUser(SOCIAL_PROVIDER_NAME,memberOpt.get());
             return socialOauthService.getRedirectPathAndSaveOauth2AuthorizeToken(SOCIAL_PROVIDER_NAME, memberDto);
