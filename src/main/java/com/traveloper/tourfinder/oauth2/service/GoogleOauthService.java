@@ -62,20 +62,16 @@ public class GoogleOauthService {
     public String googleLogin(
             String code
     ) {
-        System.out.printf(code + "코드");
         String googleAccessToken = getAccessToken(code).getAccessToken();
-        System.out.printf(googleAccessToken + "구글 액세스 토큰");
         GoogleUserProfile userInfo = getProfile(googleAccessToken);
         String email = userInfo.getEmail();
-        String nickname = userInfo.getName();
+        String nickname = userInfo.getEmail() + "_google";
 
         Optional<Member> memberOpt = memberRepository.findMemberByEmail(email);
         if (memberOpt.isEmpty()) {
-            // 사용자가 존재하지 않으면 회원가입 및 연동 후 토큰 전달
             MemberDto memberDto = socialOauthService.handleNewUser(SOCIAL_PROVIDER_NAME,nickname, email);
             return socialOauthService.getRedirectPathAndSaveOauth2AuthorizeToken(SOCIAL_PROVIDER_NAME, memberDto);
         } else {
-            // 존재하는 사용자라면 연동 처리
             MemberDto memberDto = socialOauthService.handleExistingUser(SOCIAL_PROVIDER_NAME,memberOpt.get());
             return socialOauthService.getRedirectPathAndSaveOauth2AuthorizeToken(SOCIAL_PROVIDER_NAME, memberDto);
         }
@@ -86,8 +82,6 @@ public class GoogleOauthService {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-
-        System.out.printf("엑세스토큰 생성시 사용할 코드" + code);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setCacheControl(CacheControl.noCache());
@@ -120,7 +114,6 @@ public class GoogleOauthService {
 
 
         HttpEntity<String> request = new HttpEntity<>(headers);
-        System.out.println(request.getHeaders().get("Authorization") + "    인증토큰");
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(

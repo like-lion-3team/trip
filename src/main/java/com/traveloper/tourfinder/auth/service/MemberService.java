@@ -66,8 +66,12 @@ public class MemberService implements UserDetailsService {
             CreateMemberDto dto
     ) {
         // 닉네임 중복체크, 이메일 중복체크
-        if (memberRepository.existsByEmail(dto.getEmail()) || memberRepository.existsByNickname(dto.getNickname()))
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        if (memberRepository.existsByEmail(dto.getEmail())){
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.EMAIL_ALREADY_EXIST);
+        } else if (memberRepository.existsByNickname(dto.getNickname()) ){
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.NICKNAME_ALREADY_EXIST);
+        }
+
 
         String uuid = UUID.randomUUID().toString();
 

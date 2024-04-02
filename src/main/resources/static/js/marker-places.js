@@ -13,7 +13,6 @@ function addPlace(place) {
 function addToCourse(contentId) {
     // 이미 선택한 여행지인지 확인
     const isAlreadySelected = selectedPlaces.some(selectedPlace => selectedPlace.contentId === contentId);
-
     // 이미 선택한 여행지가 아니라면 정보를 가져와서 배열에 추가
     if (!isAlreadySelected) {
         // API 호출하여 여행지의 정보 가져오기
@@ -52,13 +51,13 @@ function addToCourse(contentId) {
 
                 // 선택한 여행지의 좌표로 지도의 중심 이동 및 확대
                 moveToSelectedPlace(place);
-
             })
             .catch(error => {
                 // API 요청이 실패했을 때 에러 처리
                 alert(error.message);
                 console.error('Error:', error);
             });
+        toggle();
     } else {
         // 이미 선택한 여행지라면 경고 메시지 표시
         alert('이미 선택한 여행지입니다.');

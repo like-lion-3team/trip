@@ -65,13 +65,15 @@
             card.classList.add('col-12', 'col-md-6');
 
             card.innerHTML = `
-            <div class="card">
-                <img src="${course.places[0].thumbnailUrl}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">${course.title}</h5>
-                    <p class="card-text">${course.desc}</p>
+            <a href="/api-test/sample-course-read/${course.id}" style="text-decoration: none;">
+                <div class="card">
+                    <img src="${course.places[0].thumbnailUrl}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">${course.title}</h5>
+                        <p class="card-text">${course.desc}</p>
+                    </div>
                 </div>
-            </div>
+            </a>
         `;
 
             container.appendChild(card);

@@ -4,9 +4,13 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
+    <!-- Bootstrap JavaScript 파일 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+            integrity="sha384-aokocJiZAN8QK9GopOdTb1FPrkyoRYFfcps8TG+DTxQD0UC6GGst4pALJHvFdkoX" crossorigin="anonymous"></script>
 
     <style>
         .card {
@@ -77,48 +81,49 @@
 
                 </div>
                 <div class="m-3">
-                    <h6>나의 여행 코스</h6>
+                    <h5>나의 여행 코스</h5>
                     <div class="container">
-                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 row-cols-xxl-6 g-2">
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 row-cols-xxl-6 g-2">
 
-                            <div class="col-12 col-md-6">
-                                <div class="card">
-                                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Card Title 1</h5>
-                                        <p class="card-text">This is a longer card with supporting text below as a
-                                            natural lead-in to additional content. This content is a little bit
-                                            longer.</p>
+                                <div class="col-12 col-md-6">
+                                    <div class="card">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card Title 1</h5>
+                                            <p class="card-text">This is a longer card with supporting text below as a
+                                                natural lead-in to additional content. This content is a little bit
+                                                longer.</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-12 col-md-6">
-                                <div class="card">
-                                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Card Title 1</h5>
-                                        <p class="card-text">This is a longer card with supporting text below as a
-                                            natural lead-in to additional content. This content is a little bit
-                                            longer.</p>
+                                <div class="col-12 col-md-6">
+                                    <div class="card">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card Title 1</h5>
+                                            <p class="card-text">This is a longer card with supporting text below as a
+                                                natural lead-in to additional content. This content is a little bit
+                                                longer.</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-12 col-md-6">
-                                <div class="card">
-                                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Card Title 1</h5>
-                                        <p class="card-text">This is a longer card with supporting text below as a
-                                            natural lead-in to additional content. This content is a little bit
-                                            longer.</p>
+                                <div class="col-12 col-md-6">
+                                    <div class="card">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card Title 1</h5>
+                                            <p class="card-text">This is a longer card with supporting text below as a
+                                                natural lead-in to additional content. This content is a little bit
+                                                longer.</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- 추가 카드는 여기에 -->
-                        </div>
+                                <!-- 추가 카드는 여기에 -->
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -220,14 +225,21 @@
 
             // 카드의 내용을 설정
             card.innerHTML = `
-            <div class="card">
-                <img src="${course.places[0].thumbnailUrl}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">${course.title}</h5>
-                    <p class="card-text">${course.desc}</p>
+                <div class="card">
+                    <a href="/api-test/sample-course-read/${course.id}" style="text-decoration: none;">
+                    <img src="${course.places[0].thumbnailUrl}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">${course.title}</h5>
+                            <p class="card-text">${course.desc}</p>
+                        </div>
+                    </a>
+                    <div class="card-footer d-flex justify-content-end">
+                        <button type="button" class="btn btn-outline-primary btn-sm me-2">수정</button>
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteCourse(${course.id})">삭제</button>
+                    </div>
                 </div>
-            </div>
-        `;
+                </a>
+            `;
 
             // 컨테이너에 카드를 추가
             container.appendChild(card);
@@ -235,6 +247,37 @@
     }
     // 여행 카드를 채우는 함수를 호출
     populateTravelCards();
+
+    // 삭제 요청을 보내는 함수
+    async function deleteCourse(courseId) {
+        const confirmDelete = confirm('정말로 삭제하시겠습니까?');
+        if (confirmDelete) {
+            const response = await fetch(`/api/v1/courses/${courseId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                // 성공적으로 삭제되었을 때 화면에서 해당 카드를 제거할 수 있습니다.
+                // 예를 들어, 삭제된 카드의 부모 요소를 찾아서 제거할 수 있습니다.
+                const deletedCard = document.querySelector(`.card[data-course-id="${courseId}"]`);
+                if (deletedCard) {
+                    deletedCard.remove();
+                } else {
+                    console.error('해당 카드를 찾을 수 없습니다.');
+                }
+                location.reload();
+            } else {
+                console.error('삭제 요청 실패:', response.status);
+            }
+        }
+    }
+
+
+
 </script>
 
 </html>
