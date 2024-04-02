@@ -92,7 +92,7 @@ function displayMarkers(coordinates) {
     markers = [];
     // 선택한 여행지 배열을 순회하면서 각각의 좌표에 마커를 표시
     selectedPlaces.forEach(place => {
-        var position = new naver.maps.LatLng(place.lng, place.lat);
+        var position = new naver.maps.LatLng(place.lat, place.lng);
         var marker = new naver.maps.Marker({
             position: position,
             map: map
@@ -192,10 +192,11 @@ function createCourse() {
 // 여행지의 좌표로 지도의 중심 이동 및 확대하는 함수
 function moveToSelectedPlace(place) {
     // 선택한 여행지의 좌표로 지도의 중심 이동
-    map.setCenter(new naver.maps.LatLng(place.lng, place.lat));
+    map.setCenter(new naver.maps.LatLng(place.lat, place.lng));
 
     // 지도 확대 수준 조정 (예: 현재 줌 레벨 + 2)
-    const currentZoomLevel = map.getZoom();
-    const newZoomLevel = currentZoomLevel + 1; // 적절한 값을 설정할 수 있습니다.
-    map.setZoom(newZoomLevel);
+    // const currentZoomLevel = map.getZoom();
+    // const newZoomLevel = currentZoomLevel + 1; // 적절한 값을 설정할 수 있습니다.
+    // map.setZoom(newZoomLevel);
+    map.setZoom(18);
 }
