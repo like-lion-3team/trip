@@ -161,8 +161,8 @@
                 document.getElementById('articleTitle').innerText = article.title;
                 document.getElementById('articleImage').innerHTML = `
                     ${article.images.map(image => {
-                    const fileName = image.substring(image.lastIndexOf('/') + 1);
-                    return `<img src="/${fileName}" alt="이미지">`;
+                    const imgSrc = image.substring(image.indexOf('/img'));
+                    return `<img src="${imgSrc}" alt="이미지">`;
                 }).join('')}
                 `;
                 document.getElementById('articleContent').innerText = article.content;

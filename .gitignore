@@ -2,7 +2,7 @@ HELP.md
 .gradle
 db.sqlite
 build/
-img/
+media/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
