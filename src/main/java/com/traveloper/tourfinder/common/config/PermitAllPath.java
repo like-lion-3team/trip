@@ -29,7 +29,7 @@ public class PermitAllPath {
 
 
 
-            "/login","sign-up","/my-page", "/home",
+            "/login","/sign-up","/my-page", "/home",
 
 
             // board

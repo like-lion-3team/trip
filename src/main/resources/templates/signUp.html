@@ -12,11 +12,18 @@
 <body>
 <th:block th:replace="~{fragments/header :: header}"></th:block>
 
-<div class="d-flex justify-content-center mt-5">
-    <div class="w-25">
+<div class="container my-auto mt-5" style="max-width:440px;">
+    <div class="row justify-content-center">
         <div class="mb-3">
             <label for="nickname" class="form-label">닉네임</label>
-            <input type="nickname" class="form-control" id="nickname" aria-describedby="nicknameHelp">
+            <div class="row g-2">
+                <div class="col">
+                    <input type="text" class="form-control" id="nickname" aria-describedby="nicknameHelp">
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-primary">중복체크</button>
+                </div>
+            </div>
             <div id="nicknameHelp" class="form-text">
                 닉네임 중복 체크를 해주세요
             </div>
@@ -52,6 +59,25 @@
 </div>
 </body>
 <script>
+    let isEmailDuplicated = undefined;
+    async function nicknameCheck(){
+        const nickname = document.getElementById("nickname").value;
+
+        const response = await fetch(`http://localhost:8080/api/v1/auth/duplicate-check/${nickname}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if(response.status !== 200){
+            isEmailDuplicated = false;
+        }else{
+            isEmailDuplicated = true;
+        }
+    }
+
+
      async function signUp() {
         //fetch
         const email = document.getElementById('email').value;
