@@ -13,7 +13,7 @@ public enum CustomGlobalErrorCode {
     EMAIL_ALREADY_EXIST(409, "1001", "이미 가입된 이메일."),
     NICKNAME_ALREADY_EXIST(409, "1002", "존재하는 닉네임."),
     PASSWORD_VALIDATION_FAILED(400, "1003", "비밀번호 유효성 검증 실패."),
-
+    NOT_FOUND_MEMBER(400,"1004","존재하지 않는 사용자"),
     // 로그인 에러
     CREDENTIALS_NOT_MATCH(401, "2001", "아이디 또는 비밀번호가 일치하지 않습니다."),
     USER_BLOCKED(403, "2002", "차단된 사용자."),
@@ -41,7 +41,9 @@ public enum CustomGlobalErrorCode {
     NOT_SUPPORT_SOCIAL_PROVIDER(400,"6001","지원하지 않는 소셜 사업자 입니다."),
 
     // email
-    PASSWORD_RECOVERY_CODE_MISS_MATCH(400,"7001","인증코드가 올바르지 않습니다");
+    PASSWORD_RECOVERY_CODE_MISS_MATCH(400,"7001","인증코드가 올바르지 않습니다"),
+    NOT_FOUND_PASSWORD_RECOVERY_CODE(400,"7002","인증 코드가 만료 되었습니다.");
+
     private int status;
     private String code;
     private String message;

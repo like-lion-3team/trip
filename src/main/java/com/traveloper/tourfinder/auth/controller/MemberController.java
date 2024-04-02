@@ -109,14 +109,15 @@ public class MemberController {
     }
 
     /**
-     * <p>비밀번호 변경 메서드</p>
+     * <p>이메일 인증코드, 이메일을 통한 비밀번호 변경 메서드</p>
      * */
     @PutMapping("/password-recovery")
     public ResponseEntity recoverPassword(
             @RequestBody
             PasswordRecoveryRequestDto dto
     ){
-        memberService.updatePassword(null, null, dto.getNewPassword());
+
+        memberService.updatePassword(dto.getEmail(),dto.getCode(), dto.getNewPassword());
         return ResponseEntity.ok("");
     }
 

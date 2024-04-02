@@ -8,5 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class PasswordRecoveryRequestDto {
+    private String email;
     private String newPassword;
+    private String code;
 }
