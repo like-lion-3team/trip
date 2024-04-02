@@ -92,13 +92,27 @@ public class ArticleService {
         Article article = optionalArticle.get();
         Member currentMember = facade.getCurrentMember();
         // article의 주인이 아닌 경우
-        if (!article.getMember().getUuid().equals(currentMember.getUuid()))
+        if (!article.getMember().getId().equals(currentMember.getId())) {
+            log.info(article.getMember().getId().toString());
+            log.info(currentMember.getId().toString());
             throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_FORBIDDEN);
+        }
 
         // article 수정
         article.setTitle(title);
         article.setContent(content);
-        // TODO 이미지 관련 로직 추가해야함 (이미지 Multipart 파일 저장, 기존 파일 삭제 등)
+        // 기존 이미지 삭제
+        for (String imagePath : article.getImages()) {
+            deleteImage(imagePath);
+        }
+        article.getImages().clear();
+
+        // 새로운 이미지 저장
+        for (MultipartFile image : images) {
+            String imagePath = saveImage(image);
+            imagePath = imagePath.replaceAll("\\\\", "/");
+            article.getImages().add(imagePath);
+        }
 
         // 수정된 태그로 교체
         article.getTags().clear();
@@ -119,10 +133,14 @@ public class ArticleService {
         Article article = optionalArticle.get();
         Member currentMember = facade.getCurrentMember();
         // article의 주인이 아닌 경우
-        if (!article.getMember().getUuid().equals(currentMember.getUuid()))
+        if (!article.getMember().getId().equals(currentMember.getId()))
             throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_FORBIDDEN);
 
-        // TODO 저장된 image 삭제하는 로직 추가해야함
+        // 기존 이미지 삭제
+        for (String imagePath : article.getImages()) {
+            deleteImage(imagePath);
+        }
+
         articleRepository.delete(article);
     }
 
@@ -161,6 +179,14 @@ public class ArticleService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return imgPath.toString();
+    }
+
+    public void deleteImage(String imagePath) {
+        try {
+            Files.deleteIfExists(Path.of(imagePath));
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public void addTags(Article article, String tags) {

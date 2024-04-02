@@ -108,7 +108,7 @@
                     console.log('게시글이 성공적으로 저장되었습니다.')
                     response.json().then(article => {
                         const articleId = article.id;
-                        window.location.href = '/board/articles/' + articleId; // 이동할 게시글의 경로로 수정
+                        location.href = '/board/articles/' + articleId; // 이동할 게시글의 경로로 수정
                     })
                 } else {
                     console.error('게시글 저장에 실패했습니다.');
