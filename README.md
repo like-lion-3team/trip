@@ -17,7 +17,7 @@
 1. 소스 코드 복제:
 
    ````bash
-   git clone https://github.com/your-username/your-project-name.git
+   git clone https://github.com/like-lion-3team/trip.git
    ````
 
 2. 환경변수 설정:
