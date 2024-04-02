@@ -103,9 +103,13 @@
 
 
     async function nicknameCheck(){
-        viewSpinner(true);
+
 
         const nickname = document.getElementById("nickname").value;
+        if(nickname.length < 2){
+            return alert("닉네임을 2글자 이상 입력 해주세요")
+        }
+        viewSpinner(true);
 
 
         const response = await fetch(`http://localhost:8080/api/v1/auth/duplicate-check/${nickname}`, {
@@ -116,9 +120,11 @@
         });
 
         if(response.status !== 200){
-            isNicknameDuplicated = false;
-        }else{
             isNicknameDuplicated = true;
+            hiddenSpinner();
+        }else{
+            isNicknameDuplicated = false;
+            viewCheckBox();
         }
     }
 

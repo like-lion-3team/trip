@@ -22,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Random;
 
 @Tag(name = "Auth", description = "Auth API")
 @Slf4j
@@ -53,6 +54,21 @@ public class MemberController {
     ) {
         log.info("test");
         return ResponseEntity.ok(memberService.login(dto));
+    }
+
+    @GetMapping("/duplicate-check/{nickname}")
+    public ResponseEntity<Boolean> nicknameDuplicateCheck(
+            @PathVariable("nickname")
+            String nickname
+    ){
+        Random random = new Random();
+        boolean randomBoolean = random.nextBoolean();
+
+        if(randomBoolean){
+            return ResponseEntity.ok(true);
+        }else{
+            return ResponseEntity.status(401).body(false);
+        }
     }
 
     @GetMapping("/sign-out")
