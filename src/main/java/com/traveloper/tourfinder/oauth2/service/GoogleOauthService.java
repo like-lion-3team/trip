@@ -63,7 +63,7 @@ public class GoogleOauthService {
             String code
     ) {
         String googleAccessToken = getAccessToken(code).getAccessToken();
-        GoogleUserProfile userInfo = getProfile(googleAccessToken);
+        GoogleUserProfile userInfo = socialOauthService.getProfileRequest(googleAccessToken,googleUserInfoUri,GoogleUserProfile.class);
         String email = userInfo.getEmail();
         String nickname = userInfo.getEmail() + "_google";
 
@@ -106,25 +106,7 @@ public class GoogleOauthService {
         }
     }
 
-    public GoogleUserProfile getProfile(String accessToken) {
 
-
-        try {
-            String body = socialOauthService.getProfileRequest(accessToken,googleUserInfoUri);
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(body, GoogleUserProfile.class);
-        } catch (HttpClientErrorException e) {
-            log.warn("클라이언트 오류: " + e.getStatusCode());
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        } catch (HttpServerErrorException e) {
-            log.warn("서버 오류: " + e.getStatusCode());
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        } catch (JsonProcessingException e) {
-            System.out.printf(e.getMessage());
-            log.warn("구글 유저 정보 조회 후, 데이터 직렬화 에러");
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        }
-    }
 }
 
 

@@ -60,7 +60,7 @@ public class NaverOauthService {
 
     public String naverLogin(String code){
         String naverAccessToken = getAccessToken(code).getAccess_token();
-        NaverUserProfile userInfo = getProfile(naverAccessToken);
+        NaverUserProfile userInfo = socialOauthService.getProfileRequest(naverAccessToken,naverUserInfoUri,NaverUserProfile.class);
         String email = userInfo.getResponse().getEmail();
         String nickname = userInfo.getResponse().getEmail() + "_naver";
 
@@ -107,24 +107,7 @@ public class NaverOauthService {
         }
     }
 
-    public NaverUserProfile getProfile(String accessToken){
 
-
-        try {
-            String body = socialOauthService.getProfileRequest(accessToken,naverUserInfoUri);
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(body, NaverUserProfile.class);
-        } catch (HttpClientErrorException e) {
-            log.warn("클라이언트 오류: " + e.getStatusCode());
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        } catch (HttpServerErrorException e) {
-            log.warn("서버 오류: " + e.getStatusCode());
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        } catch (JsonProcessingException e) {
-            log.warn("네이버 유저 정보 조회 후, 데이터 직렬화 에러");
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        }
-    }
 
 
 }

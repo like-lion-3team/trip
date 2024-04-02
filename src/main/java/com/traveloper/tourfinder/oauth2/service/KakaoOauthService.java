@@ -82,7 +82,7 @@ public class KakaoOauthService {
     @Transactional
     public String kakaoLogin(String code) {
         String kakaoAccessToken = getAccessToken(code).getAccess_token();
-        KakaoUserProfile userInfo = getProfile(kakaoAccessToken);
+        KakaoUserProfile userInfo = socialOauthService.getProfileRequest(kakaoAccessToken,kakaoUserInfoUri,KakaoUserProfile.class);
         String email = userInfo.getKakaoAccount().getEmail();
         String nickname = userInfo.getKakaoAccount().getEmail() + "_kakao";
 
@@ -138,24 +138,6 @@ public class KakaoOauthService {
 
     }
 
-    /**
-     * 카카오 로그인 이후 받은 AccessToken 으로 유저 정보 조회하는 메서드
-     * */
-    public KakaoUserProfile getProfile(String accessToken) {
-        try {
-            String body = socialOauthService.getProfileRequest(accessToken,kakaoUserInfoUri);
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(body, KakaoUserProfile.class);
-        } catch (HttpClientErrorException e) {
-            log.warn("클라이언트 오류: " + e.getStatusCode());
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        } catch (HttpServerErrorException e) {
-            log.warn("서버 오류: " + e.getStatusCode());
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        } catch (JsonProcessingException e) {
-            log.warn("카카오 유저 정보 조회 후, 데이터 직렬화 에러");
-            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
-        }
-    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.traveloper.tourfinder.oauth2.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
@@ -13,6 +14,7 @@ import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.oauth2.dto.KakaoUserProfile;
+import com.traveloper.tourfinder.oauth2.dto.NaverUserProfile;
 import com.traveloper.tourfinder.oauth2.entity.SocialProvider;
 import com.traveloper.tourfinder.oauth2.entity.SocialProviderMember;
 import com.traveloper.tourfinder.oauth2.repo.SocialProviderMemberRepo;
@@ -26,6 +28,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -150,7 +154,7 @@ public class SocialOauthService {
 
     }
 
-    public String getProfileRequest(String accessToken, String requestUri){
+    public <T> T getProfileRequest(String accessToken, String requestUri, Class<T> userProfileClass){
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -162,7 +166,19 @@ public class SocialOauthService {
         ResponseEntity<String> response = restTemplate.exchange(
                 requestUri, HttpMethod.GET, request, String.class);
 
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.getBody(), userProfileClass);
+        } catch (HttpClientErrorException e) {
+            log.warn("클라이언트 오류: " + e.getStatusCode());
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+        } catch (HttpServerErrorException e) {
+            log.warn("서버 오류: " + e.getStatusCode());
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+        } catch (JsonProcessingException e) {
+            log.warn("네이버 유저 정보 조회 후, 데이터 직렬화 에러");
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+        }
 
-        return response.getBody();
     }
 }
