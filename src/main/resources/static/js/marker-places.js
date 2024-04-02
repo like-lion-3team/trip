@@ -142,16 +142,15 @@ function renderSelectedPlaces() {
 }
 
 
-// 코스 생성 버튼 클릭 시 호출되는 함수
-function createCourse() {
-    // 선택한 여행지 배열을 콘솔에 출력
-    console.log(selectedPlaces);
-    // 코스 제목과 설명 가져오기
-    const courseTitle = document.getElementById("courseTitle").value;
-    const courseDesc = document.getElementById("courseDesc").value;
+// 코스 생성 또는 수정 버튼 클릭 시 호출되는 함수
+async function updateOrCreateCourse() {
+    const currentUrl = window.location.href;
+    const courseId = parseInt(currentUrl.substring(currentUrl.lastIndexOf('/') + 1));
+    const title = document.getElementById('courseTitle').value;
+    const desc = document.getElementById('courseDesc').value;
 
     // 코스 정보가 입력되어 있는지 확인
-    if (courseTitle.trim() === "" || courseDesc.trim() === "") {
+    if (title.trim() === "" || desc.trim() === "") {
         alert("코스 제목과 설명을 입력하세요.");
         return;
     }
@@ -162,32 +161,50 @@ function createCourse() {
         return;
     }
 
-    // 코스 생성 서버로 요청 보내기
-    fetch("/api/v1/courses", {
-        method: "POST",
-        headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token'),
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            title: courseTitle,
-            desc: courseDesc,
-            places: selectedPlaces
-        })
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('API 요청이 실패했습니다.');
-            }
-            alert("코스가 성공적으로 생성되었습니다.");
-            // 마이페이지로 리다이렉팅
-            window.location.href = "/my-page";
-        })
-        .catch(error => {
-            alert(error.message);
-            console.error('Error:', error);
-        });
+    try {
+        let response;
+        if (currentUrl.includes("/api-test/sample-course-update")) {
+            // 현재 URL이 코스 수정 페이지인 경우
+            response = await fetch(`/api/v1/courses/${courseId}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: title,
+                    desc: desc,
+                    places: selectedPlaces
+                })
+            });
+        } else if (currentUrl.includes("/api-test/sample-course-create")) {
+            // 현재 URL이 코스 생성 페이지인 경우
+            response = await fetch("/api/v1/courses", {
+                method: "POST",
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: title,
+                    desc: desc,
+                    places: selectedPlaces
+                })
+            });
+        }
+
+        if (!response.ok) {
+            throw new Error('API 요청이 실패했습니다.');
+        }
+
+        // 성공 시 홈 페이지로 이동 또는 어떤 동작을 수행할 수 있습니다.
+        window.location.href = '/my-page';
+    } catch (error) {
+        console.error('코스 정보를 처리하는 중 오류가 발생했습니다:', error);
+        alert(error.message);
+    }
 }
+
 
 // 여행지의 좌표로 지도의 중심 이동 및 확대하는 함수
 function moveToSelectedPlace(place) {

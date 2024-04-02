@@ -98,7 +98,7 @@
         <ul id="selected-places-list" class="list-group">
             <!-- 선택한 여행지가 여기에 동적으로 추가됩니다 -->
         </ul>
-        <button type="button" class="btn btn-primary" style="margin-top: 20px;" onclick="updateCourse()">코스 수정</button>
+        <button type="button" class="btn btn-primary" style="margin-top: 20px;" onclick="updateOrCreateCourse()">코스 수정</button>
     </div>
 </div>
 
@@ -128,6 +128,19 @@
             }
 
             const courseData = await response.json();
+            console.log(courseData);
+
+            // 선택한 여행지 목록에 추가
+            selectedPlaces = courseData.places;
+
+            // 선택한 여행지 목록을 화면에 표시
+            renderSelectedPlaces();
+
+            // 가져온 좌표값으로 마커를 표시합니다
+            displayMarkers();
+
+            moveToSelectedPlace(courseData.places[0]);
+
             document.getElementById('courseTitle').value = courseData.title;
             document.getElementById('courseDesc').value = courseData.desc;
         } catch (error) {
@@ -153,37 +166,5 @@
             console.error('유효한 courseId 가 없습니다.');
         }
     };
-
-
-    async function updateCourse() {
-        const courseId = document.getElementById('courseId').value;
-        const title = document.getElementById('courseTitle').value;
-        const desc = document.getElementById('courseDesc').value;
-
-        try {
-            const response = await fetch(`/api/v1/courses/${courseId}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    title: title,
-                    desc: desc
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error('API 요청이 실패했습니다.');
-            }
-
-            // 성공 시 홈 페이지로 이동 또는 어떤 동작을 수행할 수 있습니다.
-            window.location.href = '/home';
-        } catch (error) {
-            console.error('코스 정보를 업데이트하는 중 오류가 발생했습니다:', error);
-        }
-    }
-
 </script>
-
 </html>
