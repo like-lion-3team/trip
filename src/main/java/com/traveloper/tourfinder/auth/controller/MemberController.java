@@ -45,6 +45,16 @@ public class MemberController {
         return ResponseEntity.ok(memberService.signup(dto));
     }
 
+    @GetMapping("/send/{email}/code")
+    public ResponseEntity sendVerifyCode(
+            @PathVariable("email")
+            String email
+    ){
+        memberService.sendCode(email);
+        return ResponseEntity.ok("");
+    }
+
+
     // 로그인
 
     @PostMapping("/sign-in")

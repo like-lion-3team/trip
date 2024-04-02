@@ -5,6 +5,7 @@ import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
 import com.traveloper.tourfinder.auth.dto.SignInDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
+import com.traveloper.tourfinder.auth.dto.VerifyCodeSendSuccessDto;
 import com.traveloper.tourfinder.auth.entity.CustomUserDetails;
 import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.entity.Role;
@@ -52,6 +53,7 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
     private final RedisRepo redisRepo;
+    private final EmailService emailService;
     private final AuthenticationFacade authenticationFacade;
 
 
@@ -181,14 +183,10 @@ public class MemberService implements UserDetailsService {
     public void sendCode(
             String email
     ) {
-        // TODO: 이메일 인증 - 받아온 이메일로 인증코드 전송
-        // TODO: 이메일 인증 - Redis에 이메일 (key) : 코드 (value)  형태로 값 저장
-        String key = String.valueOf(redisRepo.getVerifyCode(email));
-        String value = RandomCodeUtils.generate(6);
+        VerifyCodeSendSuccessDto dto = emailService.sendVerifyCodeMail(email);
+        String key = String.valueOf(redisRepo.getVerifyCode(dto.getEmail()));
 
-        redisRepo.saveVerifyCode(key, value);
-
-
+        redisRepo.saveVerifyCode(key, dto.getCode());
     }
 
     public ResponseEntity<String> verifyCode(

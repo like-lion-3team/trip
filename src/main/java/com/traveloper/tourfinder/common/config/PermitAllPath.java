@@ -50,7 +50,9 @@ public class PermitAllPath {
 
             "/api/v1/auth/password-recovery",
             "/api/v1/auth/password-recovery/verify-code",
-            "/api/v1/auth/duplicate-check/**"
+            "/api/v1/auth/duplicate-check/**",
+            "/api/v1/auth/send/**",
+            "/api/v1/auth/email/*/verify-code/*"
 
     };
 }
