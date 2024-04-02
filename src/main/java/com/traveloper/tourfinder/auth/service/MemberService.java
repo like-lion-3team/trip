@@ -65,13 +65,18 @@ public class MemberService implements UserDetailsService {
     @Transactional
     public MemberDto signup(
             // 닉네임, 이메일, 비밀번호 입력받기
-            CreateMemberDto dto
+            CreateMemberDto dto,
+
+            // COMMON, SOCIAL
+            String type
     ) {
         // 닉네임 중복체크, 이메일 중복체크
         if (memberRepository.existsByEmail(dto.getEmail())){
             throw new GlobalExceptionHandler(CustomGlobalErrorCode.EMAIL_ALREADY_EXIST);
         } else if (memberRepository.existsByNickname(dto.getNickname()) ){
             throw new GlobalExceptionHandler(CustomGlobalErrorCode.NICKNAME_ALREADY_EXIST);
+        } else if (type.equals("COMMON") && redisRepo.getVerifyCode(dto.getEmail()).isEmpty() ){
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.PASSWORD_RECOVERY_CODE_MISS_MATCH);
         }
 
 
