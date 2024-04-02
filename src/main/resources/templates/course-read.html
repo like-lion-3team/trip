@@ -102,7 +102,7 @@
 
     function moveToSelectedPlace(place) {
         // 선택한 여행지의 좌표로 지도의 중심 이동
-        map.setCenter(new naver.maps.LatLng(place.lng, place.lat));
+        map.setCenter(new naver.maps.LatLng(place.lat, place.lng));
 
         // 지도 확대 수준 조정 (예: 현재 줌 레벨 + 2)
         const currentZoomLevel = map.getZoom();
