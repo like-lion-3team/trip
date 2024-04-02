@@ -33,7 +33,6 @@ public class ViewController {
         return "sample-course-list";
     }
 
-    // 테스트용
     @GetMapping("api-test/sample-course-list-test")
     public String sampleCourseListTest(
             Model model
@@ -52,6 +51,15 @@ public class ViewController {
         model.addAttribute("clientId", NCP_CLIENT_ID);
         model.addAttribute("courseId", courseId);
         return "sample-course-read";
+    }
+
+    // 테스트용
+    @GetMapping("api-test/sample-course-update")
+    public String sampleCourseUpdate(
+            Model model
+    ) {
+        model.addAttribute("clientId", NCP_CLIENT_ID);
+        return "sample-course-update";
     }
 
     @GetMapping("/login")
