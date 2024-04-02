@@ -87,11 +87,11 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-
 .extra-content.active {
     left: 470px; /* 사이드바의 너비만큼 왼쪽으로 이동하여 배치합니다. */
     width: 300px; /* extra-content가 열릴 때의 너비 */
 }
+
 
 .content {
     margin-left: 250px; /* 사이드바 너비 만큼 오른쪽으로 이동 */

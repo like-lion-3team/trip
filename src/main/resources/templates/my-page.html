@@ -10,7 +10,8 @@
             crossorigin="anonymous"></script>
     <!-- Bootstrap JavaScript 파일 추가 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-            integrity="sha384-aokocJiZAN8QK9GopOdTb1FPrkyoRYFfcps8TG+DTxQD0UC6GGst4pALJHvFdkoX" crossorigin="anonymous"></script>
+            integrity="sha384-aokocJiZAN8QK9GopOdTb1FPrkyoRYFfcps8TG+DTxQD0UC6GGst4pALJHvFdkoX"
+            crossorigin="anonymous"></script>
 
     <style>
         .card {
@@ -32,7 +33,7 @@
 
     <!-- Rest of the HTML code -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <title>마이페이지</title>
 </head>
@@ -83,46 +84,46 @@
                 <div class="m-3">
                     <h5>나의 여행 코스</h5>
                     <div class="container">
-                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 row-cols-xxl-6 g-2">
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 row-cols-xxl-6 g-2">
 
-                                <div class="col-12 col-md-6">
-                                    <div class="card">
-                                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Card Title 1</h5>
-                                            <p class="card-text">This is a longer card with supporting text below as a
-                                                natural lead-in to additional content. This content is a little bit
-                                                longer.</p>
-                                        </div>
+                            <div class="col-12 col-md-6">
+                                <div class="card">
+                                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Card Title 1</h5>
+                                        <p class="card-text">This is a longer card with supporting text below as a
+                                            natural lead-in to additional content. This content is a little bit
+                                            longer.</p>
                                     </div>
                                 </div>
-
-                                <div class="col-12 col-md-6">
-                                    <div class="card">
-                                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Card Title 1</h5>
-                                            <p class="card-text">This is a longer card with supporting text below as a
-                                                natural lead-in to additional content. This content is a little bit
-                                                longer.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-6">
-                                    <div class="card">
-                                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Card Title 1</h5>
-                                            <p class="card-text">This is a longer card with supporting text below as a
-                                                natural lead-in to additional content. This content is a little bit
-                                                longer.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- 추가 카드는 여기에 -->
                             </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="card">
+                                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Card Title 1</h5>
+                                        <p class="card-text">This is a longer card with supporting text below as a
+                                            natural lead-in to additional content. This content is a little bit
+                                            longer.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="card">
+                                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Card Title 1</h5>
+                                        <p class="card-text">This is a longer card with supporting text below as a
+                                            natural lead-in to additional content. This content is a little bit
+                                            longer.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 추가 카드는 여기에 -->
+                        </div>
                         </a>
                     </div>
                 </div>
@@ -148,6 +149,7 @@
         });
         return response;
     }
+
     // 마이페이지 데이터 조회
     async function fetchMyPageData() {
         const response = await fetch('http://localhost:8080/api/v1/auth/my', {
@@ -160,8 +162,6 @@
         });
         return response;
     }
-
-
 
 
     async function myPageProcessStart() {
@@ -207,6 +207,7 @@
             }
         }
     }
+
     myPageProcessStart();
 
     async function populateTravelCards() {
@@ -234,7 +235,7 @@
                         </div>
                     </a>
                     <div class="card-footer d-flex justify-content-end">
-                        <button type="button" class="btn btn-outline-primary btn-sm me-2">수정</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm me-2" onclick="getCourseAndUpdatePage(${course.id})">수정</button>
                         <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteCourse(${course.id})">삭제</button>
                     </div>
                 </div>
@@ -245,6 +246,13 @@
             container.appendChild(card);
         });
     }
+
+    // 수정 페이지로 이동하고 해당 코스의 정보를 가져와서 채워넣는 함수
+    async function getCourseAndUpdatePage(courseId) {
+        // 페이지 이동
+        window.location.href = `/api-test/sample-course-update/${courseId}`;
+    }
+
     // 여행 카드를 채우는 함수를 호출
     populateTravelCards();
 
@@ -272,11 +280,11 @@
                 location.reload();
             } else {
                 console.error('삭제 요청 실패:', response.status);
+                document.getElementById('courseTitle').value = courseData.title;
+                document.getElementById('courseDesc').value = courseData.desc;
             }
         }
     }
-
-
 
 </script>
 
