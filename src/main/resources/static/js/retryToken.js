@@ -11,8 +11,9 @@ async function retryTokenRequest(url) {
             body: JSON.stringify({ accessToken: token,uuid: uuid})
         });
         if (!response.ok){
-            alert("토큰 재발급 요청 실패")
+            alert(data.message)
             window.location.href = "/login"
+            return
         }
 
         let data = await response.json();
@@ -23,8 +24,9 @@ async function retryTokenRequest(url) {
             headers: { 'Authorization': `Bearer ${data.accessToken}` }
         });
         if (!response.ok){
-            alert("토큰 재발급 요청 실패")
+            alert(data.message)
             window.location.href = "/login"
+            return
         }
 
 

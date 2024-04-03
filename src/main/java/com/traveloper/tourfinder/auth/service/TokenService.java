@@ -37,7 +37,7 @@ public class TokenService {
 
 
         Claims memberUuid = jwtTokenUtils.parseClaims(storedRefreshToken.get());
-        if(!memberUuid.get("uuid").equals(dto.getUuid())){
+        if(!memberUuid.getSubject().equals(dto.getUuid())){
             throw new GlobalExceptionHandler(CustomGlobalErrorCode.AUTHENTICATION_FAILED);
         }
 
