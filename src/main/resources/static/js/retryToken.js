@@ -1,4 +1,4 @@
-async function refreshTokenAndRetryRequest(url) {
+async function retryTokenRequest(url) {
     const token = localStorage.getItem("token")
     const uuid = localStorage.getItem("uuid")
 
@@ -35,4 +35,4 @@ async function refreshTokenAndRetryRequest(url) {
     }
 }
 
-window.refreshTokenIfNeeded = refreshTokenAndRetryRequest;
+window.refreshTokenIfNeeded = retryTokenRequest;
