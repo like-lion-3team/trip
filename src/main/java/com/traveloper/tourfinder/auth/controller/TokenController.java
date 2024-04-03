@@ -25,16 +25,13 @@ public class TokenController {
             @RequestBody
             ReissuanceDto dto
     ) {
-        System.out.println("인자 테스트2");
         if( dto.getAccessToken().isEmpty() || dto.getUuid().isEmpty()){
-            System.out.println("인자 테스트");
             throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
         }
-        // TODO: AccessToken 재발급
+
         String token = tokenService.rolling(dto).orElseThrow(
                 () -> new GlobalExceptionHandler(CustomGlobalErrorCode.TOKEN_EXPIRED)
         );
-
 
         TokenDto response = TokenDto.builder()
                 .accessToken(token)
