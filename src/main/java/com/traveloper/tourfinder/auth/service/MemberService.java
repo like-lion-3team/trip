@@ -3,6 +3,7 @@ package com.traveloper.tourfinder.auth.service;
 
 import com.traveloper.tourfinder.auth.dto.CreateMemberDto;
 import com.traveloper.tourfinder.auth.dto.MemberDto;
+import com.traveloper.tourfinder.auth.dto.MemberIdDto;
 import com.traveloper.tourfinder.auth.dto.SignInDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import com.traveloper.tourfinder.auth.entity.CustomUserDetails;
@@ -224,6 +225,10 @@ public class MemberService implements UserDetailsService {
     ) {
         // TODO ( optional ) : 이메일 인증 - 당일 요청 가능한 횟수 제한 체크
         return true;
+    }
+
+    public MemberIdDto getCurrentMemberId() {
+        return MemberIdDto.fromMember(authenticationFacade.getCurrentMember());
     }
 
 

@@ -126,9 +126,8 @@
         convallis.</p>
     <p id="articleTags">태그: Tag1, Tag2, Tag3</p>
     <!-- 게시글 수정, 삭제 버튼 -->
-    <div class="article-buttons">
-        <button onclick="editArticle()">수정</button>
-        <button onclick="deleteArticle()">삭제</button>
+    <div class="article-buttons" id="articleButtonList">
+
     </div>
     <h2>댓글</h2>
     <div id="commentList">
@@ -145,11 +144,19 @@
     </div>
 </div>
 
+<script th:src="@{/js/current-member.js}"></script>
 <script>
     // 페이지 로드 후 실행될 함수
+
+    let currentMemberId = null;
+    getCurrentMemberId().then(data => {
+        currentMemberId = data.memberId;
+    })
+
     window.onload = function () {
         // articleId를 받아옵니다. 이 부분은 서버에서 Thymeleaf로 articleId를 넘겨줘야 합니다.
         const articleId = [[${articleId}]]
+
 
         // 서버로부터 해당 articleId에 해당하는 게시글 정보를 받아옵니다.
         fetch('/api/v1/articles/' + articleId, {
@@ -174,6 +181,15 @@
                 `;
                 document.getElementById('articleContent').innerText = article.content;
                 document.getElementById('articleTags').innerText = `태그: ${article.tags.join(', ')}`;
+
+
+                if (article.writer.memberId === currentMemberId) {
+                    const articleButtons = document.getElementById('articleButtonList');
+
+                    addArticleUpdateButton(articleButtons);
+                    addArticleDeleteButton(articleButtons);
+                }
+
                 updateCommentList(article.comments); // 댓글 목록 업데이트
             })
             .catch(error => {
@@ -181,10 +197,24 @@
             });
     };
 
-    // 게시글 수정 버튼 클릭 시
-    function editArticle() {
-        console.log('게시글 수정 버튼 클릭');
-        location.href = '/board/articles/' + [[${articleId}]] + '/update';
+    // 게시글 수정 버튼 추가
+    function addArticleUpdateButton(articleButtons) {
+        const articleUpdateButton = document.createElement('button');
+        articleUpdateButton.innerText = '수정';
+        articleUpdateButton.addEventListener('click', function () {
+            console.log('게시글 수정 버튼 클릭');
+            location.href = '/board/articles/' + [[${articleId}]] + '/update';
+        });
+
+        articleButtons.appendChild(articleUpdateButton);
+    }
+
+    function addArticleDeleteButton(articleButtons) {
+        const articleDeleteButton = document.createElement('button');
+        articleDeleteButton.innerText = '삭제';
+        articleDeleteButton.addEventListener('click', deleteArticle);
+
+        articleButtons.appendChild(articleDeleteButton);
     }
 
     // 게시글 삭제 버튼 클릭 시
@@ -267,7 +297,10 @@
         commentBox.appendChild(commentContent);
         commentBox.appendChild(commentWriter);
 
-        addDeleteButton(commentList, commentBox, comment)
+
+        if (comment.writer.memberId === currentMemberId) {
+            addDeleteButton(commentList, commentBox, comment);
+        }
 
         commentList.appendChild(commentBox);
     }
