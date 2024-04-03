@@ -50,6 +50,7 @@
 
              const data = await response.json()
              localStorage.setItem("token",data.accessToken);
+             localStorage.setItem("uuid",data.uuid);
              location.href = "/home"
          } catch (e) {
              console.log(e)

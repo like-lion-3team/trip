@@ -132,6 +132,7 @@ public class SocialOauthService {
 
         return TokenDto.builder()
                 .accessToken(accessToken)
+                .uuid(uuid)
                 .expiredDate(LocalDateTime.now().plusSeconds(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND))
                 .expiredSecond(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND)
                 .build();

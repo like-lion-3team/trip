@@ -4,6 +4,8 @@ import com.traveloper.tourfinder.auth.dto.Token.ReissuanceDto;
 import com.traveloper.tourfinder.auth.dto.Token.TokenDto;
 import com.traveloper.tourfinder.auth.service.TokenService;
 import com.traveloper.tourfinder.common.AppConstants;
+import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
+import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +25,14 @@ public class TokenController {
             @RequestBody
             ReissuanceDto dto
     ) {
+        System.out.println("인자 테스트2");
+        if( dto.getAccessToken().isEmpty() || dto.getUuid().isEmpty()){
+            System.out.println("인자 테스트");
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.SERVICE_UNAVAILABLE);
+        }
         // TODO: AccessToken 재발급
         String token = tokenService.rolling(dto).orElseThrow(
-                () -> new RuntimeException("토큰 재발급 오류")
+                () -> new GlobalExceptionHandler(CustomGlobalErrorCode.TOKEN_EXPIRED)
         );
 
 

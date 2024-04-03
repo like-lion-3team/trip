@@ -1,10 +1,12 @@
 package com.traveloper.tourfinder.auth.dto.Token;
 
-import lombok.Builder;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReissuanceDto {
     private String accessToken;
     private String uuid;

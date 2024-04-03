@@ -129,6 +129,7 @@ public class MemberService implements UserDetailsService {
         }
 
         return TokenDto.builder()
+                .uuid(member.getUuid())
                 .accessToken(accessToken)
                 .expiredDate(LocalDateTime.now().plusSeconds(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND))
                 .expiredSecond(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND)
@@ -221,7 +222,7 @@ public class MemberService implements UserDetailsService {
 
     public MemberDto findMember(String uuid){
         Member member = memberRepository.findMemberByUuid(uuid).orElseThrow(
-                () -> new AccessDeniedException("유저를 찾을 수 없습니다.")
+                () -> new GlobalExceptionHandler(CustomGlobalErrorCode.NOT_FOUND_MEMBER)
         );
 
         return MemberDto.builder()

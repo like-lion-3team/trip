@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class TokenDto {
     // 엑세스 토큰
     private String accessToken;
+    private String uuid;
 
     // 만료일
     private LocalDateTime expiredDate;
