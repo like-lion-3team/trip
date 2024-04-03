@@ -1,21 +1,12 @@
 package com.traveloper.tourfinder.course.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.traveloper.tourfinder.api.KTO.dto.KTOKeywordSearchDto;
+import com.traveloper.tourfinder.api.KTO.dto.search.KTOKeywordSearchDto;
 import com.traveloper.tourfinder.api.KTO.dto.detail.DetailsCommonDto;
-import com.traveloper.tourfinder.api.KTO.dto.detail.DetailsItemDto;
 import com.traveloper.tourfinder.api.KTO.service.KTOApiService;
-import com.traveloper.tourfinder.course.dto.PlaceDto;
-import com.traveloper.tourfinder.course.entity.Place;
 import com.traveloper.tourfinder.course.service.PlaceService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,12 +47,14 @@ public class PlaceController {
     public Object readCourses(
             @RequestParam("pageNo")
             Integer pageNo,
-            @RequestParam("areaCode")
+            @RequestParam(value = "areaCode", required = false)
             Integer areaCode,
-            @RequestParam("sigunguCode")
-            Integer sigunguCode
+            @RequestParam(value = "sigunguCode", required = false)
+            Integer sigunguCode,
+            @RequestParam(value = "contentTypeId", required = false)
+            Integer contentTypeId
     ) {
-        return ktoApiService.getCourseList(pageNo, areaCode, sigunguCode);
+        return ktoApiService.getCourseList(pageNo, areaCode, sigunguCode, contentTypeId);
     }
 
     @GetMapping("/area-code")
@@ -69,10 +62,6 @@ public class PlaceController {
             @RequestParam(value = "areaCode", required = false)
             Integer areaCode
     ) {
-        if (areaCode == null) {
-            return ktoApiService.getAreaCodeList(null);
-        } else {
-            return ktoApiService.getAreaCodeList(areaCode);
-        }
+        return ktoApiService.getAreaCodeList(areaCode);
     }
 }

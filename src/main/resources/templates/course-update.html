@@ -16,53 +16,60 @@
 <!-- 지도 -->
 <div id="map"></div>
 
-<!-- 메뉴바 -->
+<!-- 메뉴 바 -->
 <div class="menu-bar">
     <ul class="nav flex-column">
         <li class="nav-item">
             <a class="nav-link active" href="/home">홈</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link disabled" href="#">일정 선택</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link disabled" aria-current="page" href="#">장소 선택</a>
+            <a class="nav-link disabled" aria-current="page" href="#">코스 수정</a>
         </li>
     </ul>
 </div>
 
 <div class="sidebar relative">
-    <!-- 추가한 버튼 -->
     <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" type="button" onclick="toggleButton()">
+        <h4 class="mt-3 mb-3" style="margin-right: auto;">여행지 조회</h4>
+        <button class="btn btn-primary" type="button" style="margin-left: auto;" onclick="toggleButton()">
             <i class="bi bi-chevron-right"></i>
         </button>
     </div>
 
     <!-- 여행지 검색창 -->
-    <h5 class="mt-3 mb-3">여행지 검색</h5>
+    <h5 class="mt-3 mb-3">통합 검색</h5>
     <div class="input-group mb-3">
         <input type="text" class="form-control" id="search" name="search" placeholder="여행지를 검색하세요">
         <button class="btn btn-primary" type="button" onclick="searchPlaces()">검색</button>
     </div>
+    <h5 class="mt-3 mb-3">지역별 관광정보 조회</h5>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" id="content-type" name="content-type" placeholder="관광 타입" readonly>
+        <button class="btn btn-primary" type="button" onclick="displayContentTypes()" data-bs-toggle="modal" data-bs-target="#contentSelectModal">관광 타입 선택</button>
+    </div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" id="area-name" name="area-name" placeholder="광역시/도" readonly>
+        <input type="text" class="form-control" id="sigungu-name" name="sigungu-name" placeholder="시/군/구" readonly>
+        <button class="btn btn-primary" type="button" onclick="getAreaCode()" data-bs-toggle="modal" data-bs-target="#areaSelectModal">지역 선택</button>
+    </div>
+    <div class="input-group mb-3">
+        <button class="btn btn-primary" type="button" onclick="areaBasedPlaces()">조회</button>
+    </div>
 
-    <!-- 여행지 리스트 -->
+    <!-- 검색 결과 -->
     <div id="places-list">
         <h5 id="search-results-title">검색 결과</h5>
         <p id="page-info">총 <span id="total-results">0</span> 개의 결과 중 <span id="start-result">0</span> - <span id="end-result">0</span></p>
         <ul id="search-results" class="list-group">
-            <!-- 검색 결과가 여기에 동적으로 추가됩니다 -->
         </ul>
         <nav aria-label="Page navigation">
             <ul id="page-numbers" class="pagination justify-content-center">
-                <!-- 페이지 번호가 여기에 동적으로 추가됩니다 -->
             </ul>
         </nav>
     </div>
 </div>
 
-
-<!-- Modal -->
+<!-- 여행지 상세 정보 모달창 -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -75,8 +82,51 @@
     </div>
 </div>
 
+<!-- 관광 타입 선택 모달창 -->
+<div class="modal fade" id="contentSelectModal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">관광 타입 선택</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="row">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- 지역 선택 모달창 -->
+<div class="modal fade" id="areaSelectModal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">지역 선택</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="row">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- 코스 수정 폼과 선택한 여행지 리스트 -->
 <div class="extra-content">
     <div id="courseForm" class="p-4">
         <h5 class="mb-3">코스 수정</h5>
@@ -96,7 +146,6 @@
         <hr>
         <h5 class="mt-3" style="margin-bottom: 20px;">선택한 여행지</h5>
         <ul id="selected-places-list" class="list-group">
-            <!-- 선택한 여행지가 여기에 동적으로 추가됩니다 -->
         </ul>
         <button type="button" class="btn btn-primary" style="margin-top: 20px;" onclick="updateOrCreateCourse()">코스 수정</button>
     </div>
@@ -104,67 +153,14 @@
 
 
 <!-- 필요한 JavaScript 코드를 추가할 수 있습니다 -->
-<script th:src="@{/js/sample-course-create.js}"></script>
 <script th:src="@{/js/search-places.js}"></script>
+<script th:src="@{/js/course-map.js}"></script>
 <script th:src="@{/js/details-places.js}"></script>
 <script th:src="@{/js/marker-places.js}"></script>
+<script th:src="@{/js/course-toggle.js}"></script>
+<script th:src="@{/js/course-read-by-couse-id.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 </body>
-<script>
-    async function populateCourseData(courseId) {
-        try {
-            const response = await fetch(`/api/v1/courses/${courseId}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('API 요청이 실패했습니다.');
-            }
-
-            const courseData = await response.json();
-            console.log(courseData);
-
-            // 선택한 여행지 목록에 추가
-            selectedPlaces = courseData.places;
-
-            // 선택한 여행지 목록을 화면에 표시
-            renderSelectedPlaces();
-
-            // 가져온 좌표값으로 마커를 표시합니다
-            displayMarkers();
-
-            moveToSelectedPlace(courseData.places[0]);
-
-            document.getElementById('courseTitle').value = courseData.title;
-            document.getElementById('courseDesc').value = courseData.desc;
-        } catch (error) {
-            console.error('코스 데이터를 가져오는 중 오류가 발생했습니다:', error);
-        }
-    }
-
-    window.onload = function() {
-        // 현재 URL 가져오기
-        const currentUrl = window.location.href;
-
-        // URL에서 마지막 부분 추출하기
-        const lastSegment = currentUrl.substring(currentUrl.lastIndexOf('/') + 1);
-
-        // 숫자인지 확인하기
-        const courseId = parseInt(lastSegment);
-
-        // courseId 가 NaN 이 아닌지 확인
-        if (!isNaN(courseId)) {
-            // courseId 가 유효한 경우 populateCourseData 함수 호출
-            populateCourseData(courseId);
-        } else {
-            console.error('유효한 courseId 가 없습니다.');
-        }
-    };
-</script>
 </html>

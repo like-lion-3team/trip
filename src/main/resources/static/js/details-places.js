@@ -98,13 +98,6 @@ function displayPlaceDetails(details) {
             homepageElement.innerHTML = '홈페이지: ' + item.homepage;
             modalBody.appendChild(homepageElement);
         }
-
-        // 이미지 표시 가능
-        if (item.firstimage) {
-            var imageElement = document.createElement('img');
-            imageElement.src = item.firstimage;
-            modalBody.appendChild(imageElement);
-        }
     });
 
     // 모달 열기

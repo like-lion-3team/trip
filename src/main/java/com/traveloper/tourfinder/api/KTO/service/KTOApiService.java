@@ -4,8 +4,7 @@ import com.traveloper.tourfinder.api.KTO.dto.detail.DetailsCommonDto;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.traveloper.tourfinder.api.KTO.dto.KTOKeywordSearchDto;
+import com.traveloper.tourfinder.api.KTO.dto.search.KTOKeywordSearchDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,7 +61,8 @@ public class KTOApiService {
     public Object getCourseList(
             Integer pageNo,
             Integer areaCode,
-            Integer sigunguCode
+            Integer sigunguCode,
+            Integer contentTypeId
     ) {
         Map<String, Object> params = new HashMap<>();
         params.put("numOfRows", 10);
@@ -71,9 +71,9 @@ public class KTOApiService {
         params.put("MobileOS", "ETC");
         params.put("MobileApp", "AppTest");
         params.put("_type", "json");
-        // params.put("contentTypeId", 25);
         params.put("areaCode", areaCode);
         params.put("sigunguCode", sigunguCode);
+        params.put("contentTypeId", contentTypeId);
         return ktoSearchService.AreaBasedList(params);
     }
 

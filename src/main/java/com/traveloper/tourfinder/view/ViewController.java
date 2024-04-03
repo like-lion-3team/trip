@@ -1,7 +1,6 @@
 package com.traveloper.tourfinder.view;
 
 import com.traveloper.tourfinder.auth.service.EmailService;
-import com.traveloper.tourfinder.common.RedisRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -24,33 +23,33 @@ public class ViewController {
         return "sample";
     }
 
-    @GetMapping("api-test/sample-course-create")
-    public String sampleCourseCreate(
+    @GetMapping("/api/v1/courses/course-create")
+    public String courseCreate(
             Model model
     ) {
         model.addAttribute("clientId", NCP_CLIENT_ID);
-        return "sample-course-create";
+        return "course-create";
     }
 
-    @GetMapping("api-test/sample-course-list")
-    public String sampleCourseList(
+    @GetMapping("/api/v1/courses/course-list")
+    public String courseList(
             Model model
     ) {
         model.addAttribute("clientId", NCP_CLIENT_ID);
-        return "sample-course-list";
+        return "course-list";
     }
 
-    @GetMapping("api-test/sample-course-list-test")
-    public String sampleCourseListTest(
+    @GetMapping("/api/v1/courses/course-list-find")
+    public String courseListFind(
             Model model
     ) {
         model.addAttribute("clientId", NCP_CLIENT_ID);
-        return "sample-course-list-test";
+        return "course-list-find";
     }
 
 
-    @GetMapping("api-test/sample-course-read/{courseId}")
-    public String sampleCourseRead(
+    @GetMapping("/api/v1/courses/course-read/{courseId}")
+    public String courseRead(
             @PathVariable("courseId")
             Long courseId,
             Model model
@@ -60,15 +59,15 @@ public class ViewController {
         return "course-read";
     }
 
-    @GetMapping("api-test/sample-course-update/{courseId}")
-    public String sampleCourseUpdate(
+    @GetMapping("/api/v1/courses/course-update/{courseId}")
+    public String courseUpdate(
             @PathVariable("courseId")
             Long courseId,
             Model model
     ) {
         model.addAttribute("clientId", NCP_CLIENT_ID);
         model.addAttribute("courseId", courseId);
-        return "sample-course-update";
+        return "course-update";
     }
 
     @GetMapping("/login")

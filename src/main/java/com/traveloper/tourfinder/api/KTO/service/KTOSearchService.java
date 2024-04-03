@@ -3,7 +3,7 @@ package com.traveloper.tourfinder.api.KTO.service;
 import com.traveloper.tourfinder.api.KTO.dto.detail.DetailsCommonDto;
 import java.util.Map;
 
-import com.traveloper.tourfinder.api.KTO.dto.KTOKeywordSearchDto;
+import com.traveloper.tourfinder.api.KTO.dto.search.KTOKeywordSearchDto;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
