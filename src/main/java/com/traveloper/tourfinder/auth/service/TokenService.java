@@ -8,6 +8,7 @@ import com.traveloper.tourfinder.common.AppConstants;
 import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
+import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,14 @@ public class TokenService {
             return Optional.empty(); // Redis에 토큰이 없다면 빈 Optional 반환
         }
 
-        System.out.println(storedRefreshToken.get() + "토큰 체크");
+
+        Claims memberUuid = jwtTokenUtils.parseClaims(storedRefreshToken.get());
+        if(!memberUuid.get("uuid").equals(dto.getUuid())){
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.AUTHENTICATION_FAILED);
+        }
+
+
+
 
         Member member = memberRepository.findMemberByUuid(dto.getUuid())
                 .orElseThrow(() -> new GlobalExceptionHandler(CustomGlobalErrorCode.NOT_FOUND_MEMBER));
