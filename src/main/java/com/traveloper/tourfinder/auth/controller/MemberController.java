@@ -103,14 +103,10 @@ public class MemberController {
     @PostMapping("/password-recovery/verify-code")
     public ResponseEntity verifyCode(
             @RequestBody
-            PasswordRecoveryVerifyCodeRequestDto dto,
-            HttpServletResponse servletResponse
+            PasswordRecoveryVerifyCodeRequestDto dto
 
     )  {
-        System.out.println(dto.getEmail() + "이메일");
-        System.out.println(dto.getCode() + "코드");
-        boolean isVerify = emailService.verifyCode(dto.getEmail(), dto.getCode());
-        if(!isVerify) throw new GlobalExceptionHandler(CustomGlobalErrorCode.PASSWORD_RECOVERY_CODE_MISS_MATCH);
+        memberService.verifyCode(dto.getEmail(), dto.getCode());
         return ResponseEntity.ok("");
     }
 
