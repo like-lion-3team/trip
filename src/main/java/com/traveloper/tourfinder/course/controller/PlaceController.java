@@ -55,8 +55,24 @@ public class PlaceController {
     @GetMapping("/course-list")
     public Object readCourses(
             @RequestParam("pageNo")
-            Integer pageNo
+            Integer pageNo,
+            @RequestParam("areaCode")
+            Integer areaCode,
+            @RequestParam("sigunguCode")
+            Integer sigunguCode
     ) {
-        return ktoApiService.getCourseList(pageNo);
+        return ktoApiService.getCourseList(pageNo, areaCode, sigunguCode);
+    }
+
+    @GetMapping("/area-code")
+    public Object readCourses(
+            @RequestParam(value = "areaCode", required = false)
+            Integer areaCode
+    ) {
+        if (areaCode == null) {
+            return ktoApiService.getAreaCodeList(null);
+        } else {
+            return ktoApiService.getAreaCodeList(areaCode);
+        }
     }
 }
