@@ -39,6 +39,7 @@ public enum CustomGlobalErrorCode {
 
     // oauth2
     NOT_SUPPORT_SOCIAL_PROVIDER(400,"6001","지원하지 않는 소셜 사업자 입니다."),
+    MEMBER_IS_SOCIAL_SIGN_UP(400,"6002","소셜 연동 회원은 비밀번호 변경 기능을 이용할 수 없습니다."),
 
     // email
     PASSWORD_RECOVERY_CODE_MISS_MATCH(400,"7001","인증코드가 올바르지 않습니다"),
