@@ -53,12 +53,14 @@ public class ViewController {
         return "course-read";
     }
 
-    // 테스트용
-    @GetMapping("api-test/sample-course-update")
+    @GetMapping("api-test/sample-course-update/{courseId}")
     public String sampleCourseUpdate(
+            @PathVariable("courseId")
+            Long courseId,
             Model model
     ) {
         model.addAttribute("clientId", NCP_CLIENT_ID);
+        model.addAttribute("courseId", courseId);
         return "sample-course-update";
     }
 
