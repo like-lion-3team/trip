@@ -46,12 +46,12 @@ public class MemberController {
     }
 
     @GetMapping("/send/{email}/code")
-    public ResponseEntity sendVerifyCode(
+    public ResponseEntity<String> sendVerifyCode(
             @PathVariable("email")
             String email
     ){
         memberService.sendCode(email);
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok("{}");
     }
 
 
@@ -67,26 +67,26 @@ public class MemberController {
     }
 
     @GetMapping("/duplicate-check/{nickname}")
-    public ResponseEntity<Boolean> nicknameDuplicateCheck(
+    public ResponseEntity<String> nicknameDuplicateCheck(
             @PathVariable("nickname")
             String nickname
     ){
         if(memberService.nicknameDuplicateCheck(nickname)){
-            return ResponseEntity.status(400).body(true);
+            return ResponseEntity.status(400).body("{}");
         }else{
-            return ResponseEntity.ok(false);
+            return ResponseEntity.ok("{}");
         }
 
     }
 
     @GetMapping("/sign-out")
-    public ResponseEntity signOut(
+    public ResponseEntity<String> signOut(
             @RequestHeader("Authorization")
             String accessToken
     ) {
         // TODO: 로그아웃 기능
         memberService.signOut(accessToken);
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok("{}");
     }
 
     @GetMapping("/my")
@@ -101,13 +101,17 @@ public class MemberController {
      * <p>비밀번호 변경시 메일로 전송된 코드 검증 메서드</p>
      * */
     @PostMapping("/password-recovery/verify-code")
-    public ResponseEntity verifyCode(
+    public ResponseEntity<String> verifyCode(
             @RequestBody
             PasswordRecoveryVerifyCodeRequestDto dto
 
     )  {
-        memberService.verifyCode(dto.getEmail(), dto.getCode());
-        return ResponseEntity.ok("");
+
+        System.out.println(dto.getEmail() + "이메일");
+        System.out.println(dto.getCode() + "코드");
+        boolean isVerify = emailService.verifyCode(dto.getEmail(), dto.getCode());
+        if(!isVerify) throw new GlobalExceptionHandler(CustomGlobalErrorCode.PASSWORD_RECOVERY_CODE_MISS_MATCH);
+        return ResponseEntity.ok("{}");
     }
 
 
@@ -115,13 +119,13 @@ public class MemberController {
      * <p>이메일 인증코드, 이메일을 통한 비밀번호 변경 메서드</p>
      * */
     @PutMapping("/password-recovery")
-    public ResponseEntity recoverPassword(
+    public ResponseEntity<String> recoverPassword(
             @RequestBody
             PasswordRecoveryRequestDto dto
     ){
 
         memberService.updatePassword(dto.getEmail(),dto.getCode(), dto.getNewPassword());
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok("{}");
     }
 
     /**

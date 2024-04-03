@@ -24,7 +24,7 @@ public class EmailController {
         VerifyCodeSendSuccessDto result = emailService.sendVerifyCodeMail(email);
         log.info(result.getEmail() + "이메일");
         log.info(result.getCode() + "코드");
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("{}");
     }
 
     @GetMapping("/email/{email}/verify-code/{code}")
@@ -35,7 +35,7 @@ public class EmailController {
             String code
     ){
          boolean result = emailService.verifyCode(email,code);
-         return result ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
+         return result ? ResponseEntity.ok("{}") : ResponseEntity.status(400).body("{}");
     }
 
 

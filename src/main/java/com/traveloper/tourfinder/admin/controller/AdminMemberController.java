@@ -66,7 +66,7 @@ public class AdminMemberController {
             PeriodDto dto
     ){
         adminMemberService.blockMember(memberUuid);
-        return ResponseEntity.ok( "");
+        return ResponseEntity.ok( "{}");
     }
 
     @PatchMapping("/{memberUuid}/unblock")
