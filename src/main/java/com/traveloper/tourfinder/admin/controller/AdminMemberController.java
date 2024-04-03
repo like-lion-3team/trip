@@ -28,6 +28,7 @@ public class AdminMemberController {
             Pageable pageable
     ){
 
+        System.out.println("멤버 조회");
         Page<Member> members = adminMemberService.findMembers(pageable);
 
         List<MemberDto> memberDtos = members.getContent().stream().map(member ->
