@@ -118,7 +118,7 @@
 <body>
 <th:block th:replace="~{fragments/header :: header}"></th:block>
 <div class="article-container">
-    <h1 id="articleTitle">게시글 제목</h1>
+    <h1 id="articleTitle">게시글 제목 <span class="author" id="articleWriter"></span></h1>
     <div class="image-preview" id="articleImage">
         <img src="이미지 URL" alt="이미지">
     </div>
@@ -181,7 +181,10 @@
             })
             .then(article => {
                 // article 객체에서 필요한 정보를 추출하여 HTML에 표시합니다.
-                document.getElementById('articleTitle').innerText = article.title;
+                document.getElementById('articleTitle').innerHTML = `
+                    <h1 id="articleTitle">${article.title} <span class="author" id="articleWriter">${article.writer.nickname}</span></h1>
+                `;
+                document.getElementById('articleWriter').innerText = article.writer.nickname;
                 document.getElementById('articleImage').innerHTML = `
                     ${article.images.map(image => {
                     const imgSrc = image.substring(image.indexOf('/img'));
