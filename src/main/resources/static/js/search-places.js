@@ -84,6 +84,23 @@ function displayAreaCode(data) {
     const listGroup = document.createElement('div');
     listGroup.classList.add('list-group');
 
+    // "전국" 항목 추가
+    const allOption = document.createElement('button');
+    allOption.type = 'button';
+    allOption.classList.add('btn', 'btn-light', 'w-100', 'mb-2');
+    allOption.textContent = '전국';
+    allOption.addEventListener('click', function() {
+        // 선택한 지역 코드를 해당 HTML 요소에 채워 넣기
+        document.getElementById('area-name').value = '전국';
+        selectedAreaCode = ''; // 공백으로 설정
+
+        // 시군구 코드 모달 닫기
+        const modal = document.querySelector('#areaSelectModal');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        modalInstance.hide();
+    });
+    listGroup.appendChild(allOption);
+
     // 각 지역 코드 항목 추가
     data.response.body.items.item.forEach(item => {
         const code = item.code;
