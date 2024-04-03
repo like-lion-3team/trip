@@ -60,16 +60,34 @@ public class KTOApiService {
 
     // 지역기반 관광정보 조회 (코스 찾기)
     public Object getCourseList(
-            Integer pageNo
+            Integer pageNo,
+            Integer areaCode,
+            Integer sigunguCode
     ) {
         Map<String, Object> params = new HashMap<>();
-        params.put("numOfRows", 12);
+        params.put("numOfRows", 10);
         params.put("pageNo", pageNo);
         params.put("serviceKey", serviceKey);
         params.put("MobileOS", "ETC");
         params.put("MobileApp", "AppTest");
         params.put("_type", "json");
-        params.put("contentTypeId", 25);
+        // params.put("contentTypeId", 25);
+        params.put("areaCode", areaCode);
+        params.put("sigunguCode", sigunguCode);
         return ktoSearchService.AreaBasedList(params);
+    }
+
+    // 지역 코드 조회 (areaCode 가 있는 경우)
+    public Object getAreaCodeList(
+            Integer areaCode
+    ) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("numOfRows", 50);
+        params.put("serviceKey", serviceKey);
+        params.put("MobileOS", "ETC");
+        params.put("MobileApp", "AppTest");
+        params.put("_type", "json");
+        params.put("areaCode", areaCode);
+        return ktoSearchService.AreaCodeList(params);
     }
 }
