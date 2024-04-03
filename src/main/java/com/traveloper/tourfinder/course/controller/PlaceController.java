@@ -47,11 +47,11 @@ public class PlaceController {
     public Object readCourses(
             @RequestParam("pageNo")
             Integer pageNo,
-            @RequestParam("areaCode")
+            @RequestParam(value = "areaCode", required = false)
             Integer areaCode,
-            @RequestParam("sigunguCode")
+            @RequestParam(value = "sigunguCode", required = false)
             Integer sigunguCode,
-            @RequestParam("contentTypeId")
+            @RequestParam(value = "contentTypeId", required = false)
             Integer contentTypeId
     ) {
         return ktoApiService.getCourseList(pageNo, areaCode, sigunguCode, contentTypeId);
@@ -62,10 +62,6 @@ public class PlaceController {
             @RequestParam(value = "areaCode", required = false)
             Integer areaCode
     ) {
-        if (areaCode == null) {
-            return ktoApiService.getAreaCodeList(null);
-        } else {
-            return ktoApiService.getAreaCodeList(areaCode);
-        }
+        return ktoApiService.getAreaCodeList(areaCode);
     }
 }

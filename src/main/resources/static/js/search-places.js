@@ -147,6 +147,23 @@ function displaySigunguCode(data) {
     const listGroup = document.createElement('div');
     listGroup.classList.add('list-group');
 
+    // "전체" 아이템 추가
+    const allOption = document.createElement('button');
+    allOption.type = 'button';
+    allOption.classList.add('btn', 'btn-light', 'w-100', 'mb-2');
+    allOption.textContent = '전체';
+    allOption.addEventListener('click', function() {
+        // 시군구 코드를 해당 HTML 요소에 채워 넣기
+        document.getElementById('sigungu-name').value = '전체';
+        selectedSigunguCode = '';
+
+        // 모달 닫기
+        const modal = document.querySelector('#areaSelectModal');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        modalInstance.hide();
+    });
+    listGroup.appendChild(allOption);
+
     // 각 시군구 코드 항목 추가
     data.response.body.items.item.forEach(item => {
         const code = item.code;
@@ -222,7 +239,6 @@ function displayContentTypes() {
 
 // 지역 기반 여행지 조회
 function areaBasedPlaces() {
-    // 검색어가 비어있지 않을 경우 API 요청 보내기
     fetch(`/api/v1/places/course-list?&pageNo=${currentPage}&areaCode=${selectedAreaCode}&sigunguCode=${selectedSigunguCode}&contentTypeId=${selectedContentTypeId}`, {
         method: 'GET',
         headers: {
