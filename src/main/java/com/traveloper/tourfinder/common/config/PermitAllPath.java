@@ -43,12 +43,12 @@ public class PermitAllPath {
 
 
             // board
-            "/board",
             "/board/articles",
             "/board/articles/{articleId}",
             "/board/articles/create",
             "/board/articles/{articleId}/update",
             "/api/v1/auth/current-member",
+            "/api/v1/articles",
             "/api/v1/articles/{articleId}/like",
             "/api/v1/articles/{articleId}",
 
