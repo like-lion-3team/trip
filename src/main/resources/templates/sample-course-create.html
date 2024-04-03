@@ -34,20 +34,26 @@
 <div class="sidebar relative">
     <!-- 추가한 버튼 -->
     <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" type="button" onclick="toggleButton()">
+        <h4 class="mt-3 mb-3" style="margin-right: auto;">여행지 조회</h4>
+        <button class="btn btn-primary" type="button" style="margin-left: auto;" onclick="toggleButton()">
             <i class="bi bi-chevron-right"></i>
         </button>
     </div>
 
     <!-- 여행지 검색창 -->
-    <h5 class="mt-3 mb-3">여행지 검색</h5>
+    <h5 class="mt-3 mb-3">통합 검색</h5>
     <div class="input-group mb-3">
         <input type="text" class="form-control" id="search" name="search" placeholder="여행지를 검색하세요">
         <button class="btn btn-primary" type="button" onclick="searchPlaces()">검색</button>
     </div>
+    <h5 class="mt-3 mb-3">지역별 관광정보</h5>
     <div class="input-group mb-3">
-        <input type="text" class="form-control" id="area-name" name="area-name" readonly>
-        <input type="text" class="form-control" id="sigungu-name" name="sigungu-name" readonly>
+        <input type="text" class="form-control" id="content-type" name="content-type" placeholder="관광 타입" readonly>
+        <button class="btn btn-primary" type="button" onclick="displayContentTypes()" data-bs-toggle="modal" data-bs-target="#contentSelectModal">관광 타입 선택</button>
+    </div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" id="area-name" name="area-name" placeholder="광역시/도" readonly>
+        <input type="text" class="form-control" id="sigungu-name" name="sigungu-name" placeholder="시/군/구" readonly>
         <button class="btn btn-primary" type="button" onclick="getAreaCode()" data-bs-toggle="modal" data-bs-target="#areaSelectModal">지역 선택</button>
     </div>
     <div class="input-group mb-3">
@@ -82,8 +88,30 @@
     </div>
 </div>
 
+<!-- 관광 타입 선택 모달창 -->
+<div class="modal fade" id="contentSelectModal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">관광 타입 선택</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="row">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<!-- 지역 코드 모달창 -->
+
+<!-- 지역 선택 모달창 -->
 <div class="modal fade" id="areaSelectModal">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -101,9 +129,6 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">완료</button>
-            </div>
         </div>
     </div>
 </div>
@@ -111,7 +136,7 @@
 <!-- 코스 생성 버튼과 선택한 여행지 리스트 -->
 <div class="extra-content">
     <div id="courseForm" class="p-4">
-        <h5 class="mb-3">코스 수정</h5>
+        <h5 class="mb-3">코스 생성</h5>
         <form th:action="@{/api/v1/courses}" method="post">
             <div class="mb-3">
                 <label for="courseTitle" class="form-label">코스 제목</label>

@@ -4,6 +4,8 @@ let totalPages = 0; // 총 페이지 수 초기화
 // 전역 변수로 지역 코드와 시군구 코드를 저장할 변수 선언
 let selectedAreaCode = '';
 let selectedSigunguCode = '';
+let selectedContentTypeId = '';
+
 
 // 여행지 검색 함수
 function searchPlaces() {
@@ -43,6 +45,7 @@ function searchPlaces() {
             });
     }
 }
+
 
 // 지역 코드 조회
 function getAreaCode() {
@@ -119,7 +122,7 @@ function displayAreaCode(data) {
 
         const areaOption = document.createElement('button');
         areaOption.type = 'button';
-        areaOption.classList.add('list-group-item', 'list-group-item-action');
+        areaOption.classList.add('btn', 'btn-light', 'w-100', 'mb-2');
         areaOption.textContent = name;
         // 클릭 이벤트 추가
         areaOption.addEventListener('click', function() {
@@ -153,14 +156,18 @@ function displaySigunguCode(data) {
 
         const sigunguOption = document.createElement('button');
         sigunguOption.type = 'button';
-        sigunguOption.classList.add('list-group-item', 'list-group-item-action');
+        sigunguOption.classList.add('btn', 'btn-light', 'w-100', 'mb-2');
         sigunguOption.textContent = name;
         // 클릭 이벤트 추가
         sigunguOption.addEventListener('click', function() {
             // 시군구 코드를 해당 HTML 요소에 채워 넣기
             document.getElementById('sigungu-name').value = name;
             selectedSigunguCode = code;
-            // getSigunguCode(selectedSigunguCode); // 해당 지역 코드를 파라미터로 전달하여 getSigunguCode 함수 호출
+
+            // 모달 닫기
+            const modal = document.querySelector('#areaSelectModal');
+            const modalInstance = bootstrap.Modal.getInstance(modal);
+            modalInstance.hide();
         });
         // 해당 버튼에 데이터 코드 속성 추가
         sigunguOption.setAttribute('data-code', code);
@@ -171,10 +178,61 @@ function displaySigunguCode(data) {
 }
 
 
+// 관광 타입 정보를 저장할 객체
+const contentTypes = {
+    '관광지': '12',
+    '문화시설': '14',
+    '행사/공연/축제': '15',
+    '레저 스포츠': '28',
+    '숙박': '32',
+    '쇼핑': '38',
+    '음식점': '39'
+};
+
+// 모달창에 관광 타입 정보를 표시하는 함수
+function displayContentTypes() {
+    const modalBody = document.querySelector('#contentSelectModal .modal-body');
+    modalBody.innerHTML = ''; // 모달창 내용 초기화
+
+    const container = document.createElement('div');
+    container.classList.add('container-fluid');
+
+    const listGroup = document.createElement('ul');
+    listGroup.classList.add('list-group');
+
+    Object.entries(contentTypes).forEach(([typeName, typeId]) => {
+        const listItem = document.createElement('li');
+        listItem.classList.add('list-group-item', 'list-group-item-action');
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.classList.add('btn', 'btn-light', 'w-100');
+        button.textContent = typeName;
+        button.addEventListener('click', function() {
+            // 선택한 관광 타입 정보를 전역 변수에 저장
+            selectedContentTypeId = typeId;
+            document.getElementById('content-type').value = typeName;
+
+            // 모달 닫기
+            const modal = document.querySelector('#contentSelectModal');
+            const modalInstance = bootstrap.Modal.getInstance(modal);
+            modalInstance.hide();
+        });
+
+        listItem.appendChild(button);
+        listGroup.appendChild(listItem);
+    });
+
+    container.appendChild(listGroup);
+    modalBody.appendChild(container);
+}
+
+
+
 // 지역 기반 여행지 조회
 function areaBasedPlaces() {
     // 검색어가 비어있지 않을 경우 API 요청 보내기
-    fetch(`/api/v1/places/course-list?&pageNo=${currentPage}&areaCode=${selectedAreaCode}&sigunguCode=${selectedSigunguCode}`, {
+    fetch(`/api/v1/places/course-list?&pageNo=${currentPage}&areaCode=${selectedAreaCode}&sigunguCode=${selectedSigunguCode}&contentTypeId=${selectedContentTypeId}`, {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem('token'),
