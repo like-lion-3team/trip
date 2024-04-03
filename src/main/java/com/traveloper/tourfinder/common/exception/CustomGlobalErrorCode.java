@@ -42,7 +42,12 @@ public enum CustomGlobalErrorCode {
 
     // email
     PASSWORD_RECOVERY_CODE_MISS_MATCH(400,"7001","인증코드가 올바르지 않습니다"),
-    NOT_FOUND_PASSWORD_RECOVERY_CODE(400,"7002","인증 코드가 만료 되었습니다.");
+    NOT_FOUND_PASSWORD_RECOVERY_CODE(400,"7002","인증 코드가 만료 되었습니다."),
+
+    // token_auth
+    AUTHENTICATION_FAILED(403, "8001", "인증 확인에 실패했습니다.");
+
+
 
     private int status;
     private String code;
