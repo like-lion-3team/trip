@@ -1,16 +1,23 @@
 package com.traveloper.tourfinder.view;
 
+import com.traveloper.tourfinder.auth.service.EmailService;
+import com.traveloper.tourfinder.common.RedisRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@RequiredArgsConstructor
 public class ViewController {
     @Value("${naver.ncp.client-id}")
     private String NCP_CLIENT_ID;
+
+    private final EmailService emailService;
 
     @RequestMapping("/test")
     public String test() {
@@ -124,9 +131,34 @@ public class ViewController {
         return "article-read";
     }
 
-    @GetMapping("/password-change")
+    @GetMapping("/password-check")
     public String passwordChangeView(){
-        return "password-change";
+        return "password-change-email-check";
     }
+
+    @GetMapping("/password-change")
+    public String passwordChangeForm(
+            @RequestParam("email")
+            String email,
+            @RequestParam("code")
+            String code
+    ){
+
+
+
+        System.out.println(email + "email");
+        System.out.println(code + "code");
+
+
+        boolean verify = emailService.verifyCode(email,code);
+        if(!verify || email.isEmpty() || code.isEmpty()){
+            return "redirect:login";
+        }else{
+            return "password-change-form";
+        }
+
+    }
+
+
 
 }
