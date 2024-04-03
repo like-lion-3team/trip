@@ -30,6 +30,9 @@ public class Article extends BaseEntity {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private final List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private final List<ArticleLike> likes = new ArrayList<>();
+
     @ElementCollection
     private final List<String> images = new ArrayList<>();
 

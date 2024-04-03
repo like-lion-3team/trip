@@ -14,6 +14,7 @@ public class ArticleDto {
     private String title;
     private String content;
     private WriterDto writer;
+    private Integer likes;
     private List<String> images;
     private List<CommentDto> comments;
     private List<String> tags;
@@ -27,8 +28,9 @@ public class ArticleDto {
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .content(entity.getContent())
-                .images(entity.getImages())
                 .writer(WriterDto.fromMember(entity.getMember()))
+                .likes(entity.getLikes().size())
+                .images(entity.getImages())
                 .comments(commentDtoList)
                 .tags(entity.getTags())
                 .build();

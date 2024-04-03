@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long> {
     Optional<ArticleLike> findByMemberAndArticle(Member member, Article article);
+    boolean existsByMemberAndArticleId(Member member, Long articleId);
 }
