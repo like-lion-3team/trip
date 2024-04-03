@@ -10,7 +10,7 @@
             background-color: #f8f9fa;
         }
 
-        .container {
+        .article-container {
             max-width: 600px;
             margin: 50px auto;
             padding: 20px;
@@ -44,7 +44,7 @@
             height: 150px;
         }
 
-        button {
+        .saveButton {
             display: block;
             width: 100%;
             padding: 10px;
@@ -55,7 +55,7 @@
             cursor: pointer;
         }
 
-        button:hover {
+        .saveButton:hover {
             background-color: #0056b3;
         }
 
@@ -66,7 +66,8 @@
     </style>
 </head>
 <body>
-<div class="container">
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<div class="article-container">
     <h1>게시글 작성</h1>
     <form id="articleForm" enctype="multipart/form-data">
         <label for="title">제목:</label>
@@ -77,9 +78,11 @@
         <input type="file" id="images" name="images" accept="image/*" multiple required><br><br>
         <label for="tags">태그:</label><br>
         <input type="text" id="tags" name="tags" placeholder="태그를 입력하세요 (쉼표로 구분)" required><br><br>
-        <button type="submit">게시글 작성</button>
+        <button class="saveButton" type="submit">게시글 작성</button>
     </form>
 </div>
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+
 
 <script>
     document.getElementById('articleForm').addEventListener('submit', function (event) {
