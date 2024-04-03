@@ -127,7 +127,12 @@
     <p id="articleTags">태그: Tag1, Tag2, Tag3</p>
     <!-- 게시글 수정, 삭제 버튼 -->
     <div class="article-buttons" id="articleButtonList">
-
+        <!-- 좋아요 이미지 버튼 -->
+        <div id="likeButtonContainer">
+            <img id="likeButton" src="/images/board/empty-heart-icon.png" alt="Like" width="24" height="24"
+                 onclick="toggleLike()">
+            <span id="likeCount" class="like-count">0</span> <!-- 좋아요 수를 표시할 요소 -->
+        </div>
     </div>
     <h2>댓글</h2>
     <div id="commentList">
@@ -153,10 +158,11 @@
         currentMemberId = data.memberId;
     })
 
+    let isLiked = false;
+
     window.onload = function () {
         // articleId를 받아옵니다. 이 부분은 서버에서 Thymeleaf로 articleId를 넘겨줘야 합니다.
         const articleId = [[${articleId}]]
-
 
         // 서버로부터 해당 articleId에 해당하는 게시글 정보를 받아옵니다.
         fetch('/api/v1/articles/' + articleId, {
@@ -190,12 +196,65 @@
                     addArticleDeleteButton(articleButtons);
                 }
 
+                // 좋아요 정보 불러오기
+                checkArticleLike();
+                // 좋아요 수 표시
+                document.getElementById('likeCount').innerText = article.likes;
+
                 updateCommentList(article.comments); // 댓글 목록 업데이트
             })
             .catch(error => {
                 console.error('게시글을 불러오는 중 오류가 발생했습니다:', error);
             });
     };
+
+
+    function checkArticleLike() {
+        const likeButton = document.getElementById('likeButton');
+
+        fetch('/api/v1/articles/' + [[${articleId}]] + '/like', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error("좋아요 체크 오류");
+            }
+            return response.text();
+        }).then(data => {
+            isLiked = (data.trim() === 'true');
+            if (isLiked) {
+                likeButton.src = '/images/board/filled-heart-icon.png'; // 채워진 하트 이미지로 변경
+            } else {
+                likeButton.src = '/images/board/empty-heart-icon.png'; // 빈 하트 이미지로 변경
+            }
+        })
+    }
+    function toggleLike() {
+        const likeButton = document.getElementById('likeButton');
+        const likeCount = document.getElementById('likeCount');
+        fetch('/api/v1/articles/' + [[${articleId}]] + '/like', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        }).then(response => {
+            if (!response.ok) {
+                alert("좋아요 실패!");
+            } else {
+                // 성공시에만
+                isLiked = !isLiked;
+                if (!isLiked) {
+                    likeButton.src = '/images/board/empty-heart-icon.png'; // 빈 하트 이미지로 변경
+                    likeCount.innerText = (parseInt(likeCount.innerText) - 1).toString()
+                } else {
+                    likeButton.src = '/images/board/filled-heart-icon.png'; // 채워진 하트 이미지로 변경
+                    likeCount.innerText = (parseInt(likeCount.innerText) + 1).toString()
+                }
+            }
+        })
+    }
 
     // 게시글 수정 버튼 추가
     function addArticleUpdateButton(articleButtons) {

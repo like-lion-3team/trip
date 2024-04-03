@@ -18,6 +18,7 @@ public class PermitAllPath {
             "/api/v1/auth/send/*/password-recovery-code",
             "/api/v1/auth/email/*/verify-code/*",
             "/api/v1/auth/current-member",
+
             "/api-test/**",
             "/api/v1/courses/**",
             "/api/v1/places/**",
@@ -46,6 +47,13 @@ public class PermitAllPath {
             "/board/articles/{articleId}",
             "/board/articles/create",
             "/board/articles/{articleId}/update",
+            "/api/v1/auth/current-member",
+            "/api/v1/articles/{articleId}/like",
+            "/api/v1/articles/{articleId}",
+
+
+            "/password-change",
+
 
             "/swagger-ui/*",
             "/v1/api-docs/*",

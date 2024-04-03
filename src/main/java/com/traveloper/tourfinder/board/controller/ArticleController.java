@@ -75,4 +75,12 @@ public class ArticleController {
     ) {
         articleService.toggleArticleLike(articleId);
     }
+
+    @GetMapping("{articleId}/like")
+    public Boolean isCurrentMemberLikedArticle(
+            @PathVariable("articleId")
+            Long articleId
+    ) {
+        return articleService.isCurrentMemberLikedArticle(articleId);
+    }
 }
