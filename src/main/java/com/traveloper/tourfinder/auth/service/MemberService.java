@@ -110,11 +110,12 @@ public class MemberService implements UserDetailsService {
         );
 
         if(!passwordEncoder.matches(dto.getPassword(), member.getPassword())){
-            throw new AccessDeniedException("로그인 실패");
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.CREDENTIALS_NOT_MATCH);
         }
 
         if(member.getRole().getName().equals("BLOCK_USER")){
-            throw  new AccessDeniedException("차단된 사용자");
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.USER_BLOCKED);
+
         }
 
 
