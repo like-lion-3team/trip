@@ -19,6 +19,7 @@ public class PermitAllPath {
             "/api/v1/auth/send/*/code",
             "/api/v1/auth/email/*/verify-code/*",
             "/api/v1/auth/current-member",
+            "/api/v1/auth/token",
             "/api/v1/admin/auth/**",
             "/api/v1/admin/**",
 

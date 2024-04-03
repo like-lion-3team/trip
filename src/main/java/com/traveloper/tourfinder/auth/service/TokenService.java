@@ -4,7 +4,10 @@ import com.traveloper.tourfinder.auth.dto.Token.ReissuanceDto;
 import com.traveloper.tourfinder.auth.entity.Member;
 import com.traveloper.tourfinder.auth.jwt.JwtTokenUtils;
 import com.traveloper.tourfinder.auth.repo.MemberRepository;
+import com.traveloper.tourfinder.common.AppConstants;
 import com.traveloper.tourfinder.common.RedisRepo;
+import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
+import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,12 +34,14 @@ public class TokenService {
             return Optional.empty(); // Redis에 토큰이 없다면 빈 Optional 반환
         }
 
+        System.out.println(storedRefreshToken.get() + "토큰 체크");
+
         Member member = memberRepository.findMemberByUuid(dto.getUuid())
-                .orElseThrow(() -> new EntityNotFoundException("찾을 수 없음"));
+                .orElseThrow(() -> new GlobalExceptionHandler(CustomGlobalErrorCode.NOT_FOUND_MEMBER));
 
         // 새로운 토큰 생성
-        String newAccessToken = jwtTokenUtils.generateToken(member);
-        String newRefreshToken = jwtTokenUtils.generateToken(member);
+        String newAccessToken = jwtTokenUtils.generateToken(member,AppConstants.ACCESS_TOKEN_EXPIRE_SECOND);
+        String newRefreshToken = jwtTokenUtils.generateToken(member, AppConstants.REFRESH_TOKEN_EXPIRE_SECOND);
 
         // 기존 리프레시 토큰 삭제
         redisRepo.destroyRefreshToken(dto.getAccessToken());

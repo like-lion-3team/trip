@@ -72,8 +72,8 @@ public class CustomJwtExceptionFilter extends OncePerRequestFilter {
                 }
 
                 if (!jwtTokenUtils.validate(token)) {
-                    log.info("올바르지 않은 토큰");
-                    setErrorResponse(CustomGlobalErrorCode.MALFORMED_TOKEN, response);
+                    log.info("토큰이 만료되었습니다.");
+                    setErrorResponse(CustomGlobalErrorCode.TOKEN_EXPIRED, response);
                     return;
                 }
 
