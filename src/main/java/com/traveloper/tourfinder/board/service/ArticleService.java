@@ -9,9 +9,7 @@ import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,11 +59,16 @@ public class ArticleService {
 
     // article 페이지 단위로 받아오기
     public Page<ArticleDto> readArticlePaged(Pageable pageable) {
-        Page<Article> articlesPage = articleRepository.findAll(pageable);
+        Pageable reversePageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by("id").descending());
+
+        Page<Article> articlesPage = articleRepository.findAll(reversePageable);
         List<ArticleDto> articleDtos = articlesPage.getContent().stream()
                 .map(ArticleDto::fromEntity)
                 .collect(Collectors.toList());
-        return new PageImpl<>(articleDtos, pageable, articlesPage.getTotalElements());
+        return new PageImpl<>(articleDtos, reversePageable, articlesPage.getTotalElements());
     }
 
     // 특정 articleId의 article 가져오기

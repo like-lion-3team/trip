@@ -72,11 +72,31 @@
             background-color: #007bff;
             color: #fff;
         }
+
+        /* 작성 버튼 스타일 */
+        .write-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .write-button a {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 <th:block th:replace="~{fragments/header :: header}"></th:block>
 <div class="board-container">
+    <div class="write-button">
+        <a href="/board/articles/create">게시글 작성하기</a>
+    </div>
+    <div class="article-divider"></div> <!-- 각 게시글 간의 구분선 -->
     <div id="article-container">
 
     </div>
