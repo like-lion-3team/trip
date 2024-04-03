@@ -1,4 +1,4 @@
-package com.traveloper.tourfinder.api.KTO.dto;
+package com.traveloper.tourfinder.api.KTO.dto.search;
 
 import lombok.Data;
 

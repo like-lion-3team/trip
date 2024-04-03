@@ -4,8 +4,7 @@ import com.traveloper.tourfinder.api.KTO.dto.detail.DetailsCommonDto;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.traveloper.tourfinder.api.KTO.dto.KTOKeywordSearchDto;
+import com.traveloper.tourfinder.api.KTO.dto.search.KTOKeywordSearchDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
