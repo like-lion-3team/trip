@@ -222,7 +222,6 @@ function displayContentTypes() {
 
 // 지역 기반 여행지 조회
 function areaBasedPlaces() {
-    console.log(selectedAreaCode + ' ' + selectedSigunguCode + ' ' + selectedContentTypeId);
     // 검색어가 비어있지 않을 경우 API 요청 보내기
     fetch(`/api/v1/places/course-list?&pageNo=${currentPage}&areaCode=${selectedAreaCode}&sigunguCode=${selectedSigunguCode}&contentTypeId=${selectedContentTypeId}`, {
         method: 'GET',
