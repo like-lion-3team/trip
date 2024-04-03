@@ -129,7 +129,8 @@
             if (response.status === 200) {
                 alert('로그인 성공');
 
-                localStorage.setItem('token', data.accessToken);
+                localStorage.setItem("token",data.accessToken);
+                localStorage.setItem("uuid",data.uuid);
                 closeModal();
                 window.location.href = "/home";
 

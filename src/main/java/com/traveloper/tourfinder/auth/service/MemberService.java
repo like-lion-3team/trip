@@ -129,6 +129,7 @@ public class MemberService implements UserDetailsService {
         }
 
         return TokenDto.builder()
+                .uuid(member.getUuid())
                 .accessToken(accessToken)
                 .expiredDate(LocalDateTime.now().plusSeconds(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND))
                 .expiredSecond(AppConstants.ACCESS_TOKEN_EXPIRE_SECOND)
