@@ -16,6 +16,7 @@ public class PermitAllPath {
             "/api/v1/auth/password-recovery/verify-code",
             "/api/v1/auth/duplicate-check/**",
             "/api/v1/auth/send/*/password-recovery-code",
+            "/api/v1/auth/send/*/code",
             "/api/v1/auth/email/*/verify-code/*",
             "/api/v1/auth/current-member",
 
