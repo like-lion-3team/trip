@@ -227,7 +227,7 @@
             // 카드의 내용을 설정
             card.innerHTML = `
                 <div class="card">
-                    <a href="/api-test/sample-course-read/${course.id}" style="text-decoration: none;">
+                    <a href="/api/v1/courses/sample-course-read/${course.id}" style="text-decoration: none;">
                     <img src="${course.places[0].thumbnailUrl}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">${course.title}</h5>
@@ -250,7 +250,7 @@
     // 수정 페이지로 이동하고 해당 코스의 정보를 가져와서 채워넣는 함수
     async function getCourseAndUpdatePage(courseId) {
         // 페이지 이동
-        window.location.href = `/api-test/sample-course-update/${courseId}`;
+        window.location.href = `/api/v1/courses/sample-course-update/${courseId}`;
     }
 
     // 여행 카드를 채우는 함수를 호출

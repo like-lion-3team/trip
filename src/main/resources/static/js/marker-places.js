@@ -163,7 +163,7 @@ async function updateOrCreateCourse() {
 
     try {
         let response;
-        if (currentUrl.includes("/api-test/sample-course-update")) {
+        if (currentUrl.includes("/api/v1/courses/sample-course-update")) {
             // 현재 URL이 코스 수정 페이지인 경우
             response = await fetch(`/api/v1/courses/${courseId}`, {
                 method: 'PUT',
@@ -177,7 +177,7 @@ async function updateOrCreateCourse() {
                     places: selectedPlaces
                 })
             });
-        } else if (currentUrl.includes("/api-test/sample-course-create")) {
+        } else if (currentUrl.includes("/api/v1/courses/sample-course-create")) {
             // 현재 URL이 코스 생성 페이지인 경우
             response = await fetch("/api/v1/courses", {
                 method: "POST",

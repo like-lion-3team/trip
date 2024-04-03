@@ -23,9 +23,6 @@
             <a class="nav-link active" href="/home">홈</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link disabled" href="#">일정 선택</a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link disabled" aria-current="page" href="#">장소 선택</a>
         </li>
     </ul>
@@ -46,7 +43,7 @@
         <input type="text" class="form-control" id="search" name="search" placeholder="여행지를 검색하세요">
         <button class="btn btn-primary" type="button" onclick="searchPlaces()">검색</button>
     </div>
-    <h5 class="mt-3 mb-3">지역별 관광정보</h5>
+    <h5 class="mt-3 mb-3">지역별 관광정보 조회</h5>
     <div class="input-group mb-3">
         <input type="text" class="form-control" id="content-type" name="content-type" placeholder="관광 타입" readonly>
         <button class="btn btn-primary" type="button" onclick="displayContentTypes()" data-bs-toggle="modal" data-bs-target="#contentSelectModal">관광 타입 선택</button>
@@ -73,7 +70,6 @@
         </nav>
     </div>
 </div>
-
 
 <!-- 상세 정보 모달창 -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
