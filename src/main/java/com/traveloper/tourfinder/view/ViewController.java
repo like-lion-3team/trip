@@ -131,7 +131,7 @@ public class ViewController {
         return "article-read";
     }
 
-    @GetMapping("/password-check")
+    @GetMapping("/password-change-email-check")
     public String passwordChangeView(){
         return "password-change-email-check";
     }

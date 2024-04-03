@@ -37,10 +37,7 @@ public class PermitAllPath {
 
             "/login","/sign-up","/my-page", "/home",
             "/password-change",
-            "/password-change",
-            "/password-change/*",
-            "/password-change/**",
-            "/password-check",
+            "/password-change-email-check",
 
 
             // board
