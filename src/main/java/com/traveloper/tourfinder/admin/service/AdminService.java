@@ -27,7 +27,7 @@ public class AdminService {
                 () -> new EntityNotFoundException("로그인 실패")
         );
 
-        if(passwordEncoder.matches(dto.getPassword(), member.getPassword())){
+        if(!passwordEncoder.matches(dto.getPassword(), member.getPassword())){
             throw new AccessDeniedException("로그인 실패");
         }
 

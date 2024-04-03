@@ -78,17 +78,15 @@
 
 </body>
 <script>
-
+    var myModal = new bootstrap.Modal(document.getElementById('loginLoadingModal'));
     function openModal() {
-        var myModal = new bootstrap.Modal(document.getElementById('loginLoadingModal'));
+
 
         myModal.show();
     }
 
     function closeModal(){
-        var myModal = new bootstrap.Modal(document.getElementById('loginLoadingModal'));
-
-        myModal.close();
+        myModal.hide();
     }
 
 
@@ -138,6 +136,7 @@
             } else {
                 alert('로그인 실패2');
                 closeModal();
+                window.location.href ="/my-page"
             }
         } catch (error) {
             console.error('에러처리:', error);
