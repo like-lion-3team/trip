@@ -84,7 +84,7 @@ public class SocialOauthService {
                 .password(password)
                 .build();
         
-        MemberDto memberDto = memberService.signup(createMemberDto);
+        MemberDto memberDto = memberService.signup(createMemberDto, "SOCIAL");
         Member findMember = memberRepository.findMemberByUuid(memberDto.getUuid()).orElseThrow(
                 () -> {
                     log.warn("회원 가입이 정상 처리되지 않았습니다.");

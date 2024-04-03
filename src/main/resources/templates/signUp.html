@@ -12,11 +12,24 @@
 <body>
 <th:block th:replace="~{fragments/header :: header}"></th:block>
 
-<div class="d-flex justify-content-center mt-5">
-    <div class="w-25">
+<div class="container my-auto mt-5" style="max-width:440px;">
+    <div class="row justify-content-center">
         <div class="mb-3">
             <label for="nickname" class="form-label">닉네임</label>
-            <input type="nickname" class="form-control" id="nickname" aria-describedby="nicknameHelp">
+            <div class="row g-2">
+                <div class="col">
+                    <input type="text" class="form-control" id="nickname" aria-describedby="nicknameHelp">
+                </div>
+                <div class="col-auto">
+
+
+                    <div style="display:none" id="duplicate-check-spinner" class="spinner-border text-primary" role="status">
+                        <span class="sr-only"></span>
+                    </div>
+
+                    <button id="duplicate-check-btn" class="btn btn-primary" onclick="nicknameCheck()">중복체크</button>
+                </div>
+            </div>
             <div id="nicknameHelp" class="form-text">
                 닉네임 중복 체크를 해주세요
             </div>
@@ -24,11 +37,48 @@
 
         <div class="mb-3">
             <label for="email" class="form-label">이메일</label>
-            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+
+            <div class="col-auto">
+
+
+
+
+                <div class="row g-2">
+                    <div class="col">
+                        <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                    </div>
+                    <div style="display:none" id="email-verify-code-send-spinner" class="spinner-border text-primary" role="status">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="col-auto">
+                        <button id="email-verify-code-send-btn" class="btn btn-primary" onclick="sendEmailVerifyCode()">인증 코드 전송</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div class="mb-3">
+            <label for="verify-code" class="form-label"> <b>이메일 인증코드</b></label>
+            <div class="row g-2">
+                <div style="display: none" id="email-verify-code-check">✅</div>
+                <div class="col">
+                    <input type="text" class="form-control" id="verify-code" aria-describedby="verifyCodeHelp">
+                </div>
+                <div style="display:none" id="email-verify-spinner" class="spinner-border text-primary" role="status">
+                    <span class="sr-only"></span>
+                </div>
+                <div class="col-auto">
+                    <button id="email-verify-check-btn" class="btn btn-primary" onclick="emailVerifyCodeCheck()">검증</button>
+                </div>
+            </div>
             <div id="emailHelp" class="form-text">
                 인증 가능한 이메일이 없으면 회원가입이 제한됩니다.
             </div>
         </div>
+
 
         <div class="mb-3">
             <label for="password" class="form-label">비밀번호</label>
@@ -52,6 +102,128 @@
 </div>
 </body>
 <script>
+
+
+    let isNicknameDuplicated = undefined;
+    async function emailVerifyCodeCheck(){
+        viewEmailVerifySpinner();
+        const email = document.getElementById("email").value;
+        const code = document.getElementById("verify-code").value;
+
+
+        const response = await fetch(`http://localhost:8080/api/v1/auth/email/${email}/verify-code/${code}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if(response.status !== 200){
+            alert("인증 코드가 유효하지 않습니다.")
+        }else{
+            alert("이메일 인증이 완료 되었습니다.")
+        }
+        hiddenEmailVerifySpinner();
+    };
+
+    function viewEmailVerifySpinner(){
+        const spinner = document.getElementById('email-verify-spinner');
+        const button = document.getElementById('email-verify-check-btn');
+        spinner.style.display = 'block'; // 로딩 중이면 스피너 표시
+        button.style.display = 'none'
+    };
+    function hiddenEmailVerifySpinner(){
+        const spinner = document.getElementById('email-verify-spinner');
+        const button = document.getElementById('email-verify-check-btn');
+
+        spinner.style.display = 'none';  // 로딩이 아니면 스피너 숨김
+        button.style.display = 'block'
+    };
+
+    function viewEmailSendSpinner(){
+        const spinner = document.getElementById('email-verify-code-send-spinner');
+        const button = document.getElementById('email-verify-code-send-btn');
+        spinner.style.display = 'block'; // 로딩 중이면 스피너 표시
+        button.style.display = 'none'
+    };
+    function hiddenEmailSendSpinner(){
+        const spinner = document.getElementById('email-verify-code-send-spinner');
+        const button = document.getElementById('email-verify-code-send-btn');
+
+        spinner.style.display = 'none';  // 로딩이 아니면 스피너 숨김
+        button.style.display = 'block'
+    };
+
+    async function sendEmailVerifyCode(){
+        viewEmailSendSpinner()
+        const email = document.getElementById("email").value;
+        const response = await fetch(`http://localhost:8080/api/v1/auth/send/${email}/code`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+
+
+        });
+
+        if(response.status === 200){
+            alert(email + " 이메일로 인증번호가 발송 되었습니다. \n 이메일 인증코드 칸에 입력 후 검증 버튼을 클릭 해주세요")
+
+        }else if(response.status = 409){
+            alert("이미 가입된 이메일 입니다. \n 로그인 페이지로 이동합니다.")
+            window.location.href = "/login"
+        }else {
+            alert("인증번호 전송에 실패했습니다. \n 관리자에게 문의 해주세요")
+        }
+
+        hiddenEmailSendSpinner()
+        console.log(response.status)
+    };
+
+
+
+
+
+
+
+
+    function viewSpinner() {
+        const spinner = document.getElementById('duplicate-check-spinner');
+        const button = document.getElementById('duplicate-check-btn');
+        spinner.style.display = 'block'; // 로딩 중이면 스피너 표시
+        button.style.display = 'none'
+    }
+    function hiddenSpinner() {
+        const spinner = document.getElementById('duplicate-check-spinner');
+        const button = document.getElementById('duplicate-check-btn');
+        spinner.style.display = 'none';  // 로딩이 아니면 스피너 숨김
+        button.style.display = 'block'
+    }
+    async function nicknameCheck(){
+        const nickname = document.getElementById("nickname").value;
+        if(nickname.length < 2){
+            return alert("닉네임을 2글자 이상 입력 해주세요")
+        }
+        viewSpinner(true);
+
+
+        const response = await fetch(`http://localhost:8080/api/v1/auth/duplicate-check/${nickname}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if(response.status !== 200){
+            isNicknameDuplicated = true;
+            hiddenSpinner();
+            alert("이미 존재하는 닉네임 입니다")
+        }else{
+            isNicknameDuplicated = false;
+            hiddenSpinner();
+            alert("사용 가능한 닉네임 입니다.")
+        }
+    }
      async function signUp() {
         //fetch
         const email = document.getElementById('email').value;
@@ -93,11 +265,10 @@
                 location.href = '/login';
 
             } else {
-                alert('회원 가입 실패');
+                alert(data.message);
             }
         } catch (error) {
-            console.error('에러처리:', error);
-            alert('로그인 실패');
+
 
         }
 

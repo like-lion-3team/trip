@@ -22,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Random;
 
 @Tag(name = "Auth", description = "Auth API")
 @Slf4j
@@ -41,8 +42,18 @@ public class MemberController {
             @RequestBody
             CreateMemberDto dto
     ) {
-        return ResponseEntity.ok(memberService.signup(dto));
+        return ResponseEntity.ok(memberService.signup(dto,"COMMON"));
     }
+
+    @GetMapping("/send/{email}/code")
+    public ResponseEntity sendVerifyCode(
+            @PathVariable("email")
+            String email
+    ){
+        memberService.sendCode(email);
+        return ResponseEntity.ok("");
+    }
+
 
     // 로그인
 
@@ -53,6 +64,19 @@ public class MemberController {
     ) {
         log.info("test");
         return ResponseEntity.ok(memberService.login(dto));
+    }
+
+    @GetMapping("/duplicate-check/{nickname}")
+    public ResponseEntity<Boolean> nicknameDuplicateCheck(
+            @PathVariable("nickname")
+            String nickname
+    ){
+        if(memberService.nicknameDuplicateCheck(nickname)){
+            return ResponseEntity.status(400).body(true);
+        }else{
+            return ResponseEntity.ok(false);
+        }
+
     }
 
     @GetMapping("/sign-out")
