@@ -86,7 +86,7 @@ public class ViewController {
         return "my-page";
     }
 
-    @GetMapping("/board")
+    @GetMapping("/board/articles")
     public String board() {
         return "board-articles";
     }
@@ -103,7 +103,6 @@ public class ViewController {
     @GetMapping("/oauth2/callback")
     public String oauthRedirect()
         {return "oauth2-redirect"; }
-
 
     @GetMapping("/board/articles/create")
     public String createArticleView() {

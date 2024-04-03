@@ -9,6 +9,8 @@ import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.common.util.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -57,10 +60,12 @@ public class ArticleService {
     }
 
     // article 페이지 단위로 받아오기
-    public List<ArticleDto> readArticlePaged(Pageable pageable) {
-        return articleRepository.findAll(pageable).stream()
+    public Page<ArticleDto> readArticlePaged(Pageable pageable) {
+        Page<Article> articlesPage = articleRepository.findAll(pageable);
+        List<ArticleDto> articleDtos = articlesPage.getContent().stream()
                 .map(ArticleDto::fromEntity)
-                .toList();
+                .collect(Collectors.toList());
+        return new PageImpl<>(articleDtos, pageable, articlesPage.getTotalElements());
     }
 
     // 특정 articleId의 article 가져오기

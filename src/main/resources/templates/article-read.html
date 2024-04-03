@@ -12,7 +12,7 @@
             padding: 0;
         }
 
-        .container {
+        .article-container {
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
@@ -116,8 +116,9 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <h1 id="articleTitle">게시글 제목 <span class="author" id="articleWriter">작성자 이름</span></h1>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<div class="article-container">
+    <h1 id="articleTitle">게시글 제목 <span class="author" id="articleWriter"></span></h1>
     <div class="image-preview" id="articleImage">
         <img src="이미지 URL" alt="이미지">
     </div>
@@ -126,7 +127,7 @@
         convallis.</p>
     <p id="articleTags">태그: Tag1, Tag2, Tag3</p>
     <!-- 게시글 수정, 삭제 버튼 -->
-    <div class="article-buttons" id="articleButtonList">
+    <div id="articleButtonList">
         <!-- 좋아요 이미지 버튼 -->
         <div id="likeButtonContainer">
             <img id="likeButton" src="/images/board/empty-heart-icon.png" alt="Like" width="24" height="24"
@@ -134,7 +135,8 @@
             <span id="likeCount" class="like-count">0</span> <!-- 좋아요 수를 표시할 요소 -->
         </div>
     </div>
-    <h2>댓글</h2>
+    <br><br>
+    <h2>댓글 <span id="commentCount">(0)</span></h2>
     <div id="commentList">
         <!-- 댓글이 여기에 동적으로 추가될 것입니다. -->
     </div>
@@ -148,6 +150,7 @@
         </form>
     </div>
 </div>
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
 <script th:src="@{/js/current-member.js}"></script>
 <script>
@@ -178,7 +181,10 @@
             })
             .then(article => {
                 // article 객체에서 필요한 정보를 추출하여 HTML에 표시합니다.
-                document.getElementById('articleTitle').innerText = article.title;
+                document.getElementById('articleTitle').innerHTML = `
+                    <h1 id="articleTitle">${article.title} <span class="author" id="articleWriter">${article.writer.nickname}</span></h1>
+                `;
+                document.getElementById('articleWriter').innerText = article.writer.nickname;
                 document.getElementById('articleImage').innerHTML = `
                     ${article.images.map(image => {
                     const imgSrc = image.substring(image.indexOf('/img'));
@@ -201,6 +207,7 @@
                 // 좋아요 수 표시
                 document.getElementById('likeCount').innerText = article.likes;
 
+                document.getElementById('commentCount').innerText = '(' + article.comments.length + ')';
                 updateCommentList(article.comments); // 댓글 목록 업데이트
             })
             .catch(error => {
@@ -231,6 +238,7 @@
             }
         })
     }
+
     function toggleLike() {
         const likeButton = document.getElementById('likeButton');
         const likeCount = document.getElementById('likeCount');

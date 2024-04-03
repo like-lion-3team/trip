@@ -2,6 +2,7 @@ package com.traveloper.tourfinder.board.controller;
 
 import com.traveloper.tourfinder.board.dto.ArticleDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class ArticleController {
     }
 
     @GetMapping
-    public List<ArticleDto> readArticlePaged(
+    public Page<ArticleDto> readArticlePaged(
             @RequestParam(value = "page", defaultValue = "1")
             Integer page,
             @RequestParam(value = "size", defaultValue = "10")
