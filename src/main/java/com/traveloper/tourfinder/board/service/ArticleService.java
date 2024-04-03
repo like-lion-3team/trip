@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Slf4j
 @Service
@@ -164,6 +162,11 @@ public class ArticleService {
                     .build();
             articleLikeRepository.save(newLike);
         }
+    }
+
+    public Boolean isCurrentMemberLikedArticle(Long articleId) {
+        Member currentMember = facade.getCurrentMember();
+        return articleLikeRepository.existsByMemberAndArticleId(currentMember, articleId);
     }
 
     public String saveImage(MultipartFile image) {
