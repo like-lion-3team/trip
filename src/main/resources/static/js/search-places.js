@@ -1,6 +1,10 @@
 let currentPage = 1; // 현재 페이지 초기화
 let totalPages = 0; // 총 페이지 수 초기화
 
+// 전역 변수로 지역 코드와 시군구 코드를 저장할 변수 선언
+let selectedAreaCode = '';
+let selectedSigunguCode = '';
+
 // 여행지 검색 함수
 function searchPlaces() {
     // 1. 사용자가 입력한 검색어 가져오기
@@ -119,18 +123,15 @@ function displayAreaCode(data) {
         areaOption.textContent = name;
         // 클릭 이벤트 추가
         areaOption.addEventListener('click', function() {
-            const selectedCode = areaOption.getAttribute('data-code'); // 해당 버튼의 data-code 속성을 가져옴
-            getSigunguCode(selectedCode); // 해당 지역 코드를 파라미터로 전달하여 getSigunguCode 함수 호출
+            // 선택한 지역 코드를 해당 HTML 요소에 채워 넣기
+            document.getElementById('area-name').value = name;
+            selectedAreaCode = code;
+            getSigunguCode(selectedAreaCode); // 해당 지역 코드를 파라미터로 전달하여 getSigunguCode 함수 호출
         });
         // 해당 버튼에 데이터 코드 속성 추가
         areaOption.setAttribute('data-code', code);
         listGroup.appendChild(areaOption);
     });
-
-    // <div className="input-group mb-3">
-    //     <input type="text" className="form-control" id="area-sigungu-select" name="area-sigungu-select" placeholder="area-sigungu-select">
-    //         <button className="btn btn-primary" type="button" onClick="getSigunguCode()">시군구 선택</button>
-    // </div>
 
     // 리스트 그룹을 모달 바디에 추가
     areaCodeModalBody.appendChild(listGroup);
@@ -147,15 +148,24 @@ function displaySigunguCode(data) {
 
     // 각 시군구 코드 항목 추가
     data.response.body.items.item.forEach(item => {
+        const code = item.code;
         const name = item.name;
 
         const sigunguOption = document.createElement('button');
         sigunguOption.type = 'button';
         sigunguOption.classList.add('list-group-item', 'list-group-item-action');
         sigunguOption.textContent = name;
+        // 클릭 이벤트 추가
+        sigunguOption.addEventListener('click', function() {
+            // 시군구 코드를 해당 HTML 요소에 채워 넣기
+            document.getElementById('sigungu-name').value = name;
+            selectedSigunguCode = code;
+            // getSigunguCode(selectedSigunguCode); // 해당 지역 코드를 파라미터로 전달하여 getSigunguCode 함수 호출
+        });
+        // 해당 버튼에 데이터 코드 속성 추가
+        sigunguOption.setAttribute('data-code', code);
         listGroup.appendChild(sigunguOption);
     });
-
     // 리스트 그룹을 모달 바디에 추가
     sigunguModalBody.appendChild(listGroup);
 }
@@ -163,18 +173,8 @@ function displaySigunguCode(data) {
 
 // 지역 기반 여행지 조회
 function areaBasedPlaces() {
-    // 1. 사용자가 입력한 검색어 가져오기
-    const pageNo = document.getElementById('page-no').value;
-    const areaCode = document.getElementById('area-code').value;
-    const sigunguCode = document.getElementById('sigungu-code').value;
-    // const contentTypeId = document.getElementById('contentTypeId').value;
-    console.log(pageNo);
-    console.log(areaCode);
-    console.log(sigunguCode);
-
-
     // 검색어가 비어있지 않을 경우 API 요청 보내기
-    fetch(`/api/v1/places/course-list?pageNo=${pageNo}&areaCode=${areaCode}&sigunguCode=${sigunguCode}`, {
+    fetch(`/api/v1/places/course-list?&pageNo=${currentPage}&areaCode=${selectedAreaCode}&sigunguCode=${selectedSigunguCode}`, {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -235,6 +235,7 @@ function updatePageNumbers() {
         link.addEventListener('click', function() {
             currentPage--;
             searchPlaces();
+            areaBasedPlaces();
         });
         prevPageButton.appendChild(link);
         pageNumbersContainer.appendChild(prevPageButton);
@@ -249,6 +250,7 @@ function updatePageNumbers() {
         link.addEventListener('click', function() {
             currentPage = i;
             searchPlaces();
+            areaBasedPlaces();
         });
         pageNumberButton.appendChild(link);
         pageNumbersContainer.appendChild(pageNumberButton);
@@ -264,6 +266,7 @@ function updatePageNumbers() {
         link.addEventListener('click', function() {
             currentPage++;
             searchPlaces();
+            areaBasedPlaces();
         });
         nextPageButton.appendChild(link);
         pageNumbersContainer.appendChild(nextPageButton);

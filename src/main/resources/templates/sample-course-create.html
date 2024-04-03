@@ -46,12 +46,11 @@
         <button class="btn btn-primary" type="button" onclick="searchPlaces()">검색</button>
     </div>
     <div class="input-group mb-3">
+        <input type="text" class="form-control" id="area-name" name="area-name" readonly>
+        <input type="text" class="form-control" id="sigungu-name" name="sigungu-name" readonly>
         <button class="btn btn-primary" type="button" onclick="getAreaCode()" data-bs-toggle="modal" data-bs-target="#areaSelectModal">지역 선택</button>
     </div>
     <div class="input-group mb-3">
-        <input type="text" class="form-control" id="area-code" name="area-code" placeholder="area-code">
-        <input type="text" class="form-control" id="sigungu-code" name="sigungu-code" placeholder="sigungu-code">
-        <input type="text" class="form-control" id="page-no" name="page-no" placeholder="page-no">
         <button class="btn btn-primary" type="button" onclick="areaBasedPlaces()">조회</button>
     </div>
     <!-- 여행지 리스트 -->
@@ -98,14 +97,12 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="row">
-
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="getAreaCode()">이전</button>
-                <button type="button" class="btn btn-primary">완료</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">완료</button>
             </div>
         </div>
     </div>
