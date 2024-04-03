@@ -204,15 +204,18 @@ public class MemberService implements UserDetailsService {
             String email,
             String code
     ) {
-        // TODO: 인증 코드 검증 - 유저가 입력한 코드 검사
-        // TODO: 인증 코드 검증 - Redis에 저장된 값 ( 이메일 )을 검색
-        // TODO: 인증 코드 검증 - 일치하면 200 응
-        String savedCode = redisRepo.saveVerifyCode(email,code);
+        Member member = memberRepository.findMemberByEmail(email).orElseThrow(
+                () -> new GlobalExceptionHandler(CustomGlobalErrorCode.NOT_FOUND_MEMBER)
+        );
 
-        if (savedCode != null && savedCode.equals(code)) {
+        if(!member.getSocialProviderMembers().isEmpty()){
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.MEMBER_IS_SOCIAL_SIGN_UP);
+        }
+
+        if (emailService.verifyCode(email,code)) {
             return ResponseEntity.ok("코드 일치");
         } else {
-            return ResponseEntity.badRequest().body("코드 불일치");
+            throw new GlobalExceptionHandler(CustomGlobalErrorCode.PASSWORD_RECOVERY_CODE_MISS_MATCH);
         }
     }
 

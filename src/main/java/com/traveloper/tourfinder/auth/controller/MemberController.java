@@ -106,6 +106,7 @@ public class MemberController {
             PasswordRecoveryVerifyCodeRequestDto dto
 
     )  {
+
         System.out.println(dto.getEmail() + "이메일");
         System.out.println(dto.getCode() + "코드");
         boolean isVerify = emailService.verifyCode(dto.getEmail(), dto.getCode());
