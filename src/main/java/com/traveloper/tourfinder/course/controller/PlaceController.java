@@ -50,9 +50,11 @@ public class PlaceController {
             @RequestParam("areaCode")
             Integer areaCode,
             @RequestParam("sigunguCode")
-            Integer sigunguCode
+            Integer sigunguCode,
+            @RequestParam("contentTypeId")
+            Integer contentTypeId
     ) {
-        return ktoApiService.getCourseList(pageNo, areaCode, sigunguCode);
+        return ktoApiService.getCourseList(pageNo, areaCode, sigunguCode, contentTypeId);
     }
 
     @GetMapping("/area-code")

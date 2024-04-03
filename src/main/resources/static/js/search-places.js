@@ -1,11 +1,6 @@
 let currentPage = 1; // 현재 페이지 초기화
 let totalPages = 0; // 총 페이지 수 초기화
 
-// 전역 변수로 지역 코드와 시군구 코드를 저장할 변수 선언
-let selectedAreaCode = '';
-let selectedSigunguCode = '';
-let selectedContentTypeId = '';
-
 
 // 여행지 검색 함수
 function searchPlaces() {
@@ -46,8 +41,13 @@ function searchPlaces() {
     }
 }
 
+// 전역 변수로 지역 코드와 시군구 코드를 저장할 변수 선언
+let selectedAreaCode = '';
+let selectedSigunguCode = '';
+let selectedContentTypeId = '';
 
-// 지역 코드 조회
+
+// 광역시/도 코드 조회
 function getAreaCode() {
     fetch(`/api/v1/places/area-code`, {
         method: 'GET',
@@ -61,7 +61,6 @@ function getAreaCode() {
                 // 응답이 성공적이지 않을 때 에러 처리
                 throw new Error('API 요청이 실패했습니다.');
             }
-            console.log(response);
             // JSON 형태로 변환하여 반환
             return response.json();
         })
@@ -76,37 +75,7 @@ function getAreaCode() {
         });
 }
 
-
-// 시군구 코드 조회
-function getSigunguCode(selectedCode) {
-    fetch(`/api/v1/places/area-code?areaCode=${selectedCode}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token'),
-            'Content-Type': 'application/json',
-        }
-    })
-        .then(response => {
-            if (!response.ok) {
-                // 응답이 성공적이지 않을 때 에러 처리
-                throw new Error('API 요청이 실패했습니다.');
-            }
-            console.log(response);
-            // JSON 형태로 변환하여 반환
-            return response.json();
-        })
-        .then(data => {
-            // API 응답 데이터를 화면에 표시
-            displaySigunguCode(data);
-        })
-        .catch(error => {
-            // API 요청이 실패했을 때 에러 처리
-            alert(error.message);
-            console.error('Error:', error);
-        });
-}
-
-// 지역 코드 화면 표시
+// 광역시/도 화면 표시
 function displayAreaCode(data) {
     const areaCodeModalBody = document.querySelector('#areaSelectModal .modal-body');
     areaCodeModalBody.innerHTML = ''; // 모달창 내용 초기화
@@ -138,6 +107,35 @@ function displayAreaCode(data) {
 
     // 리스트 그룹을 모달 바디에 추가
     areaCodeModalBody.appendChild(listGroup);
+}
+
+
+// 시/군/구 코드 조회
+function getSigunguCode(selectedAreaCode) {
+    fetch(`/api/v1/places/area-code?areaCode=${selectedAreaCode}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                // 응답이 성공적이지 않을 때 에러 처리
+                throw new Error('API 요청이 실패했습니다.');
+            }
+            // JSON 형태로 변환하여 반환
+            return response.json();
+        })
+        .then(data => {
+            // API 응답 데이터를 화면에 표시
+            displaySigunguCode(data);
+        })
+        .catch(error => {
+            // API 요청이 실패했을 때 에러 처리
+            alert(error.message);
+            console.error('Error:', error);
+        });
 }
 
 // 시군구 화면 표시
@@ -194,24 +192,19 @@ function displayContentTypes() {
     const modalBody = document.querySelector('#contentSelectModal .modal-body');
     modalBody.innerHTML = ''; // 모달창 내용 초기화
 
-    const container = document.createElement('div');
-    container.classList.add('container-fluid');
-
-    const listGroup = document.createElement('ul');
+    const listGroup = document.createElement('div');
     listGroup.classList.add('list-group');
 
     Object.entries(contentTypes).forEach(([typeName, typeId]) => {
-        const listItem = document.createElement('li');
-        listItem.classList.add('list-group-item', 'list-group-item-action');
 
         const button = document.createElement('button');
         button.type = 'button';
-        button.classList.add('btn', 'btn-light', 'w-100');
+        button.classList.add('btn', 'btn-light', 'w-100', 'mb-2');
         button.textContent = typeName;
         button.addEventListener('click', function() {
+            document.getElementById('content-type').value = typeName;
             // 선택한 관광 타입 정보를 전역 변수에 저장
             selectedContentTypeId = typeId;
-            document.getElementById('content-type').value = typeName;
 
             // 모달 닫기
             const modal = document.querySelector('#contentSelectModal');
@@ -219,18 +212,17 @@ function displayContentTypes() {
             modalInstance.hide();
         });
 
-        listItem.appendChild(button);
-        listGroup.appendChild(listItem);
+        listGroup.appendChild(button);
     });
 
-    container.appendChild(listGroup);
-    modalBody.appendChild(container);
+    modalBody.appendChild(listGroup);
 }
 
 
 
 // 지역 기반 여행지 조회
 function areaBasedPlaces() {
+    console.log(selectedAreaCode + ' ' + selectedSigunguCode + ' ' + selectedContentTypeId);
     // 검색어가 비어있지 않을 경우 API 요청 보내기
     fetch(`/api/v1/places/course-list?&pageNo=${currentPage}&areaCode=${selectedAreaCode}&sigunguCode=${selectedSigunguCode}&contentTypeId=${selectedContentTypeId}`, {
         method: 'GET',
@@ -244,7 +236,6 @@ function areaBasedPlaces() {
                 // 응답이 성공적이지 않을 때 에러 처리
                 throw new Error('API 요청이 실패했습니다.');
             }
-            console.log(response);
             // JSON 형태로 변환하여 반환
             return response.json();
         })
