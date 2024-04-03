@@ -355,11 +355,6 @@ function updatePageNumbers() {
 }
 
 
-
-
-// 초기 페이지 로드 시 검색 수행
-searchPlaces();
-
 // 검색 결과를 화면에 표시하는 함수
 function displaySearchResults(results) {
     const searchResultsList = document.getElementById('search-results');
@@ -372,9 +367,9 @@ function displaySearchResults(results) {
         listItem.innerHTML =
         `<div class="card">
             <div class="row g-0">
-                <div class="col-md-3 d-flex align-items-center" style="margin-left: 10px">
+                <div class="col-md-3 d-flex align-items-center mt-2 mb-2" style="margin-left: 10px">
                     <!-- 이미지가 카드 이미지 부분에 꽉 차게 설정 -->
-                    <img src="${item.firstimage}" class="card-img img-square" alt="여행지 이미지"> 
+                    <img src="${item.firstimage}" class="card-img img-fluid" alt="여행지 이미지"> 
                 </div>
                 <div class="col-md-6">
                     <div class="card-body">
