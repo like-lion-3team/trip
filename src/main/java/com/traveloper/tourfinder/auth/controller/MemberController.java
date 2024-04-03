@@ -97,40 +97,23 @@ public class MemberController {
                 .build());
     }
 
-
-    @PatchMapping("/me/password")
-    public void updatePassword(
-            @Validated
-            @RequestBody
-            UpdatePasswordReq updatePasswordReq,
-            Member member
-    ){
-        // TODO: 비밀번호 수정 ( 마이페이지 )
-        memberService.updatePassword(
-                String.valueOf(member.getEmail()),
-                updatePasswordReq.getCurrentPassword(),
-                updatePasswordReq.getNewPassword());
-
-    }
-
     /**
      * <p>비밀번호 변경시 메일로 전송된 코드 검증 메서드</p>
      * */
     @PostMapping("/password-recovery/verify-code")
-    public void verifyCode(
+    public ResponseEntity verifyCode(
             @RequestBody
             PasswordRecoveryVerifyCodeRequestDto dto,
             HttpServletResponse servletResponse
 
-    ) throws IOException {
+    )  {
+        System.out.println(dto.getEmail() + "이메일");
+        System.out.println(dto.getCode() + "코드");
         boolean isVerify = emailService.verifyCode(dto.getEmail(), dto.getCode());
         if(!isVerify) throw new GlobalExceptionHandler(CustomGlobalErrorCode.PASSWORD_RECOVERY_CODE_MISS_MATCH);
-
-        // 비밀번호 변경 화면으로 리다이렉트
-        // 아래 location은 임시로 넣어 둔 값입니다.
-        // 실제 사용할 값으로 변경 해주세요
-        servletResponse.sendRedirect("/password-change");
+        return ResponseEntity.ok("");
     }
+
 
     /**
      * <p>이메일 인증코드, 이메일을 통한 비밀번호 변경 메서드</p>
@@ -148,12 +131,12 @@ public class MemberController {
     /**
      * <p>비밀번호 복구에 사용할 본인 인증 코드를 이메일로 보냅니다.</p>
      * */
-    @PostMapping("/password-recovery")
+    @GetMapping("/send/{email}/password-recovery-code")
     public void recoverPasswordRequest(
-            @RequestBody
-            PasswordRecoveryMailRequestDto dto
+         @PathVariable("email")
+         String email
     ) {
-        emailService.sendVerifyCodeMail(dto.getEmail());
+        emailService.sendVerifyCodeMail(email);
     }
 
     /**
