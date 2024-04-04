@@ -82,9 +82,17 @@
     </form>
 </div>
 <th:block th:replace="~{fragments/footer :: footer}"></th:block>
-
-
+<script th:src="@{/js/current-member.js}"></script>
 <script>
+
+    let currentMemberId = null;
+    getCurrentMemberId().then(data => {
+        currentMemberId = data.memberId;
+    }).catch(error => {
+        alert('로그인이 필요합니다.');
+        location.href = '/login';
+    })
+
     document.getElementById('articleForm').addEventListener('submit', function (event) {
         event.preventDefault(); // 폼 제출 방지
 
