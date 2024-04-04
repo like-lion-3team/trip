@@ -48,7 +48,14 @@
                     <div class="d-flex flex-row m-3">
                         <div>
                             <div class="flex-shrink-0">
-                                <div style="width:200px; height:200px; background-color: rgb(128,128,128);"></div>
+                                <div style="width:200px; height:200px; border-radius: 50%; overflow:hidden; background-color: rgba(128,128,128,0.3);">
+                                    <img src="/images/user.png" width="100%" height="100%">
+
+
+                                </div>
+                                <input type="file" id="profile-image" name="image" accept="image/*" required><br><br>
+                                <button onclick="uploadProfileImage()">저장하기</button>
+
                                 <!--                                <img src="/profile_image.jpg" alt="My Image"/>-->
                             </div>
                         </div>
@@ -98,6 +105,25 @@
 </body>
 
 <script>
+    async function uploadProfileImage(){
+
+        const formData = new FormData();
+        console.log(document.getElementById('profile-image') )
+        formData.append('image', document.getElementById('profile-image').value);
+
+
+        const url = "http://localhost:8080/api/v1/auth/profile-upload"
+        const response = await fetch(url,{
+            method:"POST",
+            body:formData,
+            headers:{
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+              }
+            }
+
+        );
+
+    }
 
     async function myPageProcessStart(){
         const myPageData = await fetchMyPageData();
@@ -117,11 +143,13 @@
 
 
         if(response.status !== 200){
-            const data = await retryTokenRequest(url).json();
-            document.querySelector('.nickname').innerText = data.member.nickname;
-            document.querySelector('.name').innerText = data.member.memberName;
-            document.querySelector('.email').innerText = data.member.email;
-            return data;
+            const {retryResponse} = await retryTokenRequest(url).json();
+            console.log(retryResponse,"데이터")
+
+            document.querySelector('.nickname').innerText = retryResponse.member.nickname;
+            document.querySelector('.name').innerText = retryResponse.member.memberName;
+            document.querySelector('.email').innerText = retryResponse.member.email;
+            return retryResponse;
         }
 
         const data = await response.json();
@@ -140,6 +168,7 @@
 
         if(data.courseList.length <= 0){
             const container = document.getElementById('course-container');
+            const div = document.createElement("div");
             const nothingHTML = `
             <div>
               <p> 등록된 코스가 없어요. <br/>
@@ -147,7 +176,8 @@
               </p>
             </div>
             `
-            container.appendChild(nothingHTML)
+            div.innerHTML = nothingHTML;
+            container.appendChild(div)
         }
 
         // 각 코스에 대해 반복

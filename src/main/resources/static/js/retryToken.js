@@ -20,7 +20,7 @@ async function retryTokenRequest(url) {
         console.log(data, "데이터")
         localStorage.setItem('token', data.accessToken);
 
-        response = await fetch(url, {
+        const retryResponse = await fetch(url, {
             headers: { 'Authorization': `Bearer ${data.accessToken}` }
         });
         if (!response.ok){
@@ -30,7 +30,7 @@ async function retryTokenRequest(url) {
         }
 
 
-        return await response
+        return {response,retryResponse}
     } catch (error) {
         console.error(error);
         throw error;
