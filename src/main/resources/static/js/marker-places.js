@@ -162,6 +162,16 @@ async function updateOrCreateCourse() {
     }
 
     try {
+        // 현재 사용자의 memberId를 가져옴
+        const currentMemberId = await getCurrentMemberId();
+
+        if (!currentMemberId) {
+            // 로그인이 필요한 경우 로그인 페이지로 리다이렉트
+            alert('로그인이 필요합니다.');
+            window.location.href = '/login'; // 로그인 페이지로 리다이렉트
+            return;
+        }
+
         let response;
         if (currentUrl.includes("/api/v1/courses/course-update")) {
             // 현재 URL이 코스 수정 페이지인 경우
