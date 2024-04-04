@@ -38,6 +38,7 @@ public class AdminMemberController {
                                 .memberName(member.getMemberName())
                                 .nickname(member.getNickname())
                                 .email(member.getEmail())
+                                .profile(member.getProfile())
                                 .role(member.getRole().getName())
                                 .build())
                 .collect(Collectors.toList());

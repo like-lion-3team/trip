@@ -55,6 +55,7 @@ public class AdminMemberService {
                 .password(member.getPassword())
                 .nickname(member.getNickname())
                 .email(member.getEmail())
+                .profile(member.getProfile())
                 .role(role)
                 .build();
 

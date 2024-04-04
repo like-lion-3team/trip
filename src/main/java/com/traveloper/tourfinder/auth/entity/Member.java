@@ -24,6 +24,8 @@ public class Member extends BaseEntity {
     @Setter
     private String nickname;
     private String email;
+    @Setter
+    private String profile;
 
     @ManyToOne
     private Role role;

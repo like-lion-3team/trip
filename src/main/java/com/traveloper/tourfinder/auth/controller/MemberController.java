@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Random;
@@ -153,6 +154,18 @@ public class MemberController {
     @GetMapping("/current-member")
     public ResponseEntity<MemberIdDto> getCurrentMemberId() {
         return ResponseEntity.ok(memberService.getCurrentMemberId());
+    }
+
+    /**
+     * <p></p>
+     */
+    @PostMapping("profile-upload")
+    public ResponseEntity<String> uploadProfileImage(
+            @RequestParam("image")
+            MultipartFile profileImage
+    ) {
+        memberService.uploadProfileImage(profileImage);
+        return ResponseEntity.ok("{}");
     }
 
 }
