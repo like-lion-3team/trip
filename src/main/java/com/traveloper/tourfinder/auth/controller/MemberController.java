@@ -54,7 +54,15 @@ public class MemberController {
         return ResponseEntity.ok("{}");
     }
 
-
+    @GetMapping("/is-login")
+    public ResponseEntity<String> isLogin(
+            @RequestHeader("Authorization")
+            String authorization
+    ){
+        return memberService.isLogin(authorization) ?
+                ResponseEntity.status(200).body("{}") :
+                ResponseEntity.status(401).body("{}");
+    }
     // 로그인
 
     @PostMapping("/sign-in")

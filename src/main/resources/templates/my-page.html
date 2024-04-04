@@ -96,7 +96,7 @@
     <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </div>
 </body>
-<script th:src="@{/js/retryToken.js}"></script>
+
 <script>
 
     async function myPageProcessStart(){
@@ -117,7 +117,7 @@
 
 
         if(response.status !== 200){
-            const data = await retryTokenRequest(url)
+            const data = await retryTokenRequest(url).json();
             document.querySelector('.nickname').innerText = data.member.nickname;
             document.querySelector('.name').innerText = data.member.memberName;
             document.querySelector('.email').innerText = data.member.email;
