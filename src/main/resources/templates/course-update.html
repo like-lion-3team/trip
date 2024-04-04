@@ -162,5 +162,16 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+<script th:src="@{/js/current-member.js}"></script>
+<script>
+
+    let currentMemberId = null;
+    getCurrentMemberId().then(data => {
+        currentMemberId = data.memberId;
+    }).catch(error => {
+        alert('로그인이 필요합니다.');
+        window.location.href = '/login'; // 로그인 페이지로 리다이렉트
+    })
+</script>
 </body>
 </html>
