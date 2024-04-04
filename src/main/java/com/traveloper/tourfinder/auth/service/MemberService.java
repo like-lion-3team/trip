@@ -262,7 +262,8 @@ public class MemberService implements UserDetailsService {
 
         // 기존 이미지 삭제
         String oldProfile = currentMember.getProfile();
-        deleteImage(oldProfile);
+        if (oldProfile != null) deleteImage(oldProfile);
+
 
         // 새로운 이미지 추가
         String imagePath = saveImage(image);
