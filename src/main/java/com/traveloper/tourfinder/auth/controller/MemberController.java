@@ -161,7 +161,7 @@ public class MemberController {
      */
     @PostMapping("profile-upload")
     public ResponseEntity<String> uploadProfileImage(
-            @RequestParam("image")
+            @RequestPart("image")
             MultipartFile profileImage
     ) {
         memberService.uploadProfileImage(profileImage);
