@@ -19,19 +19,18 @@ import com.traveloper.tourfinder.common.RedisRepo;
 import com.traveloper.tourfinder.common.exception.CustomGlobalErrorCode;
 import com.traveloper.tourfinder.common.exception.GlobalExceptionHandler;
 import com.traveloper.tourfinder.common.util.AuthenticationFacade;
-import com.traveloper.tourfinder.common.util.RandomCodeUtils;
-import com.traveloper.tourfinder.course.service.CourseService;
 import jakarta.transaction.Transactional;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,6 +41,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
@@ -239,6 +239,7 @@ public class MemberService implements UserDetailsService {
                 .email(member.getEmail())
                 .memberName(member.getMemberName())
                 .nickname(member.getNickname())
+                .profile(member.getProfile())
                 .role(member.getRole().getName())
                 .build();
 
@@ -256,7 +257,43 @@ public class MemberService implements UserDetailsService {
         return MemberIdDto.fromMember(authenticationFacade.getCurrentMember());
     }
 
+    public void uploadProfileImage(MultipartFile image) {
+        Member currentMember = authenticationFacade.getCurrentMember();
 
+        // 기존 이미지 삭제
+        String oldProfile = currentMember.getProfile();
+        deleteImage(oldProfile);
+
+        // 새로운 이미지 추가
+        String imagePath = saveImage(image);
+        imagePath = imagePath.replaceAll("\\\\", "/");
+        currentMember.setProfile(imagePath);
+
+        memberRepository.save(currentMember);
+    }
+
+    public String saveImage(MultipartFile image) {
+        String imgDir = "media/img/profiles/";
+        String imgName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+        Path imgPath = Path.of(imgDir + imgName);
+
+        try {
+            Files.createDirectories(Path.of(imgDir));
+            image.transferTo(imgPath);
+            log.info(image.getName());
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return imgPath.toString();
+    }
+
+    public void deleteImage(String imagePath) {
+        try {
+            Files.deleteIfExists(Path.of(imagePath));
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

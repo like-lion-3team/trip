@@ -1,9 +1,6 @@
 package com.traveloper.tourfinder.auth.dto;
 
 import com.traveloper.tourfinder.auth.entity.Member;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +16,7 @@ public class MemberDto {
     private String memberName;
     private String nickname;
     private String email;
+    private String profile;
     private String role;
 
     public static MemberDto fromEntity(Member entity) {
@@ -28,6 +26,7 @@ public class MemberDto {
                 .memberName(entity.getMemberName())
                 .nickname(entity.getNickname())
                 .email(entity.getEmail())
+                .profile(entity.getProfile())
                 .role(String.valueOf(entity.getRole()))
                 .build();
 

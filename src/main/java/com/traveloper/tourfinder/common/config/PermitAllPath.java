@@ -37,6 +37,7 @@ public class PermitAllPath {
             "/*.jpeg",
             "/images/**",
             "/img/articles/**",
+            "/img/profiles/**",
 
 
 

@@ -115,6 +115,7 @@ public class SocialOauthService {
                 .role(member.getRole().toString())
                 .memberName(member.getMemberName())
                 .email(member.getEmail())
+                .profile(member.getProfile())
                 .build();
     }
 
