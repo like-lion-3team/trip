@@ -9,27 +9,84 @@ body {
 
 /* 지도 스타일링 */
 #map {
-    width: calc(100% - 300px); /* 전체 폭에서 extra-content의 너비를 뺀 나머지를 가로 길이로 설정합니다. */
+    width: calc(100% - 390px); /* 전체 폭에서 extra-content의 너비를 뺀 나머지를 가로 길이로 설정합니다. */
     height: 100vh;
     float: right; /* 오른쪽 정렬합니다 */
     position: relative; /* 모달이 지도 위에 나타날 수 있도록 */
     z-index: 0;
 }
 
+/* 여행 코스 메뉴바 스타일링 */
+.menu-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 90px; /* 메뉴바의 너비 설정 */
+    height: 100vh; /* 화면 높이에 맞게 설정 */
+    background-color: #f5f5f5; /* 배경색 설정 */
+    z-index: 2; /* 다른 요소 위에 위치하도록 z-index 설정 */
+    padding-top: 20px; /* 상단 여백 설정 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.menu-bar a {
+    text-decoration: none; /* 링크 밑줄 제거 */
+    margin-bottom: 20px; /* 각 링크 아래 여백 설정 */
+    transition: all 0.3s ease; /* 전환 효과 설정 */
+}
+
+.menu-bar a:hover {
+    color: #ffcc00; /* 호버 시 글자색 변경 */
+}
+
+.sidebar {
+    width: 380px;
+    height: 100vh;
+    background-color: #f0f0f0;
+    position: fixed;
+    top: 0;
+    left: 90px;
+    transition: width 0.3s ease; /* 사이드바의 너비 변경 애니메이션 */
+    overflow-y: auto;
+    padding: 20px;
+    z-index: 2; /* 다른 요소 위에 사이드바가 보이도록 z-index를 설정합니다 */
+}
+
+.img-square {
+    width: 100%; /* 이미지의 너비를 부모 요소의 너비에 맞추어 설정 */
+    height: auto; /* 이미지의 높이를 자동으로 조정하여 비율 유지 */
+    object-fit: cover; /* 이미지를 자르지 않고 부모 요소에 맞춰 재배치 */
+}
+
+.card {
+    width: 100%;
+    /* 카드 너비를 100%로 설정하여 부모 요소에 맞게 조정 */
+    margin: 6px;
+    /* 카드 사이 여백 */
+    background-color: #f8f9fa;
+    /* 카드 배경색 */
+    border-radius: 10px;
+    /* 카드 모서리 둥글게 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    /* 카드 그림자 */
+}
+
+
 .extra-content {
     position: fixed; /* 절대적으로 위치를 고정합니다. */
+    padding: 20px;
     top: 0;
-    width: 280px; /* extra-content의 너비를 250px로 설정합니다. */
+    left: 90px; /* 사이드바의 너비만큼 왼쪽으로 이동하여 배치합니다. */
+    width: 300px; /* extra-content의 너비를 400px로 설정합니다. */
     height: 100vh; /* 화면 높이에 맞게 설정합니다. */
-    padding: 20px; /* 내부 여백을 설정합니다. */
     box-sizing: border-box; /* 내부 여백을 포함하여 크기를 계산합니다. */
     background-color: #f0f0f0; /* 배경색을 설정합니다. */
     z-index: 1; /* 다른 요소 위에 위치하도록 z-index를 설정합니다. */
+    overflow-x: hidden; /* 가로 스크롤을 숨깁니다. */
+    transition: width 0.6s ease; /* 너비 변경에 대한 부드러운 애니메이션을 추가합니다. */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.content {
-    padding: 20px;
-}
 
 /* 모달 스타일링 */
 .modal {
@@ -59,28 +116,6 @@ body {
     color: #ccc;
 }
 
-/* 여행지 검색창 스타일링 */
-.search-container input[type="text"] {
-    width: 75%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-}
-
-.search-container button {
-    padding: 8px 15px;
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-
-.search-container button:hover {
-    background-color: #45a049;
-}
 
 /* 여행지 리스트 스타일링 */
 #places-list ul li {
@@ -92,14 +127,31 @@ body {
     padding: 0;
 }
 
-#places-list ul li {
-    margin-bottom: 10px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    border-radius: 5px;
-    position: relative; /* 부모 요소에 대해 상대적으로 위치를 지정합니다 */
+.extra-content {
+    display: flex; /* Flexbox 사용 */
+    flex-direction: column; /* 요소들을 세로로 배치 */
+    height: 100vh; /* 화면의 전체 높이를 차지하도록 설정 */
 }
+
+/* 여행지 상세 정보 스타일링 */
+.modal-body {
+    color: black;
+}
+
+.modal-body img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.modal-header {
+    color: black;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 
 
 /* 선택한 여행지 스타일링 */
