@@ -10,13 +10,13 @@ async function retryTokenRequest(url) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ accessToken: token,uuid: uuid})
         });
+        let data = await response.json()
         if (!response.ok){
             alert(data.message)
             window.location.href = "/login"
             return
         }
 
-        let data = await response.json();
         console.log(data, "데이터")
         localStorage.setItem('token', data.accessToken);
 
@@ -30,7 +30,7 @@ async function retryTokenRequest(url) {
         }
 
 
-        return await response.json();
+        return await response
     } catch (error) {
         console.error(error);
         throw error;

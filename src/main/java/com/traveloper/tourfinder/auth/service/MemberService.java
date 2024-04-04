@@ -100,6 +100,14 @@ public class MemberService implements UserDetailsService {
         return memberRepository.existsByNickname(nickname);
     }
 
+    public boolean isLogin(String authorization){
+        if (authorization != null && authorization.startsWith("Bearer ")) {
+            String token = authorization.split(" ")[1];
+            return jwtTokenUtils.validate(token);
+        }
+        return false;
+
+    }
 
     public TokenDto login(
             SignInDto dto

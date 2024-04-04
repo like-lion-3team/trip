@@ -12,6 +12,7 @@ public class PermitAllPath {
     String[] PERMIT_ALL_PATTERN= {
             "/api/v1/auth/sign-in",
             "/api/v1/auth/sign-up",
+            "/api/v1/auth/sign-out",
             "/api/v1/auth/password-recovery",
             "/api/v1/auth/password-recovery/verify-code",
             "/api/v1/auth/duplicate-check/**",
