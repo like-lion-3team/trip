@@ -154,15 +154,13 @@
 
 <script th:src="@{/js/current-member.js}"></script>
 <script>
-    // 페이지 로드 후 실행될 함수
-
     let currentMemberId = null;
     getCurrentMemberId().then(data => {
         currentMemberId = data.memberId;
     })
 
     let isLiked = false;
-
+    // 페이지 로드 후 실행될 함수
     window.onload = function () {
         // articleId를 받아옵니다. 이 부분은 서버에서 Thymeleaf로 articleId를 넘겨줘야 합니다.
         const articleId = [[${articleId}]]
@@ -212,6 +210,8 @@
             })
             .catch(error => {
                 console.error('게시글을 불러오는 중 오류가 발생했습니다:', error);
+                alert('게시글을 불러오는 데 실패했습니다.');
+                location.href = '/board/articles';
             });
     };
 
