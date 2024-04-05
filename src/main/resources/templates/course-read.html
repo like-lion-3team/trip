@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>여행 코스 조회</title>
+    <script type="text/javascript" th:src="@{https://oapi.map.naver.com/openapi/v3/maps.js(ncpClientId=${clientId})}"></script>
+    <!-- 여기에 필요한 CSS 링크를 추가할 수 있습니다 -->
+    <link rel="stylesheet" type="text/css" href="/css/course-read.css">
+</head>
+<body>
+<!-- 지도 -->
+<div id="map"></div>
+
+<!-- 메뉴 바 -->
+<div class="menu-bar">
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link active" href="/home">홈</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" aria-current="page" href="#">코스 조회</a>
+        </li>
+    </ul>
+</div>
+
+<!-- 여행지 상세 정보 모달창 -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 코스 조회 폼과 선택한 여행지 리스트 -->
+<div class="extra-content">
+    <div id="courseForm" class="p-4">
+        <h5 class="mb-3">코스 조회</h5>
+        <div>
+            <input type="hidden" id="courseId" th:value="${courseId}" />
+        </div>
+        <form id="updateCourseForm">
+            <div class="mb-3">
+                <label for="courseTitle" class="form-label">코스 제목</label>
+                <input type="text" class="form-control" id="courseTitle" name="title" placeholder="코스 제목" style="font-size: 14px;" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="courseDesc" class="form-label">코스 설명</label>
+                <textarea class="form-control" id="courseDesc" name="desc" placeholder="코스 설명" style="height: 100px; font-size: 14px; overflow-y: auto; resize: none;" readonly></textarea>
+            </div>
+        </form>
+        <hr>
+        <h5 class="mt-3" style="margin-bottom: 20px;">선택한 여행지</h5>
+        <ul id="selected-places-list" class="list-group">
+        </ul>
+    </div>
+</div>
+
+<script>
+    function courseLoad(courseId) {
+        let selectedPlacesList = document.getElementById("selected-places-list");
+
+        fetch('/api/v1/courses/' + courseId, {
+            method: 'GET'
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('게시글을 불러오는데 실패했습니다.');
+            }
+            return response.json(); // JSON 형태로 변환하여 반환
+        }).then(data => {
+            document.getElementById('courseTitle').value = data.title;
+            document.getElementById('courseDesc').innerText = data.desc;
+            return data.places;
+        }).then(places => {
+            places.forEach(placeData => {
+                // 여행지의 정보를 가져와서 선택한 여행지 배열에 추가
+                const place = {
+                    contentId: placeData.contentId,
+                    title: placeData.title,
+                    lat: parseFloat(placeData.lat),
+                    lng: parseFloat(placeData.lng),
+                    address: placeData.addr,
+                    thumbnailUrl: placeData.thumbnailUrl
+                };
+                // 선택한 여행지 목록을 화면에 표시
+                renderSelectedPlaces(selectedPlacesList, place);
+
+                // 가져온 좌표값으로 마커를 표시합니다
+                displayMarker(place);
+            })
+        })
+    }
+
+    // 선택한 여행지를 화면에 표시하는 함수
+    function renderSelectedPlaces(selectedPlacesList, place) {
+        // 선택한 여행지 배열을 순회하면서 각각의 여행지를 화면에 추가
+        let listItem = document.createElement("li");
+        listItem.textContent = place.title; // 여행지 이름 등 필요한 정보를 여기서 표시
+        listItem.classList.add("list-item"); // CSS 클래스 추가
+
+        // 해당 여행지를 클릭했을 때 지도의 중심을 해당 위치로 이동
+        listItem.addEventListener("click", () => {
+            moveToSelectedPlace(place);
+        });
+
+        selectedPlacesList.appendChild(listItem);
+    }
+
+    function moveToSelectedPlace(place) {
+        // 선택한 여행지의 좌표로 지도의 중심 이동
+        map.setCenter(new naver.maps.LatLng(place.lat, place.lng));
+
+        // 지도 확대 수준 조정 (예: 현재 줌 레벨 + 2)
+        // const currentZoomLevel = map.getZoom();
+        // const newZoomLevel = currentZoomLevel + 1; // 적절한 값을 설정할 수 있습니다.
+        // map.setZoom(newZoomLevel);
+        map.setZoom(18);
+    }
+
+    function displayMarker(place) {
+        var position = new naver.maps.LatLng(place.lat, place.lng);
+        var marker = new naver.maps.Marker({
+            position: position,
+            map: map
+        });
+    }
+
+    courseLoad([[${courseId}]]);
+</script>
+
+<!--맵 표시 자바스크립트-->
+<script th:src="@{/js/course-map.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,322 @@
+/* 전체 페이지 스타일링 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    font-size: 13px; /* 전체 폰트 사이즈를 14px로 설정합니다. */
+}
+
+/* 지도 스타일링 */
+#map {
+    width: calc(100% - 470px); /* 전체 폭에서 extra-content의 너비를 뺀 나머지를 가로 길이로 설정합니다. */
+    height: 100vh;
+    float: right; /* 오른쪽 정렬합니다 */
+    position: relative; /* 모달이 지도 위에 나타날 수 있도록 */
+    z-index: 0;
+}
+
+/* 여행 코스 메뉴바 스타일링 */
+.menu-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 90px; /* 메뉴바의 너비 설정 */
+    height: 100vh; /* 화면 높이에 맞게 설정 */
+    background-color: #f5f5f5; /* 배경색 설정 */
+    z-index: 2; /* 다른 요소 위에 위치하도록 z-index 설정 */
+    padding-top: 20px; /* 상단 여백 설정 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.menu-bar a {
+    text-decoration: none; /* 링크 밑줄 제거 */
+    margin-bottom: 20px; /* 각 링크 아래 여백 설정 */
+    transition: all 0.3s ease; /* 전환 효과 설정 */
+}
+
+.menu-bar a:hover {
+    color: #ffcc00; /* 호버 시 글자색 변경 */
+}
+
+.sidebar {
+    width: 380px;
+    height: 100vh;
+    background-color: #f0f0f0;
+    position: fixed;
+    top: 0;
+    left: 90px;
+    transition: width 0.3s ease; /* 사이드바의 너비 변경 애니메이션 */
+    overflow-y: auto;
+    padding: 20px;
+    z-index: 2; /* 다른 요소 위에 사이드바가 보이도록 z-index를 설정합니다 */
+}
+
+.img-square {
+    width: 100%; /* 이미지의 너비를 부모 요소의 너비에 맞추어 설정 */
+    height: auto; /* 이미지의 높이를 자동으로 조정하여 비율 유지 */
+    object-fit: cover; /* 이미지를 자르지 않고 부모 요소에 맞춰 재배치 */
+}
+
+.card {
+    width: 100%;
+    /* 카드 너비를 100%로 설정하여 부모 요소에 맞게 조정 */
+    margin: 6px;
+    /* 카드 사이 여백 */
+    background-color: #f8f9fa;
+    /* 카드 배경색 */
+    border-radius: 10px;
+    /* 카드 모서리 둥글게 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    /* 카드 그림자 */
+}
+
+
+.extra-content {
+    position: fixed; /* 절대적으로 위치를 고정합니다. */
+    padding: 20px;
+    top: 0;
+    left: 470px; /* 사이드바의 너비만큼 왼쪽으로 이동하여 배치합니다. */
+    width: 250px; /* extra-content의 너비를 250px로 설정합니다. */
+    height: 100vh; /* 화면 높이에 맞게 설정합니다. */
+    box-sizing: border-box; /* 내부 여백을 포함하여 크기를 계산합니다. */
+    background-color: #f0f0f0; /* 배경색을 설정합니다. */
+    z-index: 1; /* 다른 요소 위에 위치하도록 z-index를 설정합니다. */
+    overflow-x: hidden; /* 가로 스크롤을 숨깁니다. */
+    transition: width 0.6s ease; /* 너비 변경에 대한 부드러운 애니메이션을 추가합니다. */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.extra-content.active {
+    left: 470px; /* 사이드바의 너비만큼 왼쪽으로 이동하여 배치합니다. */
+    width: 300px; /* extra-content가 열릴 때의 너비 */
+}
+
+
+.content {
+    margin-left: 250px; /* 사이드바 너비 만큼 오른쪽으로 이동 */
+    padding: 20px;
+}
+
+/* 모달 스타일링 */
+.modal {
+    display: none;
+    position: absolute;
+    z-index: 9999;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    color: #fff;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.close:hover {
+    color: #ccc;
+}
+
+/* 여행지 검색창 스타일링 */
+.search-container input[type="text"] {
+    width: 75%;
+    padding: 8px;
+    border: 1px solid #ccc;
+
+    border-radius: 5px;
+    outline: none;
+}
+
+.search-container button {
+    padding: 8px 15px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+.search-container button:hover {
+    background-color: #45a049;
+}
+
+/* 여행지 리스트 스타일링 */
+#places-list ul li {
+    font-size: 11px; /* 여행지 리스트 항목 폰트 사이즈를 11px로 설정합니다. */
+}
+
+#places-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.extra-content {
+    display: flex; /* Flexbox 사용 */
+    flex-direction: column; /* 요소들을 세로로 배치 */
+    height: 100vh; /* 화면의 전체 높이를 차지하도록 설정 */
+}
+
+/* 여행지 상세 정보 스타일링 */
+.modal-body {
+    color: black;
+}
+
+.modal-body img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.modal-header {
+    color: black;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+/* 선택한 여행지 스타일링 */
+#selected-places-list {
+    list-style-type: none;
+    padding: 0;
+    overflow-y: auto; /* 내용이 넘칠 경우 세로 스크롤바 추가 */
+}
+
+#selected-places-list li {
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+#selected-places-list li img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+#selected-places-list li .place-info {
+    flex: 1;
+}
+
+#selected-places-list li h4 {
+    margin: 0;
+    font-size: 18px;
+}
+
+#selected-places-list li p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #777;
+}
+
+#selected-places-list li button.remove-button {
+    background-color: #dc3545; /* btn-warning 색상 대신 빨간색 계열로 설정 */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin-left: auto;
+}
+
+#selected-places-list li {
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+#selected-places-list li .place-info {
+    flex: 1;
+}
+
+#courseForm {
+    max-width: 400px; /* 코스 입력 폼의 최대 너비 설정 */
+    margin: 0 auto; /* 가운데 정렬을 위해 왼쪽과 오른쪽 마진을 자동으로 조정 */
+    flex: 1; /* 코스 생성 폼이 남은 공간을 모두 차지하도록 설정 */
+}
+
+#courseForm input[type="text"] {
+    width: 100%; /* 인풋 요소의 너비를 부모 요소의 100%로 설정하여 가로폭을 꽉 채움 */
+    padding: 10px; /* 내부 여백 설정 */
+    margin-bottom: 15px; /* 하단 여백 설정 */
+    border: 1px solid #ccc; /* 테두리 스타일 설정 */
+    border-radius: 5px; /* 테두리의 모서리를 둥글게 만듦 */
+    box-sizing: border-box; /* 테두리와 패딩을 포함한 요소의 크기를 설정 */
+}
+
+#courseForm input[type="text"]:focus {
+    outline: none; /* 포커스 시 파란 테두리 제거 */
+    border-color: #007bff; /* 포커스 시 테두리 색상 변경 */
+    width: 100%; /* 인풋과 버튼의 너비를 부모 요소의 100%로 설정하여 가로폭을 꽉 채움 */
+    margin-bottom: 15px; /* 하단 여백 설정 */
+}
+
+#courseForm textarea {
+    width: 100%; /* 텍스트 영역의 너비를 부모 요소의 100%로 설정하여 가로폭을 꽉 채움 */
+    height: 100px; /* 텍스트 영역의 높이를 100px로 설정 */
+    padding: 10px; /* 내부 여백 설정 */
+    margin-bottom: 15px; /* 하단 여백 설정 */
+    border: 1px solid #ccc; /* 테두리 스타일 설정 */
+    border-radius: 5px; /* 테두리의 모서리를 둥글게 만듦 */
+    box-sizing: border-box; /* 테두리와 패딩을 포함한 요소의 크기를 설정 */
+    resize: vertical; /* 수직 크기 조절만 가능하도록 설정 */
+}
+
+#courseForm textarea:focus {
+    outline: none; /* 포커스 시 파란 테두리 제거 */
+    border-color: #007bff; /* 포커스 시 테두리 색상 변경 */
+    width: 100%; /* 인풋과 버튼의 너비를 부모 요소의 100%로 설정하여 가로폭을 꽉 채움 */
+    margin-bottom: 15px; /* 하단 여백 설정 */
+}
+
+.course-register-btn,
+.course-create-btn {
+    width: 100%; /* 버튼의 너비를 부모 요소의 100%로 설정하여 가로폭을 꽉 채움 */
+    padding: 10px; /* 내부 여백 설정 */
+    background-color: #007bff; /* 배경색 설정 */
+    color: #fff; /* 글자색 설정 */
+    border: none; /* 테두리 제거 */
+    border-radius: 5px; /* 버튼의 모서리를 둥글게 만듦 */
+    cursor: pointer; /* 커서 모양을 포인터로 변경하여 클릭 가능한 상태로 표시 */
+    transition: background-color 0.3s; /* 배경색 변화에 트랜지션 효과 적용 */
+    margin-bottom: 15px; /* 하단 여백 설정 */
+}
+
+.course-register-btn:hover,
+.course-create-btn:hover {
+    background-color: #0056b3; /* 마우스 호버 시 배경색 변경 */
+}
+
+
+
+/* CSS */
+.list-item:hover {
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+}

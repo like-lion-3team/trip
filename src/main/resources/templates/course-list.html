@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>코스 목록</title>
+    <link rel="stylesheet" type="text/css" href="/css/course-list.css">
+</head>
+<body>
+<div class="container">
+    <h1>코스 목록</h1>
+    <ul id="course-list">
+        <!-- 여기에 동적으로 코스 목록이 추가됩니다 -->
+    </ul>
+</div>
+
+<script>
+    // JavaScript 코드
+    // 서버에서 코스 목록을 가져오는 함수
+    function fetchCourses() {
+        const token = 'your_bearer_token_here';
+
+        fetch('/api/v1/courses', {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 서버로부터 받은 데이터를 처리하여 리스트로 출력
+                const courseList = document.getElementById('course-list');
+                courseList.innerHTML = ''; // 기존 목록을 지움
+
+                data.forEach(course => {
+                    const courseItem = document.createElement('li');
+                    courseItem.textContent = `${course.title} - ${course.desc}`;
+
+                    // 각 코스의 장소 목록을 출력
+                    const placeList = document.createElement('ul');
+                    course.places.forEach(place => {
+                        const placeItem = document.createElement('li');
+                        placeItem.textContent = `${place.title} (${place.lat}, ${place.lng})`;
+                        placeList.appendChild(placeItem);
+                    });
+
+                    courseItem.appendChild(placeList);
+                    courseList.appendChild(courseItem);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching courses:', error);
+            });
+    }
+
+    // 코스 목록에 코스를 추가하는 함수
+    function addCourseToList(course) {
+        const courseList = document.getElementById('course-list');
+        const li = document.createElement('li');
+        li.innerHTML = `
+                <h3>${course.title}</h3>
+                <p>${course.desc}</p>
+            `;
+        courseList.appendChild(li);
+    }
+
+    // 페이지 로드 시 코스 목록을 가져옵니다.
+    window.onload = function () {
+        fetchCourses();
+    };
+</script>
+</body>
+</html>

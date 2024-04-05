@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>코스 조회</title>
+    <style>
+        /* 스타일링 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-info {
+            margin-bottom: 20px;
+        }
+
+        .map-container {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        #map {
+            flex: 1;
+            height: 400px; /* 지도의 높이 조절 */
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .place-list {
+            flex: 1;
+            margin-left: 20px;
+            cursor: pointer; /* 커서 모양을 포인터로 변경 */
+        }
+
+        .place-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .place-list ul li {
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .place-list ul li:hover {
+            background-color: #e0e0e0; /* 마우스를 올렸을 때 배경색 변경 */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="course-info">
+        <h1 id="course-title">코스 제목</h1>
+        <p id="course-desc">코스 설명</p>
+    </div>
+
+    <div class="map-container">
+        <!-- 지도 -->
+        <div id="map">
+            <script type="text/javascript" th:src="@{https://openapi.map.naver.com/openapi/v3/maps.js(ncpClientId=${clientId})}"></script>
+        </div>
+        <div class="place-list" id="place-list">
+            <h2>장소 목록</h2>
+            <ul id="place-ul">
+                <!-- 장소 목록이 여기에 동적으로 추가됩니다 -->
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    var mapOptions = {
+        center: new naver.maps.LatLng(37.3595704, 127.105399),
+        zoom: 15
+    };
+
+    var map = new naver.maps.Map('map', mapOptions);
+
+    // 코스 정보 설정
+    const courseTitle = document.getElementById('course-title');
+    const courseDesc = document.getElementById('course-desc');
+    const placeList = document.getElementById('place-ul');
+    var course;
+    var places;
+
+    function fetchCourseData() {
+        const courseId = [[${courseId}]];
+        fetch('/api/v1/courses/' + courseId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    // 응답이 성공적이지 않을 때 에러 처리
+                    throw new Error('API 요청이 실패했습니다.');
+                }
+                // JSON 형태로 변환하여 반환
+                return response.json();
+            })
+            .then(data => {
+                course = data;
+                places = data.places;
+                map.setCenter(new naver.maps.LatLng(places[0].lat, places[0].lng));
+                courseTitle.textContent = data.title;
+                courseDesc.textContent = data.desc;
+                data.places.forEach((place, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${place.title}: ${place.address}`;
+                    li.addEventListener('click', () => {
+                        // 장소를 클릭하면 해당 위치로 지도 이동
+                        map.setCenter(new naver.maps.LatLng(place.lat, place.lng));
+                    });
+
+                    var marker = new naver.maps.Marker({
+                        position: new naver.maps.LatLng(place.lat, place.lng),
+                        map: map
+                    });
+
+                    placeList.appendChild(li);
+                })
+            })
+    }
+
+    fetchCourseData();
+
+    // TODO: 지도 표시 및 지도에 장소 마커 표시
+</script>
+</body>
+</html>

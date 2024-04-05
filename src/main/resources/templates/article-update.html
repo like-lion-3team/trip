@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 수정</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .article-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 150px;
+        }
+
+        .updateButton {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .updateButton:hover {
+            background-color: #0056b3;
+        }
+
+        .image-preview img {
+            max-width: 200px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<div class="article-container">
+    <h1>게시글 수정</h1>
+    <form id="articleForm" enctype="multipart/form-data">
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" required><br><br>
+        <label for="content">내용:</label><br>
+        <textarea id="content" name="content" rows="4" required></textarea><br><br>
+        <label for="images">이미지:</label><br>
+        <input type="file" id="images" name="images" accept="image/*" multiple required><br><br>
+        <label for="tags">태그:</label><br>
+        <input type="text" id="tags" name="tags" placeholder="태그를 입력하세요 (쉼표로 구분)" required><br><br>
+        <button class="updateButton" type="submit">게시글 수정</button>
+    </form>
+</div>
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+<script th:src="@{/js/current-member.js}"></script>
+<script>
+
+    let currentMemberId = null;
+
+    // 기존 게시글의 정보를 불러와서 폼에 채워주는 함수
+    function loadArticleData() {
+        fetch(`/api/v1/articles/` + [[${articleId}]], {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('존재하지 않는 게시글 입니다.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.writer.memberId !== currentMemberId) {
+                    throw new Error('자신의 게시글만 수정이 가능합니다.');
+                }
+                document.getElementById('title').value = data.title;
+                // TODO 이미지 정보 표시 및 필요시 삭제 구현
+                document.getElementById('content').value = data.content;
+                document.getElementById('tags').value = data.tags.join(', ');
+            })
+            .catch(error => {
+                console.log('Error:', error);
+                alert(error.message);
+                if (error.message === '존재하지 않는 게시글 입니다.') {
+                    location.href = '/board/articles';
+                } else if (error.message === '자신의 게시글만 수정이 가능합니다.') {
+                    location.href = '/board/articles/' + [[${articleId}]];
+                }
+            });
+    }
+
+    // 페이지 로드 시 게시글 정보를 불러옴
+    window.addEventListener('load', function () {
+        getCurrentMemberId().then(data => {
+            currentMemberId = data.memberId;
+            loadArticleData();
+        }).catch(error => {
+            console.log(error.message);
+            alert('로그인이 필요합니다.');
+            location.href = '/login';
+        })
+    });
+
+    document.getElementById('articleForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // 폼 제출 방지
+
+        const formData = new FormData();
+        formData.append('title', document.getElementById('title').value);
+        formData.append('content', document.getElementById('content').value);
+        formData.append('tags', document.getElementById('tags').value);
+
+        const images = document.getElementById('images').files;
+        for (let i = 0; i < images.length; i++) {
+            formData.append('images', images[i]);
+        }
+
+        // AJAX를 사용하여 폼 데이터를 서버로 전송
+        fetch('/api/v1/articles/' + [[${articleId}]], {
+            method: 'PUT', // 수정 요청이므로 PUT 메서드 사용
+            body: formData,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('게시글이 성공적으로 수정되었습니다.');
+                    location.href = '/board/articles/' + [[${articleId}]];
+                    // 페이지 새로고침 또는 다른 작업 수행
+                } else {
+                    alert('수정 권한이 없습니다!');
+                    console.error('게시글 수정에 실패했습니다.');
+                    location.href = '/board/articles/' + [[${articleId}]];
+                }
+            })
+            .catch(error => {
+                console.error('게시글 수정 중 오류가 발생했습니다:', error);
+            })
+    });
+</script>
+</body>
+</html>
